@@ -14,3 +14,6 @@ node_modules/
 # misc
 .DS_Store
 npm-debug.log*
+
+# soubor s klíči pro Vercel — jen lokálně
+VERCEL-PROMENNE.md
