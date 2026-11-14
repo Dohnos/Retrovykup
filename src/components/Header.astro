@@ -2,8 +2,9 @@
 import Icon from './Icon.astro';
 import Logo from './Logo.astro';
 import { nav, site } from '../data/site';
+import { cleanPath } from '../lib/path';
 
-const path = Astro.url.pathname;
+const path = cleanPath(Astro.url.pathname);
 ---
 
 <header id="site-header" class="sticky top-0 z-50 transition-all duration-300">

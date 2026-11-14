@@ -4,6 +4,7 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import FloatingContact from '../components/FloatingContact.astro';
 import { site } from '../data/site';
+import { cleanPath } from '../lib/path';
 
 interface Props {
   title: string;
@@ -18,7 +19,7 @@ interface Props {
 
 const { title, description = site.description, image = site.heroImage, noindex = false, schema = [], bare = false } = Astro.props;
 
-const canonical = new URL(Astro.url.pathname.replace(/\/$/, '') || '/', site.url).href;
+const canonical = new URL(cleanPath(Astro.url.pathname), site.url).href;
 
 const orgSchema = {
   '@context': 'https://schema.org',
@@ -58,7 +59,7 @@ const allSchema = bare ? [] : [orgSchema, ...schema];
     <meta name="twitter:image" content={image} />
 
     <link rel="preconnect" href="https://i.postimg.cc" crossorigin />
-    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="sitemap" href="/sitemap.xml" />
 
     {allSchema.map((s) => <script type="application/ld+json" set:html={JSON.stringify(s)} />)}
 

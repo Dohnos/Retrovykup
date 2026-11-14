@@ -8,7 +8,7 @@ const year = new Date().getFullYear();
 ---
 
 <footer class="grain mt-24 rounded-t-[2.5rem] bg-ink text-paper">
-  <div class="container-x py-16">
+  <div class="container-x pt-16 pb-28 md:pb-16">
     <div class="grid gap-12 md:grid-cols-[1.4fr_1fr_1fr]">
       <div>
         <Logo dark />
@@ -48,12 +48,12 @@ const year = new Date().getFullYear();
 
       <div>
         <p class="eyebrow text-white/40">Výkup ve městech</p>
-        <ul class="mt-4 space-y-2.5 text-sm">
+        <ul class="mt-4 columns-2 gap-6 text-sm [&>li]:mb-2.5">
           {
             cities.map((c) => (
               <li>
                 <a href={cityUrl(c)} class="text-white/70 transition-colors hover:text-white">
-                  Výkup starožitností {c.name}
+                  {c.name}
                 </a>
               </li>
             ))

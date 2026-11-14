@@ -1,0 +1,49 @@
+---
+import Icon from './Icon.astro';
+import { site } from '../data/site';
+
+interface Props {
+  title?: string;
+  text?: string;
+  variant?: 'dark' | 'light';
+}
+const {
+  title = 'Máte doma starožitnosti?',
+  text = 'Pošlete fotky a do 24 hodin víte, kolik za ně dostanete. Zdarma a nezávazně.',
+  variant = 'dark',
+} = Astro.props;
+const dark = variant === 'dark';
+---
+
+<section class="py-8">
+  <div class="container-x">
+    <div
+      class:list={[
+        'reveal relative flex flex-col items-start gap-6 overflow-hidden rounded-[2.5rem] p-8 sm:p-12 lg:flex-row lg:items-center lg:justify-between',
+        dark ? 'grain bg-ink text-paper' : 'border border-line bg-mist',
+      ]}>
+      <div class="relative">
+        <h2 class="h-display text-4xl sm:text-5xl">{title}</h2>
+        <p class:list={['mt-3 max-w-xl', dark ? 'text-white/60' : 'text-muted']}>{text}</p>
+      </div>
+      <div class="relative flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
+        <a href="/#formular" data-cta class:list={[dark ? 'btn-light' : 'btn-primary', 'px-7 py-4 text-base']}>
+          <Icon name="camera" class="size-5" />
+          Získat nabídku
+          <Icon name="arrow-right" class="arrow size-5" />
+        </a>
+        <a href={site.phoneHref} class:list={[dark ? 'btn-ghost-dark' : 'btn-ghost', 'px-7 py-4 text-base']}>
+          <Icon name="phone" class="size-5" />
+          {site.phone}
+        </a>
+      </div>
+      <!-- dekorativní kruhy -->
+      <span
+        class:list={['pointer-events-none absolute -top-24 -right-24 size-72 rounded-full border', dark ? 'border-white/10' : 'border-ink/10']}
+        aria-hidden="true"></span>
+      <span
+        class:list={['pointer-events-none absolute -top-12 -right-12 size-48 rounded-full border', dark ? 'border-white/10' : 'border-ink/10']}
+        aria-hidden="true"></span>
+    </div>
+  </div>
+</section>

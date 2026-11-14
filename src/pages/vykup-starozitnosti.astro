@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 import Sections from '../components/Sections.astro';
 import Icon from '../components/Icon.astro';
+import SellForm from '../components/SellForm.astro';
 import { cities, cityUrl } from '../data/cities';
 import { site } from '../data/site';
 
@@ -21,8 +22,8 @@ const schema = [
 ---
 
 <Base
-  title="Výkup starožitností ve vašem městě | Praha, Brno, Ostrava, Plzeň, Liberec, Olomouc | Retrovykup"
-  description="Výkup starožitností v Praze, Brně, Ostravě, Plzni, Liberci, Olomouci a po celé ČR. Ocenění z fotek do 24 hodin, vyzvednutí u vás a platba ihned."
+  title="Výkup starožitností ve vašem městě | Všechna krajská města | Retrovykup"
+  description="Výkup starožitností v Praze, Brně, Ostravě, Plzni, Liberci, Olomouci, Českých Budějovicích, Hradci Králové, Zlíně a dalších městech. Ocenění z fotek do 24 h, odvoz a platba ihned."
   schema={schema}>
   <section class="pt-14 pb-6 sm:pt-20">
     <div class="container-x">
@@ -67,18 +68,5 @@ const schema = [
 
   <Sections show="steps" />
 
-  <section class="py-10">
-    <div class="container-x">
-      <div class="grain reveal flex flex-col items-start gap-6 rounded-[2.5rem] bg-ink p-10 text-paper sm:flex-row sm:items-center sm:justify-between sm:p-14">
-        <div>
-          <h2 class="h-display text-4xl sm:text-5xl">Vaše město tu není?</h2>
-          <p class="mt-3 text-white/60">Nevadí. Vykupujeme po celé republice — stačí poslat fotky.</p>
-        </div>
-        <a href="/#formular" class="btn-light shrink-0 px-7 py-4 text-base">
-          Poslat fotky
-          <Icon name="arrow-right" class="arrow size-5" />
-        </a>
-      </div>
-    </div>
-  </section>
+  <SellForm />
 </Base>

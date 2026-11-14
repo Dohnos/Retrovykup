@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /admin
 
-Sitemap: https://retrovykup.cz/sitemap-index.xml
+Sitemap: https://retrovykup.cz/sitemap.xml

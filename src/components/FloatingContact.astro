@@ -3,14 +3,70 @@ import Icon from './Icon.astro';
 import { site } from '../data/site';
 ---
 
-<div class="fixed right-4 bottom-4 z-40 flex flex-col gap-2 sm:right-6 sm:bottom-6">
+<!-- 📱 Mobil: lepivá lišta dole -->
+<div
+  id="cta-bar"
+  class="fixed inset-x-3 bottom-3 z-40 translate-y-[150%] transition-transform duration-500 ease-(--ease-spring) md:hidden"
+  style="padding-bottom: env(safe-area-inset-bottom)">
+  <div class="flex items-center gap-2 rounded-full border border-white/10 bg-ink/95 p-1.5 shadow-[0_15px_40px_-10px_rgba(0,0,0,0.6)] backdrop-blur-xl">
+    <a href="/#formular" data-cta class="flex flex-1 items-center justify-center gap-2 rounded-full bg-paper px-4 py-3 text-sm font-semibold text-ink">
+      <Icon name="camera" class="size-4" />
+      Získat nabídku
+    </a>
+    <a href={site.phoneHref} class="grid size-11 place-items-center rounded-full bg-white/10 text-paper" aria-label="Zavolat">
+      <Icon name="phone" class="size-5" />
+    </a>
+    <a href={site.whatsappHref} target="_blank" rel="noopener noreferrer" class="grid size-11 place-items-center rounded-full bg-white/10 text-paper" aria-label="WhatsApp">
+      <Icon name="message-circle" class="size-5" />
+    </a>
+  </div>
+</div>
+
+<!-- 🖥️ Desktop: plovoucí tlačítka vpravo dole -->
+<div class="fixed right-6 bottom-6 z-40 hidden items-center gap-3 md:flex">
+  <a
+    id="cta-pill"
+    href="/#formular"
+    data-cta
+    class="btn-primary pointer-events-none translate-y-4 px-6 py-4 opacity-0 shadow-[0_15px_40px_-10px_rgba(0,0,0,0.6)] transition-all duration-500">
+    <Icon name="camera" class="size-5" />
+    Získat nabídku
+    <Icon name="arrow-right" class="arrow size-4" />
+  </a>
   <a
     href={site.whatsappHref}
     target="_blank"
     rel="noopener noreferrer"
-    class="group grid size-14 place-items-center rounded-full bg-ink text-paper shadow-[0_12px_30px_-8px_rgba(0,0,0,0.5)] transition-transform duration-300 ease-(--ease-spring) hover:scale-110"
+    class="group relative grid size-14 place-items-center rounded-full bg-ink text-paper shadow-[0_12px_30px_-8px_rgba(0,0,0,0.5)] transition-transform duration-300 ease-(--ease-spring) hover:scale-110"
     aria-label="Napsat na WhatsApp">
     <Icon name="message-circle" class="size-6 transition-transform duration-300 group-hover:-rotate-12" />
     <span class="absolute inset-0 -z-10 animate-ping rounded-full bg-ink/30 [animation-duration:2.5s]"></span>
   </a>
 </div>
+
+<script>
+  const form = document.getElementById('formular');
+  // Pokud stránka formulář má, CTA vedou na něj přímo (bez přechodu na úvod)
+  if (form) document.querySelectorAll<HTMLAnchorElement>('a[data-cta], a[href="/#formular"]').forEach((a) => (a.href = '#formular'));
+
+  const bar = document.getElementById('cta-bar')!;
+  const pill = document.getElementById('cta-pill')!;
+  let formVisible = false;
+
+  const update = () => {
+    const show = window.scrollY > 420 && !formVisible;
+    bar.classList.toggle('translate-y-[150%]', !show);
+    pill.classList.toggle('opacity-0', !show);
+    pill.classList.toggle('translate-y-4', !show);
+    pill.classList.toggle('pointer-events-none', !show);
+  };
+
+  if (form && 'IntersectionObserver' in window) {
+    new IntersectionObserver(([e]) => {
+      formVisible = e.isIntersecting;
+      update();
+    }, { threshold: 0.15 }).observe(form);
+  }
+  window.addEventListener('scroll', update, { passive: true });
+  update();
+</script>

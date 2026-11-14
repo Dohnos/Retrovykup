@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
+import SellForm from '../components/SellForm.astro';
 
 const items = [
   { icon: 'clock-3', title: 'Starý hodinový mechanismus', text: 'Elegantní hodinový mechanismus z 19. století.', tag: '19. století' },
@@ -52,18 +53,5 @@ const items = [
     </div>
   </section>
 
-  <section class="py-10">
-    <div class="container-x">
-      <div class="grain reveal flex flex-col items-start gap-6 rounded-[2.5rem] bg-ink p-10 text-paper sm:flex-row sm:items-center sm:justify-between sm:p-14">
-        <div>
-          <h2 class="h-display text-4xl sm:text-5xl">Máte podobný kousek?</h2>
-          <p class="mt-3 text-white/60">Pošlete fotky a do 24 hodin víte, kolik za něj dostanete.</p>
-        </div>
-        <a href="/#formular" class="btn-light shrink-0 px-7 py-4 text-base">
-          Kontaktovat
-          <Icon name="arrow-right" class="arrow size-5" />
-        </a>
-      </div>
-    </div>
-  </section>
+  <SellForm />
 </Base>

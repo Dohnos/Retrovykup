@@ -5,6 +5,7 @@ import Sections from '../components/Sections.astro';
 import SellForm from '../components/SellForm.astro';
 import Faq from '../components/Faq.astro';
 import Icon from '../components/Icon.astro';
+import CtaBand from '../components/CtaBand.astro';
 import { cities, cityUrl, type City } from '../data/cities';
 import { faq as baseFaq, site } from '../data/site';
 
@@ -103,7 +104,7 @@ const schema = [
         </div>
         <div class="card reveal" style="--d:180ms">
           <span class="icon-bubble"><Icon name="compass" class="size-5" /></span>
-          <h3 class="mt-5 font-semibold">Okolí {city.genitive.replace(/^z /, '')}</h3>
+          <h3 class="mt-5 font-semibold">Okolí {city.genitive.replace(/^ze? /, '')}</h3>
           <ul class="mt-3 flex flex-wrap gap-1.5">
             {city.surroundings.map((s) => <li class="rounded-full bg-mist px-3 py-1 text-xs">{s}</li>)}
           </ul>
@@ -124,9 +125,11 @@ const schema = [
     </div>
   </section>
 
-  <Sections show="categories" title={`Co vykupujeme ${city.locative}`} />
-  <Sections show="steps" />
   <SellForm defaultLocation={city.name} heading={`Výkup starožitností ${city.name}`} />
+  <Sections show="categories" title={`Co vykupujeme ${city.locative}`} />
+  <CtaBand title={`Prodáváte ${city.locative}?`} text={`Pošlete fotky a do 24 hodin máte nabídku. Pro věci si přijedeme ${city.locative} i do okolí.`} />
+  <Sections show="steps" />
   <Faq items={faq} title={`Výkup ${city.locative} — otázky`} />
   <Sections show="cities" exclude={city.slug} title="Vykupujeme i v dalších městech" />
+  <CtaBand title="Získejte nabídku ještě dnes" variant="light" />
 </Base>

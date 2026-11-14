@@ -377,6 +377,19 @@ const { defaultLocation = '', heading = 'Prodejte své starožitnosti' } = Astro
     if (dt?.files) addFiles(dt.files);
   });
 
+  // ---------- Předvyplnění z rychlé nabídky v hero ----------
+  window.addEventListener('rv:prefill', (e) => {
+    const { phone, files: incoming } = (e as CustomEvent<{ phone?: string; files?: File[] }>).detail || {};
+    if (phone) {
+      phoneInput.value = phone;
+      phoneInput.dispatchEvent(new Event('input'));
+    }
+    if (incoming?.length) addFiles(incoming);
+    loadLibs();
+    $('formular').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    setTimeout(() => $<HTMLInputElement>('f-name').focus({ preventScroll: true }), 600);
+  });
+
   // ---------- E-mail ----------
   emailDomain.addEventListener('change', () => {
     const other = emailDomain.value === 'other';
