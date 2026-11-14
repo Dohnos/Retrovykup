@@ -1,11 +1,8 @@
 @import 'tailwindcss';
 @import '@fontsource-variable/inter';
-@import '@fontsource/instrument-serif/400.css';
-@import '@fontsource/instrument-serif/400-italic.css';
 
 @theme {
   --font-sans: 'Inter Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --font-display: 'Instrument Serif', ui-serif, Georgia, serif;
 
   --color-ink: #0a0a0a;
   --color-paper: #ffffff;
@@ -97,7 +94,7 @@
   @apply text-xs font-semibold tracking-[0.2em] text-muted uppercase;
 }
 @utility h-display {
-  @apply font-display leading-[0.95] tracking-tight;
+  @apply font-sans leading-[1.02] font-semibold tracking-[-0.035em] text-balance;
 }
 
 /* Formulářové prvky */
@@ -107,6 +104,12 @@
 }
 @utility label {
   @apply mb-2 block text-sm font-medium;
+}
+
+/* Zvýraznění v nadpisech: bez kurzívy, jen tlumenější barva (jedno písmo na celém webu) */
+:is(h1, h2, h3, .h-display) em {
+  font-style: normal;
+  color: color-mix(in srgb, currentColor 48%, transparent);
 }
 
 /* Šipka v tlačítku se při hoveru posune */

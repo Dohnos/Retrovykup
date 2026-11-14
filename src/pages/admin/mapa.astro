@@ -410,7 +410,7 @@ import { STATUS_SHORT } from '../../lib/admin-labels';
               : '—'
           }</p>
           <p class="mb-1.5 text-xs">📍 ${escapeHtml(lead.location || '—')}</p>
-          <p class="mb-2 rounded-xl bg-mist px-2 py-1.5 text-xs text-muted italic">„${escapeHtml(short)}“</p>
+          <p class="mb-2 rounded-xl bg-mist px-2 py-1.5 text-xs text-muted">„${escapeHtml(short)}“</p>
           ${thumbs ? `<div class="mb-2 flex gap-1">${thumbs}${more}</div>` : ''}
           <div class="flex items-center gap-1.5">
             <a href="/admin#lead-${encodeURIComponent(lead.id)}" class="rounded-full bg-ink px-3 py-1.5 text-[11px] !text-white">🔍 Detail v adminu</a>

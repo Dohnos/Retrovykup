@@ -262,7 +262,7 @@ import { STATUS_LABELS } from '../lib/admin-labels';
         <div class="truncate">📍 ${escapeHtml(lead.location || '—')}</div>
         <div>💰 ${escapeHtml(price)} · 🖼️ ${lead.photos_count || 0}</div>
       </div>
-      <p class="mt-4 rounded-2xl bg-mist px-4 py-3 text-sm text-muted italic">„${escapeHtml(shortMsg)}“</p>
+      <p class="mt-4 rounded-2xl bg-mist px-4 py-3 text-sm text-muted">„${escapeHtml(shortMsg)}“</p>
       <div class="mt-4 flex flex-wrap items-center gap-2" data-stop>
         <select data-status="${id}" class="rounded-full border border-line bg-paper px-3 py-2 text-sm outline-none focus:border-ink">
           ${Object.entries(STATUS_LABELS)

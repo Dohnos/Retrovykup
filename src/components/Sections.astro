@@ -20,7 +20,7 @@ const marqueeItems = ['Nábytek', 'Obrazy', 'Porcelán', 'Sklo', 'Lustry', 'Hodi
     <div class="overflow-hidden border-y border-line py-5" aria-hidden="true">
       <div class="animate-marquee flex w-max gap-10 whitespace-nowrap">
         {[...marqueeItems, ...marqueeItems].map((t) => (
-          <span class="flex items-center gap-10 font-display text-3xl italic sm:text-4xl">
+          <span class="flex items-center gap-10 text-2xl font-semibold tracking-tight sm:text-3xl">
             {t}
             <span class="size-2 rounded-full bg-ink" />
           </span>
@@ -55,7 +55,7 @@ const marqueeItems = ['Nábytek', 'Obrazy', 'Porcelán', 'Sklo', 'Lustry', 'Hodi
         <div class="flex flex-col justify-between gap-6 md:flex-row md:items-end">
           <div>
             <p class="eyebrow reveal">Co vykupujeme</p>
-            <h2 class="h-display reveal mt-3 max-w-2xl text-5xl sm:text-6xl" style="--d:80ms">
+            <h2 class="h-display reveal mt-3 max-w-2xl text-4xl sm:text-5xl" style="--d:80ms">
               {title ?? (
                 <>
                   Starožitnosti a retro <em>do roku 1989</em>
@@ -92,7 +92,7 @@ const marqueeItems = ['Nábytek', 'Obrazy', 'Porcelán', 'Sklo', 'Lustry', 'Hodi
     <section class="py-20">
       <div class="container-x">
         <p class="eyebrow reveal">Jak to funguje</p>
-        <h2 class="h-display reveal mt-3 max-w-2xl text-5xl sm:text-6xl" style="--d:80ms">
+        <h2 class="h-display reveal mt-3 max-w-2xl text-4xl sm:text-5xl" style="--d:80ms">
           {title ?? (
             <>
               Čtyři kroky. <em>Žádné starosti.</em>
@@ -102,7 +102,7 @@ const marqueeItems = ['Nábytek', 'Obrazy', 'Porcelán', 'Sklo', 'Lustry', 'Hodi
         <ol class="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           {steps.map((s, i) => (
             <li class="card card-hover group reveal relative overflow-hidden" style={`--d:${i * 90}ms`}>
-              <span class="pointer-events-none absolute -top-4 -right-1 font-display text-[7rem] leading-none text-ink/[0.06] transition-transform duration-700 ease-(--ease-spring) group-hover:-translate-y-2">
+              <span class="pointer-events-none absolute -top-3 right-1 text-[6rem] leading-none font-bold tracking-tighter text-ink/[0.06] transition-transform duration-700 ease-(--ease-spring) group-hover:-translate-y-2">
                 {i + 1}
               </span>
               <span class="icon-bubble">
@@ -123,7 +123,7 @@ const marqueeItems = ['Nábytek', 'Obrazy', 'Porcelán', 'Sklo', 'Lustry', 'Hodi
     <section class="py-20">
       <div class="container-x">
         <p class="eyebrow reveal">Výkup ve vašem městě</p>
-        <h2 class="h-display reveal mt-3 max-w-2xl text-5xl sm:text-6xl" style="--d:80ms">
+        <h2 class="h-display reveal mt-3 max-w-2xl text-4xl sm:text-5xl" style="--d:80ms">
           {title ?? (
             <>
               Přijedeme <em>kamkoliv</em> v ČR

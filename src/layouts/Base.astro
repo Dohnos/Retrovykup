@@ -6,6 +6,8 @@ import FloatingContact from '../components/FloatingContact.astro';
 import SuccessModal from '../components/SuccessModal.astro';
 import { site } from '../data/site';
 import { cleanPath } from '../lib/path';
+import interLatin from '@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url';
+import interLatinExt from '@fontsource-variable/inter/files/inter-latin-ext-wght-normal.woff2?url';
 
 interface Props {
   title: string;
@@ -91,6 +93,10 @@ const allSchema = bare || noindex ? [] : [orgSchema, websiteSchema, ...(breadcru
     <meta name="description" content={description} />
     <meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large, max-snippet:-1'} />
     {!noindex && <link rel="canonical" href={canonical} />}
+
+    <!-- Jediné písmo webu (Inter) – přednačtení = rychlejší vykreslení textu -->
+    <link rel="preload" href={interLatin} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={interLatinExt} as="font" type="font/woff2" crossorigin />
 
     <!-- Ikony a PWA -->
     <link rel="icon" href="/favicon.ico" sizes="32x32" />

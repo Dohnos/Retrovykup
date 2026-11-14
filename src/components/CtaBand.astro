@@ -23,10 +23,10 @@ const dark = variant === 'dark';
         dark ? 'grain bg-ink text-paper' : 'border border-line bg-mist',
       ]}>
       <div class="relative">
-        <h2 class="h-display text-4xl sm:text-5xl">{title}</h2>
+        <h2 class="h-display text-3xl sm:text-4xl">{title}</h2>
         <p class:list={['mt-3 max-w-xl', dark ? 'text-white/60' : 'text-muted']}>{text}</p>
       </div>
-      <div class="relative flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
+      <div class="relative flex w-full shrink-0 flex-col gap-3 sm:w-auto sm:flex-row [&>a]:whitespace-nowrap">
         <a href="/#formular" data-cta class:list={[dark ? 'btn-light' : 'btn-primary', 'px-7 py-4 text-base']}>
           <Icon name="camera" class="size-5" />
           Získat nabídku

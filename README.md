@@ -5,7 +5,7 @@ Výkup starožitností po celé ČR — statický web v **Astro** (rychlé nač�
 ## 🧱 Stack
 
 - ⚡ **Astro** (statický výstup, 0 kB JS kromě formuláře) + **Tailwind CSS v4**
-- 🔤 Fonty Inter + Instrument Serif self-hostované (žádné Google Fonts requesty)
+- 🔤 Jediné písmo: Inter (self-hostované + preload, žádné Google Fonts requesty)
 - 🎨 Ikony Lucide jako inline SVG (vykreslené při buildu)
 - 🔥 Firebase (Firestore + Auth) — leady a admin
 - 🖼️ Cloudinary — nahrávání fotek (komprese v prohlížeči)
@@ -42,8 +42,9 @@ V repozitáři nejsou žádné klíče. Bezpečnostní pravidla Firestore jsou v
 
 ## 🎨 Brand
 
-- **Značka:** černý kruh = ciferník (čas, historie) + kurzivní serifové „R“ (Instrument Serif). Komponenta `BrandMark.astro`, data v `src/data/brand.ts`.
-- **Logo:** „RETRO“ (Inter, prostrkané) + „vykup“ (Instrument Serif kurzíva), podtitul „Výkup starožitností“.
+- **Značka:** černý kruh = ciferník (čas, historie) + tučné „R“ z Inter. Komponenta `BrandMark.astro`, data v `src/data/brand.ts`.
+- **Logo:** „RETRO“ (Inter ExtraBold) + „VYKUP“ (Inter Light), podtitul „Výkup starožitností“.
+- **Písmo:** jen Inter — nadpisy SemiBold s těsným prostrkáním, zvýraznění šedou barvou (bez kurzívy).
 - **Barvy:** Ink `#0a0a0a` · Paper `#ffffff` · Mist `#f4f4f4` · Line `#e6e6e6` · Muted `#6b6b6b`.
 - **Soubory v `public/`:** `favicon.svg` (s tmavým režimem), `favicon.ico`, `apple-touch-icon.png`, `icon-192/512.png`, `icon-maskable-512.png`, `logo.svg`, `og.png` (1200×630 pro sdílení), `site.webmanifest`.
 
