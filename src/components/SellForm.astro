@@ -264,18 +264,6 @@ const { defaultLocation = '', heading = 'Prodejte své starožitnosti' } = Astro
               <Icon name="arrow-right" class="arrow size-5" />
             </button>
           </form>
-
-          <!-- Úspěch -->
-          <div id="f-success" class="hidden py-10 text-center" aria-live="polite">
-            <div class="mx-auto grid size-20 place-items-center rounded-full bg-ink text-paper">
-              <Icon name="check" class="size-9" strokeWidth={2.5} />
-            </div>
-            <h3 class="h-display mt-6 text-4xl">Děkujeme!</h3>
-            <p class="mt-3 text-muted">
-              Poptávka <strong id="f-success-id" class="text-ink"></strong> dorazila. Ozveme se do 24 hodin.
-            </p>
-            <button id="f-again" type="button" class="btn-ghost mt-8">Odeslat další poptávku</button>
-          </div>
         </div>
       </div>
     </div>
@@ -283,7 +271,7 @@ const { defaultLocation = '', heading = 'Prodejte své starožitnosti' } = Astro
 </section>
 
 <script>
-  import { firebaseConfig, cloudinary, assertEnv } from '../lib/env';
+  import { newLeadId, preloadLeadLibs, leadEnvReady, submitLead, showSuccess } from '../lib/lead';
 
   const MAX_FILES = 20;
   const form0 = document.getElementById('sell-form')!;
@@ -315,15 +303,8 @@ const { defaultLocation = '', heading = 'Prodejte své starožitnosti' } = Astro
   const priceInput = $<HTMLInputElement>('f-price');
 
   let files: File[] = [];
-  const newId = () => Math.floor(100000 + Math.random() * 900000);
-  let vykupId = newId();
-
-  // Těžké knihovny načteme až když uživatel začne formulář vyplňovat → rychlé první načtení stránky
-  let libs: Promise<[typeof import('compressorjs'), typeof import('firebase/app'), typeof import('firebase/firestore/lite')]> | null =
-    null;
-  const loadLibs = () =>
-    (libs ??= Promise.all([import('compressorjs'), import('firebase/app'), import('firebase/firestore/lite')]));
-  form.addEventListener('focusin', () => loadLibs(), { once: true });
+  let vykupId = newLeadId();
+  form.addEventListener('focusin', () => preloadLeadLibs(), { once: true });
 
   // ---------- Fotky ----------
   const updateCount = () => {
@@ -385,7 +366,7 @@ const { defaultLocation = '', heading = 'Prodejte své starožitnosti' } = Astro
       phoneInput.dispatchEvent(new Event('input'));
     }
     if (incoming?.length) addFiles(incoming);
-    loadLibs();
+    preloadLeadLibs();
     $('formular').scrollIntoView({ behavior: 'smooth', block: 'start' });
     setTimeout(() => $<HTMLInputElement>('f-name').focus({ preventScroll: true }), 600);
   });
@@ -480,53 +461,6 @@ const { defaultLocation = '', heading = 'Prodejte své starožitnosti' } = Astro
     progressText.textContent = `Nahrávám fotky… ${pct} %`;
   }
 
-  async function uploadPhotos(Compressor: (typeof import('compressorjs'))['default']) {
-    if (!files.length) return { urls: [] as string[], folderUrl: null as string | null };
-    progress.classList.remove('hidden');
-    setProgress(0);
-    const date = new Date().toISOString().slice(0, 10);
-    const folder = `retrovykup/vykup_${vykupId}_${date}`;
-    let done = 0;
-
-    const urls = await Promise.all(
-      files.map(
-        (file, i) =>
-          new Promise<string>((resolve, reject) => {
-            new Compressor(file, {
-              quality: 0.6,
-              maxWidth: 1600,
-              maxHeight: 1600,
-              async success(compressed) {
-                try {
-                  const fd = new FormData();
-                  fd.append('file', compressed);
-                  fd.append('upload_preset', cloudinary.uploadPreset);
-                  fd.append('folder', folder);
-                  fd.append('public_id', `foto_${i + 1}`);
-                  const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudinary.cloudName}/image/upload`, {
-                    method: 'POST',
-                    body: fd,
-                  });
-                  const json = await res.json();
-                  if (!res.ok || !json.secure_url) throw new Error(json?.error?.message || 'Upload selhal');
-                  done++;
-                  setProgress(Math.round((done / files.length) * 100));
-                  resolve(json.secure_url as string);
-                } catch (err) {
-                  reject(err);
-                }
-              },
-              error: reject,
-            });
-          }),
-      ),
-    );
-    return {
-      urls,
-      folderUrl: `https://console.cloudinary.com/console/c-${cloudinary.cloudName}/media_library/folders/${folder}`,
-    };
-  }
-
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     errorBox.classList.add('hidden');
@@ -546,7 +480,7 @@ const { defaultLocation = '', heading = 'Prodejte své starožitnosti' } = Astro
       phoneInput.focus();
       return showError('Zadejte prosím celé telefonní číslo (9 číslic).');
     }
-    if (!assertEnv(firebaseConfig, 'Firebase') || (files.length && !assertEnv(cloudinary, 'Cloudinary'))) {
+    if (!leadEnvReady(files.length > 0)) {
       return showError('Formulář teď není dostupný. Zavolejte nám prosím na 603 538 440.');
     }
 
@@ -554,11 +488,6 @@ const { defaultLocation = '', heading = 'Prodejte své starožitnosti' } = Astro
     submitLabel.textContent = 'Odesílám…';
 
     try {
-      const [{ default: Compressor }, { initializeApp, getApps }, { getFirestore, collection, addDoc, serverTimestamp, Timestamp }] =
-        await loadLibs();
-
-      const upload = await uploadPhotos(Compressor);
-
       const fd = new FormData(form);
       let domain = String(fd.get('emailDomain') || '@seznam.cz');
       if (domain === 'other') {
@@ -566,34 +495,29 @@ const { defaultLocation = '', heading = 'Prodejte své starožitnosti' } = Astro
         if (domain && !domain.startsWith('@')) domain = `@${domain}`;
       }
       const priceOption = String(fd.get('desiredPriceOption') || 'offer');
+      if (files.length) progress.classList.remove('hidden');
 
-      const app = getApps()[0] ?? initializeApp(firebaseConfig);
-      await addDoc(collection(getFirestore(app), 'leads'), {
-        name: String(fd.get('name') || '').trim(),
-        email: `${String(fd.get('emailUser') || '').trim()}${domain}`,
-        phone: String(fd.get('phone') || '').trim(),
-        location: String(fd.get('location') || '').trim(),
-        message: String(fd.get('message') || '').trim(),
-        desiredPriceOption: priceOption,
-        fixedPriceAmount: priceOption === 'fixed' ? String(fd.get('fixedPriceAmount') || '') : 'Nezadáno',
-        photos_count: upload.urls.length,
-        photos_urls: upload.urls,
-        cloudinary_folder: upload.folderUrl || 'Bez fotografií',
-        vykup_id: vykupId,
+      await submitLead({
+        id: vykupId,
+        fields: {
+          name: String(fd.get('name') || '').trim(),
+          email: `${String(fd.get('emailUser') || '').trim()}${domain}`,
+          phone: String(fd.get('phone') || '').trim(),
+          location: String(fd.get('location') || '').trim(),
+          message: String(fd.get('message') || '').trim(),
+          desiredPriceOption: priceOption,
+          fixedPriceAmount: priceOption === 'fixed' ? String(fd.get('fixedPriceAmount') || '') : 'Nezadáno',
+        },
+        files,
+        consentText: CONSENT_TEXT,
+        consentVersion: PRIVACY_VERSION,
+        retentionDays: RETENTION_DAYS,
         source: location.pathname,
-        status: 'nova',
-        consent: true,
-        consent_version: PRIVACY_VERSION,
-        consent_text: CONSENT_TEXT,
-        // Automatické smazání (zapněte TTL politiku na poli expireAt ve Firestore)
-        expireAt: Timestamp.fromMillis(Date.now() + RETENTION_DAYS * 86_400_000),
-        timestamp: serverTimestamp(),
+        onProgress: setProgress,
       });
 
-      $('f-success-id').textContent = `#${vykupId}`;
-      form.classList.add('hidden');
-      $('f-success').classList.remove('hidden');
-      $('formular').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      showSuccess(vykupId);
+      resetForm();
     } catch (err) {
       console.error(err);
       showError('Odeslání se nezdařilo. Zkuste to prosím znovu, nebo nám zavolejte na 603 538 440.');
@@ -604,15 +528,19 @@ const { defaultLocation = '', heading = 'Prodejte své starožitnosti' } = Astro
     }
   });
 
-  $('f-again').addEventListener('click', () => {
+  function resetForm() {
     form.reset();
     files = [];
     preview.innerHTML = '';
     updateCount();
     priceWrap.classList.add('hidden');
     emailCustom.classList.add('hidden');
-    vykupId = newId();
-    $('f-success').classList.add('hidden');
-    form.classList.remove('hidden');
+    vykupId = newLeadId();
+  }
+
+  // „Poslat další“ v modalu → zpět na formulář
+  window.addEventListener('rv:again', () => {
+    $('formular').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    setTimeout(() => $<HTMLInputElement>('f-name').focus({ preventScroll: true }), 600);
   });
 </script>

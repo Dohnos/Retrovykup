@@ -3,11 +3,13 @@ export const site = {
   url: 'https://retrovykup.cz',
   phone: '603 538 440',
   phoneHref: 'tel:+420603538440',
+  phoneIntl: '+420603538440',
   whatsappHref: 'https://wa.me/420603538440',
   email: 'retrovykup@seznam.cz',
-  heroImage: 'https://i.postimg.cc/W4MM6mCd/Main.webp',
+  ogImage: '/og.png',
+  ogImageAlt: 'Retrovykup — výkup starožitností po celé ČR: nábytek, lustry, porcelán, hodiny, obrazy, militaria',
   description:
-    'Výkup starožitností a retro předmětů po celé ČR. Nábytek, obrazy, porcelán, sklo, lustry, hračky i militaria. Férové ocenění do 24 hodin, platba ihned, diskrétně.',
+    'Výkup starožitností po celé ČR. Pošlete fotky a do 24 h máte férovou nabídku. Nábytek, obrazy, porcelán, lustry, hodiny, militaria. Platba ihned.',
 };
 
 /**
@@ -30,10 +32,9 @@ export const privacy = {
   retentionText: '6 měsíců',
 };
 
+/** Hlavní menu — jen to podstatné, zbytek řeší CTA */
 export const nav = [
   { href: '/vykup', label: 'Jak to funguje' },
-  { href: '/galerie', label: 'Galerie' },
-  { href: '/vykup-starozitnosti', label: 'Města' },
   { href: '/#faq', label: 'FAQ' },
 ];
 

@@ -40,6 +40,19 @@ npm run build          # výstup do dist/
 Všechny klíče jsou ve **Vercel → Project → Settings → Environment Variables** (seznam viz `.env.example`).
 V repozitáři nejsou žádné klíče. Bezpečnostní pravidla Firestore jsou v `firestore.rules`.
 
+## 🎨 Brand
+
+- **Značka:** černý kruh = ciferník (čas, historie) + kurzivní serifové „R“ (Instrument Serif). Komponenta `BrandMark.astro`, data v `src/data/brand.ts`.
+- **Logo:** „RETRO“ (Inter, prostrkané) + „vykup“ (Instrument Serif kurzíva), podtitul „Výkup starožitností“.
+- **Barvy:** Ink `#0a0a0a` · Paper `#ffffff` · Mist `#f4f4f4` · Line `#e6e6e6` · Muted `#6b6b6b`.
+- **Soubory v `public/`:** `favicon.svg` (s tmavým režimem), `favicon.ico`, `apple-touch-icon.png`, `icon-192/512.png`, `icon-maskable-512.png`, `logo.svg`, `og.png` (1200×630 pro sdílení), `site.webmanifest`.
+
+## 🔍 SEO
+
+- Unikátní title (≤ 62 znaků) a description (120–160 znaků) na každé stránce, canonical, Open Graph + Twitter s `og.png`.
+- JSON-LD: Organization, WebSite, Service, FAQPage, BreadcrumbList, ItemList.
+- `/sitemap.xml` + `robots.txt`; admin a 404 jsou `noindex`.
+
 ## 🛡️ GDPR
 
 - Stránka `/ochrana-osobnich-udaju` (+ `/gdpr` přesměrování), odkaz v patičce a u formuláře.

@@ -1,0 +1,40 @@
+---
+import { brand } from '../data/brand';
+
+interface Props {
+  class?: string;
+  /** invert = bílý kruh, černé R (na tmavém pozadí) */
+  invert?: boolean;
+  /** dial = ciferník s ryskami (pro větší velikosti) */
+  dial?: boolean;
+}
+const { class: className = 'size-9', invert = false, dial = true } = Astro.props;
+const bg = invert ? brand.paper : brand.ink;
+const fg = invert ? brand.ink : brand.paper;
+const ticks = Array.from({ length: 12 }, (_, i) => i * 30);
+---
+
+<svg viewBox="0 0 64 64" class={className} aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="32" cy="32" r="32" fill={bg}></circle>
+  {
+    dial && (
+      <g class="brand-dial" style="transform-origin:32px 32px">
+        <circle cx="32" cy="32" r="27.5" fill="none" stroke={fg} stroke-opacity=".28" stroke-width=".8" />
+        {ticks.map((a) => (
+          <line
+            x1="32"
+            y1={a % 90 === 0 ? 5.2 : 5.8}
+            x2="32"
+            y2={a % 90 === 0 ? 8.6 : 7.4}
+            stroke={fg}
+            stroke-opacity={a % 90 === 0 ? 0.9 : 0.45}
+            stroke-width={a % 90 === 0 ? 1.4 : 0.9}
+            stroke-linecap="round"
+            transform={`rotate(${a} 32 32)`}
+          />
+        ))}
+      </g>
+    )
+  }
+  <path d={brand.rPath} fill={fg}></path>
+</svg>

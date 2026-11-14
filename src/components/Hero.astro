@@ -1,35 +1,58 @@
 ---
 import Icon from './Icon.astro';
-import { site } from '../data/site';
+import { site, operator, privacy } from '../data/site';
 
 interface Props {
   eyebrow: string;
   /** Řádky nadpisu — každý se animuje zvlášť. Text v _podtržítkách_ bude kurzívou. */
   lines: string[];
   text: string;
-  image?: string;
-  imageAlt?: string;
 }
-const { eyebrow, lines, text, image = site.heroImage, imageAlt = 'Starožitnosti' } = Astro.props;
+const { eyebrow, lines, text } = Astro.props;
 
 const fmt = (s: string) => s.replace(/_(.+?)_/g, '<em>$1</em>');
+const ticks = Array.from({ length: 60 }, (_, i) => i * 6);
+const tiles = [
+  { icon: 'armchair', label: 'Nábytek', pos: '-top-9 left-[8%] -rotate-6', d: '0s' },
+  { icon: 'clock-3', label: 'Hodiny', pos: '-top-7 right-[22%] rotate-6', d: '0.6s' },
+  { icon: 'lamp-ceiling', label: 'Lustry', pos: '-right-9 top-[18%] rotate-3', d: '1.2s' },
+  { icon: 'palette', label: 'Obrazy', pos: '-right-8 bottom-[30%] -rotate-3', d: '1.8s' },
+  { icon: 'amphora', label: 'Porcelán', pos: '-bottom-8 left-[4%] rotate-3', d: '2.4s' },
+  { icon: 'medal', label: 'Militaria', pos: '-bottom-8 right-[6%] -rotate-6', d: '3s' },
+];
 ---
 
 <section class="px-2 pt-2 sm:px-3">
   <div class="grain relative overflow-hidden rounded-[2rem] bg-ink text-paper sm:rounded-[2.5rem]">
-    <!-- Pozadí: černobílá fotka + přechod -->
-    <img
-      src={image}
-      alt={imageAlt}
-      width="1600"
-      height="1000"
-      fetchpriority="high"
-      decoding="async"
-      class="hero-img absolute inset-0 -z-10 size-full object-cover opacity-45 grayscale"
-    />
-    <div class="absolute inset-0 -z-10 bg-gradient-to-r from-ink via-ink/85 to-ink/40"></div>
+    <!-- Brand vizuál: ciferník (čas = historie) -->
+    <svg
+      class="dial pointer-events-none absolute top-1/2 -right-[30%] -z-10 aspect-square w-[150%] -translate-y-1/2 opacity-[0.09] sm:-right-[12%] sm:w-[85%] lg:-right-[6%] lg:w-[62%]"
+      viewBox="0 0 400 400"
+      aria-hidden="true">
+      <circle cx="200" cy="200" r="196" fill="none" stroke="#fff" stroke-width="1"></circle>
+      <circle cx="200" cy="200" r="150" fill="none" stroke="#fff" stroke-width="1"></circle>
+      <circle cx="200" cy="200" r="96" fill="none" stroke="#fff" stroke-width="1"></circle>
+      {
+        ticks.map((a) => (
+          <line
+            x1="200"
+            y1={a % 30 === 0 ? 8 : 10}
+            x2="200"
+            y2={a % 30 === 0 ? 30 : 18}
+            stroke="#fff"
+            stroke-width={a % 30 === 0 ? 3 : 1.2}
+            stroke-linecap="round"
+            transform={`rotate(${a} 200 200)`}
+          />
+        ))
+      }
+      <g class="hand" style="transform-origin:200px 200px">
+        <line x1="200" y1="200" x2="200" y2="70" stroke="#fff" stroke-width="3" stroke-linecap="round"></line>
+      </g>
+      <circle cx="200" cy="200" r="6" fill="#fff"></circle>
+    </svg>
 
-    <div class="container-x grid items-center gap-8 py-8 sm:py-12 lg:min-h-[min(78svh,720px)] lg:grid-cols-[1.15fr_0.85fr] lg:gap-12 lg:py-14">
+    <div class="container-x grid items-center gap-8 py-8 sm:py-12 lg:min-h-[min(80svh,740px)] lg:grid-cols-[1.1fr_0.9fr] lg:gap-16 lg:py-14">
       <!-- Text + CTA -->
       <div>
         <span class="rise inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3.5 py-1.5 text-xs font-medium backdrop-blur">
@@ -47,7 +70,7 @@ const fmt = (s: string) => s.replace(/_(.+?)_/g, '<em>$1</em>');
         <p class="rise mt-5 max-w-xl text-base leading-relaxed text-white/70 sm:text-lg" style="--d:380ms">{text}</p>
 
         <div class="rise mt-7 flex flex-col gap-3 sm:flex-row" style="--d:460ms">
-          <a href="#formular" data-cta class="btn-light group px-7 py-4 text-base shadow-[0_10px_40px_-10px_rgba(255,255,255,0.5)]">
+          <a href="#formular" data-cta class="btn-light px-7 py-4 text-base shadow-[0_10px_40px_-10px_rgba(255,255,255,0.5)]">
             <Icon name="camera" class="size-5" />
             Získat nabídku zdarma
             <Icon name="arrow-right" class="arrow size-5" />
@@ -64,7 +87,7 @@ const fmt = (s: string) => s.replace(/_(.+?)_/g, '<em>$1</em>');
               ['clock', 'Nabídka do 24 h'],
               ['banknote', 'Platba ihned'],
               ['truck', 'Odvoz zdarma'],
-              ['badge-check', 'Nezávazně'],
+              ['map-pin', 'Po celé ČR'],
             ].map(([icon, t]) => (
               <li class="flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1.5">
                 <Icon name={icon} class="size-3.5" /> {t}
@@ -75,20 +98,34 @@ const fmt = (s: string) => s.replace(/_(.+?)_/g, '<em>$1</em>');
       </div>
 
       <!-- Rychlá nabídka -->
-      <div class="rise" style="--d:300ms">
-        <form id="quick-offer" class="rounded-[1.75rem] bg-paper p-5 text-ink shadow-2xl sm:p-7" novalidate>
+      <div class="rise relative" style="--d:300ms">
+        <!-- plovoucí dlaždice s předměty (desktop) -->
+        {
+          tiles.map((t) => (
+            <span
+              class={`tile pointer-events-none absolute z-20 hidden flex-col items-center gap-1 rounded-2xl bg-paper px-3 py-2.5 text-ink shadow-xl xl:flex ${t.pos}`}
+              style={`animation-delay:${t.d}`}
+              aria-hidden="true">
+              <Icon name={t.icon} class="size-6" strokeWidth={1.5} />
+              <span class="text-[10px] font-semibold">{t.label}</span>
+            </span>
+          ))
+        }
+
+        <form id="quick-offer" class="relative z-10 rounded-[1.75rem] bg-paper p-5 text-ink shadow-2xl sm:p-7" novalidate>
           <div class="flex items-center justify-between gap-3">
             <div>
               <p class="text-lg font-semibold">Rychlá nabídka</p>
-              <p class="text-sm text-muted">Fotka + telefon = cena do 24 h</p>
+              <p class="text-sm text-muted">Pošlete jen fotky a telefon</p>
             </div>
-            <span class="grid size-14 shrink-0 place-items-center rounded-full bg-ink text-center text-paper">
+            <span class="grid size-14 shrink-0 place-items-center rounded-full bg-ink text-paper">
               <span class="font-display text-2xl leading-none italic">24h</span>
             </span>
           </div>
 
           <label
             for="q-photos"
+            id="q-drop"
             class="group mt-5 flex cursor-pointer items-center gap-4 rounded-3xl border-2 border-dashed border-line bg-mist p-4 transition-all duration-300 hover:border-ink hover:bg-paper">
             <span class="icon-bubble"><Icon name="image-plus" class="size-5" /></span>
             <span class="min-w-0">
@@ -97,6 +134,7 @@ const fmt = (s: string) => s.replace(/_(.+?)_/g, '<em>$1</em>');
             </span>
             <input id="q-photos" type="file" accept="image/*" multiple class="sr-only" />
           </label>
+          <div id="q-preview" class="mt-2 hidden grid-cols-6 gap-1.5"></div>
 
           <div class="relative mt-3">
             <Icon name="phone" class="pointer-events-none absolute top-1/2 left-4 size-4 -translate-y-1/2 text-muted" />
@@ -111,13 +149,30 @@ const fmt = (s: string) => s.replace(/_(.+?)_/g, '<em>$1</em>');
             />
           </div>
 
-          <button type="submit" class="btn-primary mt-3 w-full py-4 text-base">
-            Pokračovat k nabídce
+          <label class="mt-3 flex cursor-pointer items-start gap-2.5 text-xs leading-relaxed">
+            <input id="q-consent" type="checkbox" class="peer sr-only" />
+            <span
+              class="mt-px grid size-5 shrink-0 place-items-center rounded-md border-2 border-ink text-transparent transition-all peer-checked:bg-ink peer-checked:text-paper peer-focus-visible:ring-4 peer-focus-visible:ring-ink/15"
+              aria-hidden="true">
+              <Icon name="check" class="size-3.5" strokeWidth={3} />
+            </span>
+            <span id="q-consent-text">
+              Souhlasím se zpracováním telefonu a fotografií správcem {operator.name || 'Retrovykup'} za účelem ocenění a výkupu,
+              nejdéle {privacy.retentionText}. <a href={privacy.url} target="_blank" class="font-medium underline underline-offset-2"
+                >Zásady GDPR</a
+              >
+            </span>
+          </label>
+
+          <p id="q-error" class="mt-3 hidden rounded-2xl bg-mist px-4 py-2.5 text-sm" role="alert"></p>
+
+          <button id="q-submit" type="submit" class="btn-primary mt-3 w-full py-4 text-base">
+            <span id="q-submit-label">Odeslat fotky k ocenění</span>
             <Icon name="arrow-right" class="arrow size-5" />
           </button>
 
-          <p class="mt-3 flex items-center justify-center gap-1.5 text-center text-xs text-muted">
-            <Icon name="shield-check" class="size-3.5" /> Zdarma · nezávazně · údaje chráníme dle GDPR
+          <p class="mt-3 text-center text-xs text-muted">
+            Chcete napsat víc? <a href="#formular" class="font-medium text-ink underline underline-offset-2">Celý formulář</a>
           </p>
         </form>
       </div>
@@ -126,41 +181,119 @@ const fmt = (s: string) => s.replace(/_(.+?)_/g, '<em>$1</em>');
 </section>
 
 <style>
-  .hero-img {
-    animation: heroZoom 18s ease-out both;
+  .dial .hand {
+    animation: hero-hand 60s linear infinite;
   }
-  @keyframes heroZoom {
-    from {
-      transform: scale(1.12);
-    }
+  .tile {
+    animation: hero-float 6s ease-in-out infinite;
+  }
+  @keyframes hero-hand {
     to {
-      transform: scale(1);
+      transform: rotate(360deg);
+    }
+  }
+  @keyframes hero-float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
     }
   }
 </style>
 
 <script>
-  const quick = document.getElementById('quick-offer') as HTMLFormElement | null;
-  if (quick) {
-    const photos = document.getElementById('q-photos') as HTMLInputElement;
-    const phone = document.getElementById('q-phone') as HTMLInputElement;
-    const label = document.getElementById('q-photos-label')!;
+  import { newLeadId, preloadLeadLibs, leadEnvReady, submitLead, showSuccess } from '../lib/lead';
+  import { privacy } from '../data/site';
+
+  const MAX = 20;
+  const form = document.getElementById('quick-offer') as HTMLFormElement | null;
+  if (form) {
+    const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T;
+    const photos = $<HTMLInputElement>('q-photos');
+    const phone = $<HTMLInputElement>('q-phone');
+    const consent = $<HTMLInputElement>('q-consent');
+    const label = $('q-photos-label');
+    const preview = $('q-preview');
+    const err = $('q-error');
+    const btn = $<HTMLButtonElement>('q-submit');
+    const btnLabel = $('q-submit-label');
     let picked: File[] = [];
 
-    photos.addEventListener('change', () => {
-      picked = Array.from(photos.files ?? []);
+    form.addEventListener('focusin', () => preloadLeadLibs(), { once: true });
+
+    const render = () => {
       label.textContent = picked.length ? `✓ Vybráno fotek: ${picked.length}` : 'Nahrát / vyfotit předměty';
+      preview.innerHTML = '';
+      preview.classList.toggle('hidden', !picked.length);
+      preview.classList.toggle('grid', picked.length > 0);
+      picked.slice(0, 6).forEach((f) => {
+        const img = document.createElement('img');
+        img.src = URL.createObjectURL(f);
+        img.alt = '';
+        img.className = 'aspect-square w-full rounded-lg object-cover';
+        preview.appendChild(img);
+      });
+    };
+
+    photos.addEventListener('change', () => {
+      picked = [...picked, ...Array.from(photos.files ?? [])].slice(0, MAX);
+      photos.value = '';
+      render();
     });
     phone.addEventListener('input', () => {
       const d = phone.value.replace(/\D/g, '').replace(/^420/, '').slice(0, 9);
       phone.value = d.replace(/(\d{3})(?=\d)/g, '$1 ').trim();
     });
-    quick.addEventListener('submit', (e) => {
+
+    const fail = (msg: string, focus?: HTMLElement) => {
+      err.textContent = msg;
+      err.classList.remove('hidden');
+      focus?.focus();
+    };
+
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      window.dispatchEvent(new CustomEvent('rv:prefill', { detail: { phone: phone.value, files: picked } }));
-      picked = [];
-      photos.value = '';
-      label.textContent = 'Nahrát / vyfotit předměty';
+      err.classList.add('hidden');
+      if (!picked.length) return fail('Přidejte prosím alespoň jednu fotku.', $('q-drop'));
+      if (phone.value.replace(/\D/g, '').length < 9) return fail('Zadejte celé telefonní číslo (9 číslic), ať vám můžeme zavolat.', phone);
+      if (!consent.checked) return fail('Pro odeslání potvrďte souhlas se zpracováním údajů.', consent);
+      if (!leadEnvReady(true)) return fail('Odeslání teď není dostupné. Zavolejte nám prosím na 603 538 440.');
+
+      const id = newLeadId();
+      btn.disabled = true;
+      btnLabel.textContent = 'Nahrávám fotky…';
+      try {
+        await submitLead({
+          id,
+          fields: {
+            name: 'Rychlá nabídka',
+            email: '',
+            phone: phone.value.trim(),
+            location: '',
+            message: 'Rychlá nabídka z úvodu stránky — jen fotky a telefon.',
+            desiredPriceOption: 'offer',
+            fixedPriceAmount: 'Nezadáno',
+          },
+          files: picked,
+          consentText: $('q-consent-text').innerText.replace(/\s*Zásady GDPR\s*$/, '').trim(),
+          consentVersion: privacy.version,
+          retentionDays: privacy.retentionDays,
+          source: `${location.pathname} (rychlá nabídka)`,
+          onProgress: (p) => (btnLabel.textContent = `Nahrávám fotky… ${p} %`),
+        });
+        showSuccess(id);
+        form.reset();
+        picked = [];
+        render();
+      } catch (ex) {
+        console.error(ex);
+        fail('Odeslání se nezdařilo. Zkuste to prosím znovu, nebo zavolejte na 603 538 440.');
+      } finally {
+        btn.disabled = false;
+        btnLabel.textContent = 'Odeslat fotky k ocenění';
+      }
     });
   }
 </script>

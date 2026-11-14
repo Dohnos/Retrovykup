@@ -18,13 +18,14 @@ const serviceSchema = {
   '@type': 'Service',
   name: 'Výkup starožitností',
   serviceType: 'Výkup starožitností a retro předmětů',
-  provider: { '@type': 'Organization', name: site.name, url: site.url },
+  provider: { '@id': `${site.url}/#organization` },
+  description: site.description,
   areaServed: { '@type': 'Country', name: 'Česká republika' },
 };
 ---
 
 <Base
-  title="Výkup starožitností po celé ČR | Ocenění do 24 h, platba ihned | Retrovykup"
+  title="Výkup starožitností po celé ČR – nabídka do 24 h | Retrovykup"
   description={site.description}
   schema={[serviceSchema, faqSchema]}>
   <Hero

@@ -16,6 +16,12 @@ export function getStaticPaths() {
 const { city } = Astro.props as { city: City };
 const url = `${site.url}${cityUrl(city)}`;
 
+// SEO: title do ~60 znaků, description 120–160 znaků
+const longTitle = `Výkup starožitností ${city.name} – nabídka do 24 h | Retrovykup`;
+const seoTitle = longTitle.length <= 62 ? longTitle : `Výkup starožitností ${city.name} | Retrovykup`;
+const longDesc = `Výkup starožitností ${city.locative} a okolí. Pošlete fotky a do 24 h máte nabídku. Nábytek, obrazy, porcelán, lustry, militaria. Platba ihned, odvoz zdarma.`;
+const seoDesc = longDesc.length <= 160 ? longDesc : longDesc.replace(', militaria', '').replace(', odvoz zdarma', '');
+
 const faq = [
   ...city.faq,
   { q: `Jak rychle dostanu nabídku ${city.locative}?`, a: `Ocenění z fotek posíláme do 24 hodin. Termín vyzvednutí ${city.locative} domluvíme podle vašich možností.` },
@@ -29,7 +35,7 @@ const schema = [
     name: `Výkup starožitností ${city.name}`,
     serviceType: 'Výkup starožitností a retro předmětů',
     url,
-    provider: { '@type': 'Organization', name: site.name, url: site.url, telephone: '+420603538440', email: site.email },
+    provider: { '@id': `${site.url}/#organization` },
     areaServed: [
       { '@type': 'City', name: city.name, geo: { '@type': 'GeoCoordinates', latitude: city.lat, longitude: city.lon } },
       ...city.surroundings.map((s) => ({ '@type': 'Place', name: s })),
@@ -40,38 +46,34 @@ const schema = [
     '@type': 'FAQPage',
     mainEntity: faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
   },
-  {
-    '@context': 'https://schema.org',
-    '@type': 'BreadcrumbList',
-    itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Retrovykup', item: site.url },
-      { '@type': 'ListItem', position: 2, name: 'Výkup starožitností', item: `${site.url}/vykup-starozitnosti` },
-      { '@type': 'ListItem', position: 3, name: city.name, item: url },
-    ],
-  },
 ];
 ---
 
 <Base
-  title={`Výkup starožitností ${city.name} | Ocenění do 24 h, platba ihned | Retrovykup`}
-  description={`Výkup starožitností ${city.locative} a okolí. Nábytek, obrazy, sklo, porcelán, lustry, militaria i retro. Ocenění z fotek do 24 h, vyzvednutí a platba na místě.`}
+  title={seoTitle}
+  description={seoDesc}
+  imageAlt={`Výkup starožitností ${city.name} — Retrovykup`}
+  breadcrumbs={[
+    { name: 'Výkup po celé ČR', path: '/vykup-starozitnosti' },
+    { name: city.name, path: cityUrl(city) },
+  ]}
   schema={schema}>
-  <nav class="container-x pt-6 text-xs text-muted" aria-label="Drobečková navigace">
+  <Hero
+    eyebrow={`Výkup po celé ČR · ${city.name} a okolí`}
+    lines={['Výkup', 'starožitností', `_${city.name}_`]}
+    text={city.intro}
+  />
+
+  <nav class="container-x pt-5 text-xs text-muted" aria-label="Drobečková navigace">
     <ol class="flex flex-wrap items-center gap-1.5">
       <li><a href="/" class="hover:text-ink">Úvod</a></li>
       <li aria-hidden="true">/</li>
-      <li><a href="/vykup-starozitnosti" class="hover:text-ink">Výkup starožitností</a></li>
+      <li><a href="/vykup-starozitnosti" class="hover:text-ink">Výkup po celé ČR</a></li>
       <li aria-hidden="true">/</li>
       <li class="text-ink" aria-current="page">{city.name}</li>
     </ol>
   </nav>
 
-  <Hero
-    eyebrow={`${city.region} · vykupujeme ${city.locative}`}
-    lines={['Výkup', 'starožitností', `_${city.name}_`]}
-    text={city.intro}
-    imageAlt={`Výkup starožitností ${city.name}`}
-  />
 
   <Sections show="marquee" />
 

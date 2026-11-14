@@ -1,0 +1,80 @@
+---
+import Icon from './Icon.astro';
+import { site } from '../data/site';
+---
+
+<dialog
+  id="success-modal"
+  class="m-auto w-[min(92vw,30rem)] overflow-visible rounded-[2rem] bg-transparent p-0 text-ink backdrop:bg-ink/60 backdrop:backdrop-blur-sm"
+  aria-labelledby="success-title">
+  <div class="success-card relative rounded-[2rem] bg-paper p-8 text-center shadow-2xl sm:p-10">
+    <button
+      type="button"
+      data-close
+      class="absolute top-4 right-4 grid size-10 place-items-center rounded-full bg-mist transition hover:bg-line"
+      aria-label="Zavřít">
+      <Icon name="x" class="size-4" />
+    </button>
+
+    <div class="success-check mx-auto grid size-20 place-items-center rounded-full bg-ink text-paper">
+      <Icon name="check" class="size-9" strokeWidth={2.5} />
+    </div>
+    <h2 id="success-title" class="h-display mt-6 text-5xl">Odesláno!</h2>
+    <p class="mt-3 text-muted">
+      Děkujeme. Poptávka <strong id="success-id" class="text-ink"></strong> dorazila — ozveme se vám{' '}
+      <strong class="text-ink">do 24 hodin</strong>.
+    </p>
+
+    <ul class="mt-6 space-y-2 rounded-3xl bg-mist p-5 text-left text-sm">
+      <li class="flex items-center gap-3"><Icon name="search" class="size-4 shrink-0" /> Předměty teď posoudíme</li>
+      <li class="flex items-center gap-3"><Icon name="phone" class="size-4 shrink-0" /> Zavoláme nebo napíšeme s nabídkou</li>
+      <li class="flex items-center gap-3"><Icon name="truck" class="size-4 shrink-0" /> Domluvíme vyzvednutí a platbu</li>
+    </ul>
+
+    <div class="mt-7 flex flex-col gap-2.5">
+      <button type="button" id="success-again" class="btn-primary w-full py-4 text-base">
+        <Icon name="plus" class="size-5" />
+        Poslat další poptávku
+      </button>
+      <a href={site.phoneHref} class="btn-ghost w-full py-4">
+        <Icon name="phone" class="size-4" />
+        Spěchá to? Zavolejte {site.phone}
+      </a>
+    </div>
+  </div>
+</dialog>
+
+<style>
+  dialog[open] .success-card {
+    animation: pop 0.6s var(--ease-spring) both;
+  }
+  dialog[open] .success-check {
+    animation: pop 0.7s 0.15s var(--ease-spring) both;
+  }
+  @keyframes pop {
+    from {
+      opacity: 0;
+      transform: scale(0.85) translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+</style>
+
+<script>
+  const modal = document.getElementById('success-modal') as HTMLDialogElement;
+  window.addEventListener('rv:success', (e) => {
+    document.getElementById('success-id')!.textContent = `#${(e as CustomEvent<{ id: number }>).detail.id}`;
+    modal.showModal();
+  });
+  modal.querySelector('[data-close]')!.addEventListener('click', () => modal.close());
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) modal.close();
+  });
+  document.getElementById('success-again')!.addEventListener('click', () => {
+    modal.close();
+    window.dispatchEvent(new CustomEvent('rv:again'));
+  });
+</script>
