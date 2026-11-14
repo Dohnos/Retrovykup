@@ -20,6 +20,8 @@ export const operator = {
   name: '', // např. „Jan Novák“ nebo „Retrovykup s.r.o.“
   ico: '', // např. „12345678“
   address: '', // např. „Ulice 1, 110 00 Praha“
+  dic: '', // nepovinné, jen plátce DPH, např. „CZ12345678“
+  register: '', // např. „Fyzická osoba zapsaná v živnostenském rejstříku“ nebo „Zapsáno v OR u Městského soudu v Praze, oddíl C, vložka 12345“
 };
 
 /** 🔐 Ochrana osobních údajů — verze souhlasu a doba uložení */
@@ -30,6 +32,19 @@ export const privacy = {
   /** Po této době se lead automaticky smaže (po zapnutí TTL ve Firestore, viz README) */
   retentionDays: 180,
   retentionText: '6 měsíců',
+};
+
+/** 🚚 Doprava — vždy na naše náklady */
+export const shipping = {
+  title: 'Doprava je na nás',
+  text: 'Buď si pro předměty přijedeme osobně, nebo objednáme dopravu podle vašich preferencí. Dopravu platíme my — vy nic neplatíte.',
+  options: [
+    { icon: 'car', title: 'Osobní odvoz', text: 'Přijedeme, sbalíme a odneseme. Ideální pro nábytek a více kusů.' },
+    { icon: 'package', title: 'Zásilkovna', text: 'Menší předměty pošlete z nejbližšího výdejního místa nebo Z-Boxu.' },
+    { icon: 'package-check', title: 'Balíkovna', text: 'Podání na poště nebo v Balíkovně, štítek vám pošleme.' },
+    { icon: 'container', title: 'TopTrans', text: 'Nadrozměrné a těžké kusy — nábytek, lustry, obrazy.' },
+    { icon: 'boxes', title: 'A další', text: 'PPL, DPD a další dopravci podle toho, co vám vyhovuje.' },
+  ],
 };
 
 /** Hlavní menu — jen to podstatné, zbytek řeší CTA */
@@ -53,13 +68,13 @@ export const benefits = [
   { icon: 'hand-coins', title: 'Férové ocenění', text: 'Nabídneme nejlepší možnou cenu podle aktuálního trhu.' },
   { icon: 'clock', title: 'Odpověď do 24 h', text: 'Z fotek vám pošleme nabídku nejpozději do druhého dne.' },
   { icon: 'shield-check', title: 'Diskrétně', text: 'Vaše údaje ani fotky nikde nezveřejňujeme.' },
-  { icon: 'truck', title: 'Po celé ČR', text: 'Přijedeme, odneseme, odvezeme. Vy nemusíte nic.' },
+  { icon: 'truck', title: 'Doprava zdarma', text: 'Přijedeme osobně, nebo objednáme dopravu. Platíme ji my, vy nic.' },
 ];
 
 export const steps = [
   { icon: 'camera', title: 'Vyfoťte', text: 'Pár fotek z mobilu stačí. Vyplnění formuláře zabere minutu.' },
   { icon: 'search', title: 'Ocenění', text: 'Předměty posoudíme a do 24 hodin pošleme férovou nabídku.' },
-  { icon: 'truck', title: 'Vyzvednutí', text: 'Domluvíme termín, přijedeme a vše si odneseme sami.' },
+  { icon: 'truck', title: 'Doprava zdarma', text: 'Přijedeme si pro věci, nebo objednáme Zásilkovnu, Balíkovnu či TopTrans. Platíme my.' },
   { icon: 'banknote', title: 'Platba ihned', text: 'Hotově na místě, nebo převodem na účet. Jak chcete.' },
 ];
 
@@ -75,6 +90,10 @@ export const faq = [
   {
     q: 'Jak probíhá platba?',
     a: 'Po odsouhlasení nabídky platíme hotově při převzetí, nebo převodem na váš bankovní účet.',
+  },
+  {
+    q: 'Kdo platí dopravu?',
+    a: 'Vždy my. Buď si pro předměty přijedeme osobně, nebo objednáme dopravu — Zásilkovna, Balíkovna, TopTrans a další podle vašich preferencí. Vy nic neplatíte.',
   },
   {
     q: 'Vykupujete i celé pozůstalosti a vyklízíte byty?',

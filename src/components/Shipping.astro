@@ -1,0 +1,43 @@
+---
+import Icon from './Icon.astro';
+import { shipping } from '../data/site';
+---
+
+<section id="doprava" class="scroll-mt-24 py-20">
+  <div class="container-x">
+    <div class="grid gap-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
+      <div>
+        <p class="eyebrow reveal">Doprava zdarma</p>
+        <h2 class="h-display reveal mt-3 text-4xl sm:text-5xl" style="--d:80ms">
+          {shipping.title}. <em>Vy nic neplatíte.</em>
+        </h2>
+      </div>
+      <p class="reveal text-lg leading-relaxed text-muted lg:pb-1" style="--d:140ms">{shipping.text}</p>
+    </div>
+
+    <div class="mt-12 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+      {
+        shipping.options.map((o, i) => (
+          <div class:list={['card card-hover group reveal flex flex-col', i === 0 && 'bg-ink text-paper border-ink']} style={`--d:${i * 70}ms`}>
+            <span class:list={['icon-bubble', i === 0 && 'bg-paper text-ink']}>
+              <Icon name={o.icon} class="size-5" />
+            </span>
+            <h3 class="mt-5 font-semibold">{o.title}</h3>
+            <p class:list={['mt-1.5 text-sm leading-relaxed', i === 0 ? 'text-white/60' : 'text-muted']}>{o.text}</p>
+          </div>
+        ))
+      }
+    </div>
+
+    <div class="reveal mt-4 flex flex-col items-start gap-3 rounded-3xl bg-mist p-5 sm:flex-row sm:items-center sm:justify-between">
+      <p class="flex items-center gap-3 text-sm font-medium">
+        <span class="grid size-9 shrink-0 place-items-center rounded-full bg-ink text-paper"><Icon name="hand-coins" class="size-4" /></span>
+        Dopravu vždy hradíme my — ať zvolíte jakýkoliv způsob.
+      </p>
+      <a href="/#formular" data-cta class="btn-primary shrink-0 px-5 py-3 whitespace-nowrap">
+        Získat nabídku
+        <Icon name="arrow-right" class="arrow size-4" />
+      </a>
+    </div>
+  </div>
+</section>

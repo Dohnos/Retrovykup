@@ -6,6 +6,7 @@ import SellForm from '../components/SellForm.astro';
 import Faq from '../components/Faq.astro';
 import Icon from '../components/Icon.astro';
 import CtaBand from '../components/CtaBand.astro';
+import Shipping from '../components/Shipping.astro';
 import { cities, cityUrl, type City } from '../data/cities';
 import { faq as baseFaq, site } from '../data/site';
 
@@ -19,13 +20,13 @@ const url = `${site.url}${cityUrl(city)}`;
 // SEO: title do ~60 znaků, description 120–160 znaků
 const longTitle = `Výkup starožitností ${city.name} – nabídka do 24 h | Retrovykup`;
 const seoTitle = longTitle.length <= 62 ? longTitle : `Výkup starožitností ${city.name} | Retrovykup`;
-const longDesc = `Výkup starožitností ${city.locative} a okolí. Pošlete fotky a do 24 h máte nabídku. Nábytek, obrazy, porcelán, lustry, militaria. Platba ihned, odvoz zdarma.`;
-const seoDesc = longDesc.length <= 160 ? longDesc : longDesc.replace(', militaria', '').replace(', odvoz zdarma', '');
+const longDesc = `Výkup starožitností ${city.locative} a okolí. Pošlete fotky a do 24 h máte nabídku. Nábytek, obrazy, porcelán, lustry, militaria. Platba ihned, doprava zdarma.`;
+const seoDesc = longDesc.length <= 160 ? longDesc : longDesc.replace(', militaria', '').replace(', doprava zdarma', '');
 
 const faq = [
   ...city.faq,
-  { q: `Jak rychle dostanu nabídku ${city.locative}?`, a: `Ocenění z fotek posíláme do 24 hodin. Termín vyzvednutí ${city.locative} domluvíme podle vašich možností.` },
-  ...baseFaq.filter((f) => /platba|fotkami/i.test(f.q)),
+  { q: `Jak rychle dostanu nabídku ${city.locative}?`, a: `Ocenění z fotek posíláme do 24 hodin. Pak si pro věci ${city.locative} přijedeme, nebo objednáme dopravu (Zásilkovna, Balíkovna, TopTrans…) — vždy na naše náklady.` },
+  ...baseFaq.filter((f) => /platba|dopravu|fotkami/i.test(f.q)),
 ];
 
 const schema = [
@@ -131,6 +132,7 @@ const schema = [
   <Sections show="categories" title={`Co vykupujeme ${city.locative}`} />
   <CtaBand title={`Prodáváte ${city.locative}?`} text={`Pošlete fotky a do 24 hodin máte nabídku. Pro věci si přijedeme ${city.locative} i do okolí.`} />
   <Sections show="steps" />
+  <Shipping />
   <Faq items={faq} title={`Výkup ${city.locative} — otázky`} />
   <Sections show="cities" exclude={city.slug} title="Vykupujeme i v dalších městech" />
   <CtaBand title="Získejte nabídku ještě dnes" variant="light" />

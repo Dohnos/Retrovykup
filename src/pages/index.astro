@@ -6,6 +6,7 @@ import SellForm from '../components/SellForm.astro';
 import Faq from '../components/Faq.astro';
 import Icon from '../components/Icon.astro';
 import CtaBand from '../components/CtaBand.astro';
+import Shipping from '../components/Shipping.astro';
 import { faq, site } from '../data/site';
 
 const faqSchema = {
@@ -40,6 +41,7 @@ const serviceSchema = {
   <Sections show="categories" />
   <CtaBand title="Nevíte, jestli to má cenu?" text="Pošlete fotku čehokoliv do roku 1989. Ocenění je zdarma a k ničemu vás nezavazuje." variant="light" />
   <Sections show="steps" />
+  <Shipping />
   <CtaBand />
 
   <!-- Galerie + Jak to funguje odkazy -->

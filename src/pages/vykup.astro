@@ -4,6 +4,7 @@ import Sections from '../components/Sections.astro';
 import Icon from '../components/Icon.astro';
 import SellForm from '../components/SellForm.astro';
 import CtaBand from '../components/CtaBand.astro';
+import Shipping from '../components/Shipping.astro';
 import Faq from '../components/Faq.astro';
 import { faq } from '../data/site';
 ---
@@ -32,6 +33,7 @@ import { faq } from '../data/site';
   </section>
 
   <Sections show="steps" title="Od fotky k penězům" />
+  <Shipping />
   <CtaBand title="Začněte fotkou" text="První krok zabere minutu. Pošlete fotky a my se do 24 hodin ozveme s nabídkou." variant="light" />
   <Sections show="benefits" />
   <Sections show="categories" />

@@ -8,7 +8,7 @@ const year = new Date().getFullYear();
 ---
 
 <footer class="grain mt-24 rounded-t-[2.5rem] bg-ink text-paper">
-  <div class="container-x pt-16 pb-28 md:pb-16">
+  <div class="container-x pt-16 pb-28">
     <div class="grid gap-12 md:grid-cols-[1.4fr_1fr_1fr]">
       <div>
         <Logo dark />
@@ -64,10 +64,29 @@ const year = new Date().getFullYear();
       </div>
     </div>
 
-    <div class="mt-14 flex flex-col gap-3 border-t border-white/10 pt-6 text-xs text-white/40 sm:flex-row sm:justify-between">
-      <p>
-        © {year} Retrovykup{operator.name && ` · ${operator.name}`}{operator.ico && ` · IČO ${operator.ico}`}. Všechna práva vyhrazena.
+    <!-- Provozovatel -->
+    <div class="mt-14 flex flex-col gap-4 rounded-3xl border border-white/10 p-5 text-sm sm:flex-row sm:items-center sm:justify-between">
+      <div class="flex items-start gap-3">
+        <span class="grid size-9 shrink-0 place-items-center rounded-full bg-white/10"><Icon name="building-2" class="size-4" /></span>
+        <div class="text-white/60">
+          <p class="eyebrow text-white/40">Provozovatel</p>
+          <p class="mt-1">
+            <span class="font-semibold text-white">{operator.name || 'Retrovykup'}</span>
+            {operator.ico && <span> · IČO {operator.ico}</span>}
+            {operator.dic && <span> · DIČ {operator.dic}</span>}
+          </p>
+          {operator.address && <p>{operator.address}</p>}
+          {operator.register && <p class="text-xs text-white/40">{operator.register}</p>}
+        </div>
+      </div>
+      <p class="flex flex-col gap-1 text-white/60 sm:items-end">
+        <a href={`mailto:${site.email}`} class="hover:text-white">{site.email}</a>
+        <a href={site.phoneHref} class="hover:text-white">{site.phone}</a>
       </p>
+    </div>
+
+    <div class="mt-6 flex flex-col gap-3 border-t border-white/10 pt-6 text-xs text-white/40 sm:flex-row sm:justify-between">
+      <p>© {year} Retrovykup. Všechna práva vyhrazena.</p>
       <p class="flex flex-wrap gap-x-4 gap-y-1">
         <a href={privacy.url} class="underline-offset-4 hover:text-white hover:underline">Ochrana osobních údajů (GDPR)</a>
         <span>Web nepoužívá sledovací cookies.</span>
