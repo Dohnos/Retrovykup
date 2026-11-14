@@ -1,0 +1,45 @@
+---
+import Icon from './Icon.astro';
+
+interface Props {
+  title: string;
+  subtitle: string;
+  backHref?: string;
+}
+const { title, subtitle, backHref } = Astro.props;
+---
+
+<div id="loginSection" class="hidden min-h-dvh place-items-center bg-mist px-4">
+  <div class="w-full max-w-md rounded-[2rem] border border-line bg-paper p-8 shadow-xl sm:p-10">
+    <div class="mx-auto grid size-14 place-items-center rounded-full bg-ink text-paper">
+      <Icon name="lock" class="size-6" />
+    </div>
+    <h1 class="h-display mt-6 text-center text-4xl">{title}</h1>
+    <p class="mt-2 text-center text-sm text-muted">{subtitle}</p>
+
+    <form id="loginForm" class="mt-8 space-y-4">
+      <div>
+        <label for="loginEmail" class="label">E-mail</label>
+        <input type="email" id="loginEmail" required class="field" autocomplete="username" />
+      </div>
+      <div>
+        <label for="loginPassword" class="label">Heslo</label>
+        <input type="password" id="loginPassword" required class="field" autocomplete="current-password" placeholder="••••••••" />
+      </div>
+      <div id="loginError" class="hidden rounded-2xl border border-ink bg-mist px-4 py-3 text-sm" role="alert"></div>
+      <button type="submit" class="btn-primary w-full py-4">
+        Přihlásit se
+        <Icon name="arrow-right" class="arrow size-4" />
+      </button>
+    </form>
+    {
+      backHref && (
+        <p class="mt-6 text-center">
+          <a href={backHref} class="text-sm text-muted underline-offset-4 hover:text-ink hover:underline">
+            ← Zpět na dashboard
+          </a>
+        </p>
+      )
+    }
+  </div>
+</div>

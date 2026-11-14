@@ -1,0 +1,69 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+
+const items = [
+  { icon: 'clock-3', title: 'Starý hodinový mechanismus', text: 'Elegantní hodinový mechanismus z 19. století.', tag: '19. století' },
+  { icon: 'coffee', title: 'Porcelánový set', text: 'Sada porcelánových talířů a hrnků z období první republiky.', tag: 'První republika' },
+  { icon: 'amphora', title: 'Váza Art Deco', text: 'Stylová váza z období Art Deco.', tag: 'Art Deco' },
+  { icon: 'gem', title: 'Vintage šperk', text: 'Vintage šperk s kameny, ideální pro sběratele.', tag: 'Šperky' },
+  { icon: 'compass', title: 'Starý kompas', text: 'Historický kompas pro milovníky historie.', tag: 'Sběratelské' },
+  { icon: 'book-open', title: 'Retro kniha', text: 'Kniha z 20. let 20. století.', tag: '20. léta' },
+];
+---
+
+<Base
+  title="Galerie vykoupených starožitností | Retrovykup"
+  description="Prohlédněte si starožitnosti a retro předměty, které jsme vykoupili — hodiny, porcelán, vázy, šperky, sběratelské předměty a knihy.">
+  <section class="pt-14 pb-6 sm:pt-20">
+    <div class="container-x">
+      <span class="pill rise"><Icon name="image" class="size-3.5" /> Galerie</span>
+      <h1 class="h-display mt-6 max-w-4xl text-[clamp(3rem,8vw,6.5rem)]">
+        <span class="rise block" style="--d:100ms">Co jsme</span>
+        <span class="rise block" style="--d:220ms"><em>už vykoupili</em></span>
+      </h1>
+      <p class="rise mt-6 max-w-2xl text-lg text-muted" style="--d:350ms">
+        Několik předmětů, které jsme nedávno vykoupili. Máte něco podobného? Pošlete fotky.
+      </p>
+    </div>
+  </section>
+
+  <section class="py-12">
+    <div class="container-x grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        items.map((it, i) => (
+          <article class="group reveal card card-hover overflow-hidden p-2" style={`--d:${(i % 3) * 80}ms`}>
+            <div class="relative grid aspect-[4/3] place-items-center overflow-hidden rounded-[1.25rem] bg-mist">
+              <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,#fff,transparent_70%)]" />
+              <Icon
+                name={it.icon}
+                class="relative size-20 transition-transform duration-700 ease-(--ease-spring) group-hover:scale-110 group-hover:-rotate-6"
+                strokeWidth={1}
+              />
+              <span class="pill absolute top-3 left-3">{it.tag}</span>
+            </div>
+            <div class="p-5">
+              <h2 class="text-lg font-semibold">{it.title}</h2>
+              <p class="mt-1.5 text-sm text-muted">{it.text}</p>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="py-10">
+    <div class="container-x">
+      <div class="grain reveal flex flex-col items-start gap-6 rounded-[2.5rem] bg-ink p-10 text-paper sm:flex-row sm:items-center sm:justify-between sm:p-14">
+        <div>
+          <h2 class="h-display text-4xl sm:text-5xl">Máte podobný kousek?</h2>
+          <p class="mt-3 text-white/60">Pošlete fotky a do 24 hodin víte, kolik za něj dostanete.</p>
+        </div>
+        <a href="/#formular" class="btn-light shrink-0 px-7 py-4 text-base">
+          Kontaktovat
+          <Icon name="arrow-right" class="arrow size-5" />
+        </a>
+      </div>
+    </div>
+  </section>
+</Base>

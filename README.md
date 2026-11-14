@@ -1,38 +1,45 @@
-# RTRV - Prodej starožitností snadno 🕰️
+# Retrovykup 🕰️
 
-RTRV je moderní a uživatelsky přívětivá platforma určená pro rychlý a férový prodej starožitností a cenností. Naše webová aplikace nabízí profesionální ocenění, diskrétní služby a jednoduchý proces prodeje, který splní očekávání jak prodávajících, tak kupujících.
+Výkup starožitností po celé ČR — statický web v **Astro** (rychlé načítání a indexace), nasazený na **Vercelu**.
 
-## 🚀 Klíčové Funkce
+## 🧱 Stack
 
-### 🏠 **Úvodní Stránka**
-- **Atraktivní design** s přehledným rozložením a kvalitními obrázky.
-- **Call-to-Action tlačítko** pro snadný přechod k prodeji starožitností.
+- ⚡ **Astro** (statický výstup, 0 kB JS kromě formuláře) + **Tailwind CSS v4**
+- 🔤 Fonty Inter + Instrument Serif self-hostované (žádné Google Fonts requesty)
+- 🎨 Ikony Lucide jako inline SVG (vykreslené při buildu)
+- 🔥 Firebase (Firestore + Auth) — leady a admin
+- 🖼️ Cloudinary — nahrávání fotek (komprese v prohlížeči)
+- ✉️ EmailJS — odpovědi zákazníkům z adminu
+- 🗺️ Leaflet + OpenStreetMap — mapa leadů v adminu
 
-### 📝 **Prodejní Formulář**
-- **Jednoduché vyplnění** základních údajů jako jméno, e-mail, telefon a lokalita.
-- **Nahrávání fotografií** (max 10 fotografií, každá do 5MB) s předběžným náhledem a možností odebrání.
-- **Požadovaná cena** s možností zadání pevné ceny nebo nabídnutí vlastní ceny.
-- **Ověření a validace** vstupních dat pro zajištění kvality a správnosti informací.
+## 📁 Stránky
 
-### ❓ **FAQ Sekce**
-- Odpovědi na nejčastější dotazy týkající se procesu ocenění, druhů přijímaných starožitností a způsobu platby.
+| URL | Obsah |
+| --- | --- |
+| `/` | Úvod + výkupní formulář |
+| `/vykup` | Jak probíhá výkup |
+| `/galerie` | Galerie |
+| `/vykup-starozitnosti` | Rozcestník měst |
+| `/vykup-starozitnosti-{praha,brno,ostrava,plzen,liberec,olomouc}` | Lokální SEO stránky |
+| `/admin`, `/admin/mapa` | Admin (noindex) |
 
-### 📄 **Footer s Informacemi o Projektu**
-- **Rozbalovací obsah** poskytující detailní informace o projektu a týmu za AntikTrh.
+`/kalendar-burz` je zrušený → 301 přesměrování na `/vykup-starozitnosti` (viz `vercel.json`).
+Nové město přidáte do `src/data/cities.ts` — stránka, sitemapa i odkazy se vygenerují samy.
 
-## 🛠️ Použité Technologie
+## 💻 Lokální vývoj
 
-- **HTML5 & CSS3**: Struktura a stylování webu.
-- **Tailwind CSS**: Utility-first framework pro rychlé a efektivní stylování.
-- **JavaScript**: Interaktivní funkce a logika aplikace.
-- **EmailJS**: Odesílání formulářů přímo z klientské strany bez potřeby vlastního backendu.
-- **ImgBB API**: Nahrávání a hostování obrázků.
-- **OpenStreetMap Nominatim API**: Našeptávač pro lokalitu při vyplňování formuláře.
+```bash
+npm install
+cp .env.example .env   # vyplňte hodnoty
+npm run dev            # http://localhost:4321
+npm run build          # výstup do dist/
+```
+
+## 🔐 Proměnné prostředí
+
+Všechny klíče jsou ve **Vercel → Project → Settings → Environment Variables** (seznam viz `.env.example`).
+V repozitáři nejsou žádné klíče. Bezpečnostní pravidla Firestore jsou v `firestore.rules`.
 
 ## 📄 Licence
 
 Tento projekt je licencován. Nelze ho používat pro další projekty.
-
-## 📞 Kontakt
-
-Máte otázky nebo potřebujete pomoc?

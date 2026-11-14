@@ -1,0 +1,436 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import Logo from '../components/Logo.astro';
+import AdminLogin from '../components/AdminLogin.astro';
+import { STATUS_LABELS } from '../lib/admin-labels';
+---
+
+<Base title="Retrovykup Admin" noindex bare>
+  <AdminLogin title="Admin" subtitle="Přihlaste se pro přístup k dashboardu" />
+
+  <div id="appLoading" class="grid min-h-dvh place-items-center">
+    <span class="size-8 animate-spin rounded-full border-2 border-line border-t-ink"></span>
+  </div>
+
+  <div id="dashboardSection" class="hidden min-h-dvh bg-mist">
+    <nav class="sticky top-0 z-30 border-b border-line bg-paper/80 backdrop-blur-xl">
+      <div class="container-x flex items-center justify-between py-3">
+        <Logo />
+        <div class="flex items-center gap-2">
+          <a href="/admin/mapa" class="btn-ghost px-4 py-2.5">
+            <Icon name="map" class="size-4" /> Mapa
+          </a>
+          <span id="adminEmail" class="hidden text-sm text-muted lg:inline"></span>
+          <button id="logoutBtn" class="btn-primary px-4 py-2.5" aria-label="Odhlásit">
+            <Icon name="log-out" class="size-4" /><span class="hidden sm:inline">Odhlásit</span>
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container-x py-8">
+      <div class="grid grid-cols-2 gap-3 lg:grid-cols-4">
+        {
+          [
+            ['statTotal', 'Celkem leadů', true],
+            ['statNova', 'Nová poptávka', false],
+            ['statProbiha', 'Probíhá', false],
+            ['statVyrizeno', 'Vyřízeno', false],
+          ].map(([id, label, dark]) => (
+            <div class:list={['rounded-3xl p-5', dark ? 'bg-ink text-paper' : 'border border-line bg-paper']}>
+              <p class="h-display text-5xl tabular-nums" id={id as string}>
+                0
+              </p>
+              <p class:list={['mt-1 text-sm', dark ? 'text-white/60' : 'text-muted']}>{label}</p>
+            </div>
+          ))
+        }
+      </div>
+
+      <div class="mt-6 flex flex-wrap gap-2" id="filterButtons">
+        <button class="filter-btn is-active" data-filter="all">Vše</button>
+        {
+          Object.entries(STATUS_LABELS).map(([k, v]) => (
+            <button class="filter-btn" data-filter={k}>
+              {v}
+            </button>
+          ))
+        }
+      </div>
+
+      <div id="leadsList" class="mt-6 space-y-3">
+        <p class="py-12 text-center text-muted">Načítám leady…</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Detail modal -->
+  <div id="detailModal" class="fixed inset-0 z-50 hidden items-start justify-center overflow-y-auto bg-ink/60 p-4 backdrop-blur-sm">
+    <div class="my-8 w-full max-w-3xl overflow-hidden rounded-[2rem] bg-paper shadow-2xl">
+      <div class="flex items-center justify-between bg-ink px-6 py-4 text-paper">
+        <h2 class="font-semibold" id="modalTitle">Detail leadu</h2>
+        <button id="closeModal" class="grid size-9 place-items-center rounded-full bg-white/10 hover:bg-white/20" aria-label="Zavřít">
+          <Icon name="x" class="size-4" />
+        </button>
+      </div>
+      <div class="space-y-6 p-6" id="modalContent"></div>
+    </div>
+  </div>
+</Base>
+
+<style is:global>
+  .filter-btn {
+    border-radius: 9999px;
+    padding: 0.5rem 1rem;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    background: #fff;
+    border: 1px solid var(--color-line);
+    transition: all 0.2s;
+  }
+  .filter-btn:hover {
+    border-color: var(--color-ink);
+  }
+  .filter-btn.is-active {
+    background: var(--color-ink);
+    color: #fff;
+    border-color: var(--color-ink);
+  }
+  .act {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    border-radius: 9999px;
+    padding: 0.5rem 0.9rem;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    border: 1px solid var(--color-line);
+    background: #fff;
+    transition: all 0.2s;
+  }
+  .act:hover {
+    border-color: var(--color-ink);
+  }
+  .act-dark {
+    background: var(--color-ink);
+    color: #fff;
+    border-color: var(--color-ink);
+  }
+  .act-dark:hover {
+    background: #262626;
+  }
+</style>
+
+<script>
+  import { signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'firebase/auth';
+  import { collection, query, orderBy, onSnapshot, doc, updateDoc, deleteDoc, type Unsubscribe } from 'firebase/firestore';
+  import { send as sendEmail } from '@emailjs/browser';
+  import { emailjsConfig } from '../lib/env';
+  import {
+    auth,
+    db,
+    STATUS_LABELS,
+    badgeClass,
+    formatDate,
+    escapeHtml,
+    getPhotoUrls,
+    whatsappHref,
+    WHATSAPP_SVG,
+    type Lead,
+  } from '../lib/admin';
+
+  const $ = (id: string) => document.getElementById(id)!;
+
+  let allLeads: Lead[] = [];
+  let currentFilter = 'all';
+  let unsubscribe: Unsubscribe | null = null;
+  let pendingDetailId = leadIdFromHash();
+
+  function leadIdFromHash() {
+    const m = location.hash.match(/^#lead-(.+)$/);
+    return m ? decodeURIComponent(m[1]) : null;
+  }
+
+  // ---------- Auth ----------
+  $('loginForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const err = $('loginError');
+    err.classList.add('hidden');
+    try {
+      await signInWithEmailAndPassword(
+        auth,
+        ($('loginEmail') as HTMLInputElement).value.trim(),
+        ($('loginPassword') as HTMLInputElement).value,
+      );
+    } catch (ex) {
+      err.textContent = 'Chybné přihlašovací údaje.';
+      err.classList.remove('hidden');
+      console.error(ex);
+    }
+  });
+  $('logoutBtn').addEventListener('click', () => signOut(auth));
+
+  onAuthStateChanged(auth, (user) => {
+    $('appLoading').classList.add('hidden');
+    const login = $('loginSection');
+    if (user) {
+      login.classList.add('hidden');
+      login.classList.remove('grid');
+      $('dashboardSection').classList.remove('hidden');
+      $('adminEmail').textContent = user.email ?? '';
+      startListener();
+    } else {
+      $('dashboardSection').classList.add('hidden');
+      login.classList.remove('hidden');
+      login.classList.add('grid');
+      unsubscribe?.();
+      unsubscribe = null;
+      allLeads = [];
+    }
+  });
+
+  // ---------- Data ----------
+  function startListener() {
+    unsubscribe?.();
+    unsubscribe = onSnapshot(
+      query(collection(db, 'leads'), orderBy('timestamp', 'desc')),
+      (snap) => {
+        allLeads = snap.docs.map((d) => ({ id: d.id, ...(d.data() as Omit<Lead, 'id'>) }));
+        updateStats();
+        renderLeads();
+        if (pendingDetailId) {
+          const id = pendingDetailId;
+          pendingDetailId = null;
+          openDetail(id);
+        }
+      },
+      (err) => console.error('Chyba při načítání leadů:', err),
+    );
+  }
+
+  function updateStats() {
+    $('statTotal').textContent = String(allLeads.length);
+    $('statNova').textContent = String(allLeads.filter((l) => l.status === 'nova').length);
+    $('statProbiha').textContent = String(allLeads.filter((l) => l.status === 'probiha').length);
+    $('statVyrizeno').textContent = String(allLeads.filter((l) => l.status === 'vyrizeno').length);
+  }
+
+  // ---------- Filtry ----------
+  $('filterButtons').addEventListener('click', (e) => {
+    const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('.filter-btn');
+    if (!btn) return;
+    document.querySelectorAll('.filter-btn').forEach((b) => b.classList.remove('is-active'));
+    btn.classList.add('is-active');
+    currentFilter = btn.dataset.filter!;
+    renderLeads();
+  });
+
+  // ---------- Render ----------
+  function renderLeads() {
+    const list = $('leadsList');
+    const items = currentFilter === 'all' ? allLeads : allLeads.filter((l) => l.status === currentFilter);
+    list.innerHTML = items.length
+      ? items.map(card).join('')
+      : '<p class="py-12 text-center text-muted">Žádné leady v této kategorii.</p>';
+  }
+
+  function card(lead: Lead) {
+    const msg = lead.message || '—';
+    const shortMsg = msg.length > 140 ? msg.slice(0, 140) + '…' : msg;
+    const price = lead.desiredPriceOption === 'fixed' ? `${lead.fixedPriceAmount || '?'} Kč` : 'Nabídněte';
+    const id = escapeHtml(lead.id);
+    const email = lead.email
+      ? `<a href="mailto:${escapeHtml(lead.email)}" class="hover:underline">${escapeHtml(lead.email)}</a>`
+      : '—';
+    const phone = lead.phone
+      ? `<a href="tel:${escapeHtml(lead.phone.replace(/\s+/g, ''))}" class="hover:underline">${escapeHtml(lead.phone)}</a>`
+      : '—';
+
+    return `
+    <article class="cursor-pointer rounded-3xl border border-line bg-paper p-5 transition hover:border-ink" data-open="${id}">
+      <div class="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <h3 class="text-lg font-semibold">${escapeHtml(lead.name || '—')}</h3>
+          <p class="text-xs text-muted">#${escapeHtml(lead.vykup_id || '—')} · ${formatDate(lead.timestamp)}</p>
+        </div>
+        <span class="rounded-full px-3 py-1 text-xs font-semibold ${badgeClass(lead.status)}">${STATUS_LABELS[lead.status ?? ''] ?? escapeHtml(lead.status ?? '—')}</span>
+      </div>
+      <div class="mt-4 grid grid-cols-1 gap-2 text-sm sm:grid-cols-2 lg:grid-cols-4">
+        <div class="truncate">📧 ${email}</div>
+        <div>📞 ${phone}</div>
+        <div class="truncate">📍 ${escapeHtml(lead.location || '—')}</div>
+        <div>💰 ${escapeHtml(price)} · 🖼️ ${lead.photos_count || 0}</div>
+      </div>
+      <p class="mt-4 rounded-2xl bg-mist px-4 py-3 text-sm text-muted italic">„${escapeHtml(shortMsg)}“</p>
+      <div class="mt-4 flex flex-wrap items-center gap-2" data-stop>
+        <select data-status="${id}" class="rounded-full border border-line bg-paper px-3 py-2 text-sm outline-none focus:border-ink">
+          ${Object.entries(STATUS_LABELS)
+            .map(([v, l]) => `<option value="${v}" ${lead.status === v ? 'selected' : ''}>${l}</option>`)
+            .join('')}
+        </select>
+        <button class="act act-dark" data-action="zajem" data-id="${id}">✅ Mám zájem</button>
+        <button class="act" data-action="nezajem" data-id="${id}">❌ Nemám zájem</button>
+        <a class="act" href="${whatsappHref(lead)}" target="_blank" rel="noopener noreferrer" title="Odeslat souhrn na WhatsApp">${WHATSAPP_SVG}</a>
+        <button class="act" data-action="detail" data-id="${id}">🔍 Detail</button>
+        <button class="act" data-action="delete" data-id="${id}">🗑️ Smazat</button>
+      </div>
+    </article>`;
+  }
+
+  // ---------- Akce (event delegation) ----------
+  document.addEventListener('click', (e) => {
+    const t = e.target as HTMLElement;
+    const actionBtn = t.closest<HTMLElement>('[data-action]');
+    if (actionBtn) {
+      const id = actionBtn.dataset.id!;
+      const action = actionBtn.dataset.action;
+      if (action === 'zajem') sendTemplate(id, 'zajem');
+      else if (action === 'nezajem') sendTemplate(id, 'nezajem');
+      else if (action === 'detail') openDetail(id);
+      else if (action === 'delete') deleteLead(id);
+      else if (action === 'save-email') saveEmail(id);
+      return;
+    }
+    if (t.closest('[data-stop]') || t.closest('a')) return;
+    const cardEl = t.closest<HTMLElement>('[data-open]');
+    if (cardEl) openDetail(cardEl.dataset.open!);
+  });
+
+  document.addEventListener('change', async (e) => {
+    const sel = (e.target as HTMLElement).closest<HTMLSelectElement>('select[data-status]');
+    if (!sel) return;
+    try {
+      await updateDoc(doc(db, 'leads', sel.dataset.status!), { status: sel.value });
+    } catch (err) {
+      alert('Chyba při změně statusu: ' + (err as Error).message);
+    }
+  });
+
+  async function sendTemplate(id: string, kind: 'zajem' | 'nezajem') {
+    const lead = allLeads.find((l) => l.id === id);
+    if (!lead) return;
+    const label = kind === 'zajem' ? 'Mám zájem' : 'Nemám zájem';
+    if (!confirm(`Opravdu chcete zákazníkovi ${lead.name} odeslat zprávu „${label}“?`)) return;
+    try {
+      await sendEmail(
+        emailjsConfig.serviceId,
+        kind === 'zajem' ? emailjsConfig.templateZajem : emailjsConfig.templateNezajem,
+        {
+          to_email: lead.email,
+          to_name: lead.name,
+          vykup_id: lead.vykup_id,
+          location: lead.location,
+          phone: lead.phone,
+          message: lead.message,
+        },
+        { publicKey: emailjsConfig.publicKey },
+      );
+      await updateDoc(doc(db, 'leads', id), { status: kind === 'zajem' ? 'probiha' : 'nezajem' });
+      alert(`E-mail odeslán a status změněn na „${kind === 'zajem' ? 'Probíhá' : 'Nemám zájem'}“.`);
+    } catch (err) {
+      alert('Chyba při odesílání e-mailu: ' + ((err as { text?: string }).text || (err as Error).message));
+    }
+  }
+
+  async function deleteLead(id: string) {
+    const lead = allLeads.find((l) => l.id === id);
+    if (!lead) return;
+    if (!confirm(`Opravdu smazat lead „${lead.name}“? Tato akce je nevratná.`)) return;
+    try {
+      await deleteDoc(doc(db, 'leads', id));
+      closeDetail();
+    } catch (err) {
+      alert('Chyba při mazání: ' + (err as Error).message);
+    }
+  }
+
+  async function saveEmail(id: string) {
+    const v = (document.getElementById('editEmailInput') as HTMLInputElement).value.trim();
+    if (!v) return alert('E-mail nemůže být prázdný.');
+    try {
+      await updateDoc(doc(db, 'leads', id), { email: v });
+      alert('E-mail byl upraven.');
+    } catch (err) {
+      alert('Chyba při úpravě e-mailu: ' + (err as Error).message);
+    }
+  }
+
+  // ---------- Detail ----------
+  function openDetail(id: string) {
+    const lead = allLeads.find((l) => l.id === id);
+    if (!lead) return;
+    const photos = getPhotoUrls(lead);
+    const price = lead.desiredPriceOption === 'fixed' ? `${lead.fixedPriceAmount || '?'} Kč (pevná cena)` : 'Nabídněte';
+    const sid = escapeHtml(lead.id);
+
+    $('modalTitle').textContent = `${lead.name || '—'} · #${lead.vykup_id || '—'}`;
+    $('modalContent').innerHTML = `
+      <div class="grid gap-4 text-sm sm:grid-cols-2">
+        <div class="space-y-2">
+          <p><span class="text-muted">Jméno:</span> ${escapeHtml(lead.name || '—')}</p>
+          <div class="flex items-center gap-2">
+            <input type="email" id="editEmailInput" value="${escapeHtml(lead.email || '')}" class="field py-2" />
+            <button class="act act-dark shrink-0" data-action="save-email" data-id="${sid}">Uložit</button>
+          </div>
+          <p><span class="text-muted">Telefon:</span> ${escapeHtml(lead.phone || '—')}</p>
+          <p><span class="text-muted">Lokalita:</span> ${escapeHtml(lead.location || '—')}</p>
+        </div>
+        <div class="space-y-2">
+          <p><span class="text-muted">Datum:</span> ${formatDate(lead.timestamp)}</p>
+          <p><span class="text-muted">Požadovaná cena:</span> ${escapeHtml(price)}</p>
+          <p><span class="text-muted">Počet fotek:</span> ${lead.photos_count || 0}</p>
+          <p><span class="text-muted">Status:</span> <span class="rounded-full px-2.5 py-0.5 text-xs font-semibold ${badgeClass(lead.status)}">${STATUS_LABELS[lead.status ?? ''] ?? '—'}</span></p>
+        </div>
+      </div>
+      <div>
+        <p class="mb-2 text-sm font-medium">Zpráva</p>
+        <div class="whitespace-pre-wrap rounded-2xl bg-mist px-4 py-3 text-sm">${escapeHtml(lead.message || '—')}</div>
+      </div>
+      <div>
+        <p class="mb-3 text-sm font-medium">Fotografie (${photos.length})</p>
+        ${
+          photos.length
+            ? `<div class="grid grid-cols-2 gap-2 sm:grid-cols-4">${photos
+                .map(
+                  (u) =>
+                    `<a href="${escapeHtml(u)}" target="_blank" rel="noopener noreferrer"><img src="${escapeHtml(u)}" alt="Fotografie" loading="lazy" class="aspect-square w-full rounded-2xl object-cover transition hover:opacity-80" /></a>`,
+                )
+                .join('')}</div>`
+            : '<p class="text-sm text-muted">Bez fotografií</p>'
+        }
+        ${
+          lead.cloudinary_folder && lead.cloudinary_folder !== 'Bez fotografií'
+            ? `<a href="${escapeHtml(lead.cloudinary_folder)}" target="_blank" rel="noopener noreferrer" class="mt-3 inline-block text-sm underline underline-offset-4">Otevřít složku v Cloudinary →</a>`
+            : ''
+        }
+      </div>
+      <div class="flex flex-wrap gap-2 border-t border-line pt-4">
+        <a href="${whatsappHref(lead)}" target="_blank" rel="noopener noreferrer" class="act act-dark">${WHATSAPP_SVG} Odeslat na WhatsApp</a>
+        <button class="act" data-action="zajem" data-id="${sid}">✅ Mám zájem</button>
+        <button class="act" data-action="nezajem" data-id="${sid}">❌ Nemám zájem</button>
+        <button class="act" data-action="delete" data-id="${sid}">🗑️ Smazat</button>
+      </div>`;
+    const modal = $('detailModal');
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+  }
+
+  function closeDetail() {
+    const modal = $('detailModal');
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+  }
+
+  $('closeModal').addEventListener('click', closeDetail);
+  $('detailModal').addEventListener('click', (e) => {
+    if (e.target === e.currentTarget) closeDetail();
+  });
+  document.addEventListener('keydown', (e) => e.key === 'Escape' && closeDetail());
+  window.addEventListener('hashchange', () => {
+    const id = leadIdFromHash();
+    if (!id) return;
+    if (!allLeads.length) pendingDetailId = id;
+    else openDetail(id);
+  });
+</script>

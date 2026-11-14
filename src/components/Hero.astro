@@ -1,0 +1,86 @@
+---
+import Icon from './Icon.astro';
+import { site } from '../data/site';
+
+interface Props {
+  eyebrow: string;
+  /** Řádky nadpisu — každý se animuje zvlášť. Text v _podtržítkách_ bude kurzívou. */
+  lines: string[];
+  text: string;
+  image?: string;
+  imageAlt?: string;
+  badge?: string;
+}
+const { eyebrow, lines, text, image = site.heroImage, imageAlt = 'Starožitnosti', badge = 'Ocenění do 24 h' } = Astro.props;
+
+const fmt = (s: string) => s.replace(/_(.+?)_/g, '<em>$1</em>');
+---
+
+<section class="relative pt-10 pb-16 sm:pt-16">
+  <div class="container-x grid items-center gap-12 lg:grid-cols-[1.15fr_0.85fr]">
+    <div>
+      <span class="pill rise">
+        <span class="relative flex size-2">
+          <span class="absolute inline-flex size-full animate-ping rounded-full bg-ink opacity-60"></span>
+          <span class="relative inline-flex size-2 rounded-full bg-ink"></span>
+        </span>
+        {eyebrow}
+      </span>
+
+      <h1 class="h-display mt-6 text-[clamp(3.2rem,9vw,7rem)]">
+        {lines.map((l, i) => <span class="rise block" style={`--d:${100 + i * 120}ms`} set:html={fmt(l)} />)}
+      </h1>
+
+      <p class="rise mt-6 max-w-xl text-lg leading-relaxed text-muted" style="--d:450ms">{text}</p>
+
+      <div class="rise mt-8 flex flex-wrap gap-3" style="--d:550ms">
+        <a href="#formular" class="btn-primary px-7 py-4 text-base">
+          Chci nabídku
+          <Icon name="arrow-right" class="arrow size-5" />
+        </a>
+        <a href={site.phoneHref} class="btn-ghost px-7 py-4 text-base">
+          <Icon name="phone" class="size-5" />
+          {site.phone}
+        </a>
+      </div>
+
+      <div class="rise mt-10 flex flex-wrap items-center gap-x-6 gap-y-3 text-sm text-muted" style="--d:650ms">
+        <span class="flex items-center gap-2"><Icon name="badge-check" class="size-4 text-ink" /> Ocenění zdarma</span>
+        <span class="flex items-center gap-2"><Icon name="banknote" class="size-4 text-ink" /> Platba ihned</span>
+        <span class="flex items-center gap-2"><Icon name="truck" class="size-4 text-ink" /> Odvoz zajistíme</span>
+      </div>
+    </div>
+
+    <div class="rise relative" style="--d:300ms">
+      <div class="relative aspect-[4/5] overflow-hidden rounded-[2.5rem] bg-mist">
+        <img
+          src={image}
+          alt={imageAlt}
+          width="800"
+          height="1000"
+          fetchpriority="high"
+          decoding="async"
+          class="size-full scale-105 object-cover grayscale transition-transform duration-[2s] ease-(--ease-spring) hover:scale-100"
+        />
+        <div class="absolute inset-0 bg-gradient-to-t from-ink/50 via-transparent to-transparent"></div>
+      </div>
+
+      <!-- Plovoucí karty -->
+      <div class="animate-float absolute -bottom-6 -left-4 rounded-3xl border border-line bg-paper/90 p-4 shadow-xl backdrop-blur sm:-left-8">
+        <div class="flex items-center gap-3">
+          <span class="icon-bubble size-11"><Icon name="clock" class="size-5" /></span>
+          <div>
+            <p class="text-sm font-semibold">{badge}</p>
+            <p class="text-xs text-muted">z fotek, nezávazně</p>
+          </div>
+        </div>
+      </div>
+      <div
+        class="animate-float absolute top-6 -right-3 grid size-24 place-items-center rounded-full bg-ink text-center text-paper shadow-xl [animation-delay:1.5s] sm:-right-6">
+        <span class="text-[11px] leading-tight font-medium">
+          <span class="block font-display text-3xl leading-none italic">24h</span>odpověď
+        </span>
+      </div>
+    </div>
+  </div>
+</section>

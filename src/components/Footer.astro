@@ -1,0 +1,69 @@
+---
+import Icon from './Icon.astro';
+import Logo from './Logo.astro';
+import { site, nav } from '../data/site';
+import { cities, cityUrl } from '../data/cities';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="grain mt-24 rounded-t-[2.5rem] bg-ink text-paper">
+  <div class="container-x py-16">
+    <div class="grid gap-12 md:grid-cols-[1.4fr_1fr_1fr]">
+      <div>
+        <Logo dark />
+        <p class="mt-5 max-w-sm text-sm leading-relaxed text-white/60">
+          Výkup starožitností a retro předmětů po celé České republice. Férové ocenění do 24 hodin, platba ihned, diskrétní
+          jednání.
+        </p>
+        <div class="mt-6 flex flex-wrap gap-2">
+          <a href={site.phoneHref} class="btn-ghost-dark px-4 py-2.5">
+            <Icon name="phone" class="size-4" />
+            {site.phone}
+          </a>
+          <a href={`mailto:${site.email}`} class="btn-ghost-dark px-4 py-2.5">
+            <Icon name="mail" class="size-4" />
+            {site.email}
+          </a>
+        </div>
+      </div>
+
+      <div>
+        <p class="eyebrow text-white/40">Navigace</p>
+        <ul class="mt-4 space-y-2.5 text-sm">
+          <li><a href="/" class="text-white/70 transition-colors hover:text-white">Úvod</a></li>
+          {
+            nav.map((n) => (
+              <li>
+                <a href={n.href} class="text-white/70 transition-colors hover:text-white">
+                  {n.label}
+                </a>
+              </li>
+            ))
+          }
+          <li><a href="/#formular" class="text-white/70 transition-colors hover:text-white">Výkupní formulář</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <p class="eyebrow text-white/40">Výkup ve městech</p>
+        <ul class="mt-4 space-y-2.5 text-sm">
+          {
+            cities.map((c) => (
+              <li>
+                <a href={cityUrl(c)} class="text-white/70 transition-colors hover:text-white">
+                  Výkup starožitností {c.name}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+
+    <div class="mt-14 flex flex-col gap-3 border-t border-white/10 pt-6 text-xs text-white/40 sm:flex-row sm:justify-between">
+      <p>© {year} Retrovykup. Všechna práva vyhrazena.</p>
+      <p>Fotografie a data z formuláře automaticky mažeme do 7 dnů.</p>
+    </div>
+  </div>
+</footer>

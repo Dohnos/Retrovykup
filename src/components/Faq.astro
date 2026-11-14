@@ -1,0 +1,36 @@
+---
+import Icon from './Icon.astro';
+
+interface Props {
+  items: { q: string; a: string }[];
+  title?: string;
+}
+const { items, title = 'Časté otázky' } = Astro.props;
+---
+
+<section id="faq" class="scroll-mt-24 py-20">
+  <div class="container-x grid gap-10 lg:grid-cols-[0.8fr_1.2fr]">
+    <div>
+      <p class="eyebrow reveal">FAQ</p>
+      <h2 class="h-display reveal mt-3 text-5xl sm:text-6xl" style="--d:80ms">{title}</h2>
+      <p class="reveal mt-5 max-w-sm text-muted" style="--d:140ms">
+        Nenašli jste odpověď? Zavolejte nebo napište — rádi poradíme.
+      </p>
+    </div>
+    <div class="space-y-3">
+      {
+        items.map((item, i) => (
+          <details class="faq-item group reveal rounded-3xl border border-line bg-paper transition-colors" style={`--d:${i * 60}ms`}>
+            <summary class="flex cursor-pointer list-none items-center justify-between gap-6 p-6 text-left font-semibold">
+              {item.q}
+              <span class="faq-icon grid size-9 shrink-0 place-items-center rounded-full bg-mist transition-transform duration-300 ease-(--ease-spring) group-hover:bg-ink group-hover:text-paper">
+                <Icon name="plus" class="size-4" />
+              </span>
+            </summary>
+            <p class="-mt-2 px-6 pb-6 leading-relaxed text-muted">{item.a}</p>
+          </details>
+        ))
+      }
+    </div>
+  </div>
+</section>

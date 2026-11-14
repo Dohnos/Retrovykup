@@ -1,0 +1,67 @@
+---
+import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+import Sections from '../components/Sections.astro';
+import SellForm from '../components/SellForm.astro';
+import Faq from '../components/Faq.astro';
+import Icon from '../components/Icon.astro';
+import { faq, site } from '../data/site';
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+};
+const serviceSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: 'Výkup starožitností',
+  serviceType: 'Výkup starožitností a retro předmětů',
+  provider: { '@type': 'Organization', name: site.name, url: site.url },
+  areaServed: { '@type': 'Country', name: 'Česká republika' },
+};
+---
+
+<Base
+  title="Výkup starožitností po celé ČR | Ocenění do 24 h, platba ihned | Retrovykup"
+  description={site.description}
+  schema={[serviceSchema, faqSchema]}>
+  <Hero
+    eyebrow="Výkup starožitností po celé ČR"
+    lines={['Prodejte', 'starožitnosti', '_snadno._']}
+    text="Nábytek, obrazy, porcelán, sklo, lustry i retro kousky do roku 1989. Pošlete fotky, do 24 hodin máte férovou nabídku a my si pro věci přijedeme."
+  />
+
+  <Sections show="marquee" />
+  <Sections show="benefits" />
+  <Sections show="categories" />
+  <Sections show="steps" />
+
+  <!-- Galerie + Jak to funguje odkazy -->
+  <section class="py-10">
+    <div class="container-x grid gap-4 md:grid-cols-2">
+      <a href="/vykup" class="group reveal card card-hover flex items-center justify-between gap-6 p-8">
+        <div>
+          <p class="eyebrow">Proces</p>
+          <p class="h-display mt-2 text-4xl">Jak probíhá výkup?</p>
+        </div>
+        <span class="grid size-14 shrink-0 place-items-center rounded-full bg-ink text-paper transition-transform duration-500 ease-(--ease-spring) group-hover:rotate-45">
+          <Icon name="arrow-up-right" class="size-6" />
+        </span>
+      </a>
+      <a href="/galerie" class="group reveal card card-hover flex items-center justify-between gap-6 p-8" style="--d:100ms">
+        <div>
+          <p class="eyebrow">Galerie</p>
+          <p class="h-display mt-2 text-4xl">Co jsme už vykoupili</p>
+        </div>
+        <span class="grid size-14 shrink-0 place-items-center rounded-full bg-ink text-paper transition-transform duration-500 ease-(--ease-spring) group-hover:rotate-45">
+          <Icon name="arrow-up-right" class="size-6" />
+        </span>
+      </a>
+    </div>
+  </section>
+
+  <SellForm />
+  <Sections show="cities" />
+  <Faq items={faq} />
+</Base>

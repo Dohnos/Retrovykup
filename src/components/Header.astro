@@ -1,0 +1,107 @@
+---
+import Icon from './Icon.astro';
+import Logo from './Logo.astro';
+import { nav, site } from '../data/site';
+
+const path = Astro.url.pathname;
+---
+
+<header id="site-header" class="sticky top-0 z-50 transition-all duration-300">
+  <div class="container-x">
+    <div
+      id="header-bar"
+      class="mt-3 flex items-center justify-between rounded-full border border-transparent px-3 py-2 transition-all duration-300 sm:px-4">
+      <Logo />
+
+      <nav class="hidden items-center gap-1 md:flex" aria-label="Hlavní navigace">
+        {
+          nav.map((item) => (
+            <a
+              href={item.href}
+              class:list={[
+                'rounded-full px-4 py-2 text-sm font-medium transition-colors hover:bg-mist',
+                path === item.href && 'bg-mist',
+              ]}>
+              {item.label}
+            </a>
+          ))
+        }
+      </nav>
+
+      <div class="flex items-center gap-2">
+        <a href={site.phoneHref} class="btn-ghost hidden px-4 py-2.5 lg:inline-flex">
+          <Icon name="phone" class="size-4" />
+          {site.phone}
+        </a>
+        <a href="/#formular" class="btn-primary hidden px-5 py-2.5 sm:inline-flex">
+          Prodat
+          <Icon name="arrow-right" class="arrow size-4" />
+        </a>
+        <button
+          id="menu-btn"
+          type="button"
+          class="grid size-10 place-items-center rounded-full border border-line md:hidden"
+          aria-expanded="false"
+          aria-controls="mobile-menu"
+          aria-label="Otevřít menu">
+          <Icon name="menu" class="size-5" />
+        </button>
+      </div>
+    </div>
+
+    <nav
+      id="mobile-menu"
+      class="pointer-events-none absolute inset-x-4 top-full mt-2 origin-top scale-95 rounded-3xl border border-line bg-paper p-2 opacity-0 shadow-xl transition-all duration-300 ease-(--ease-spring) md:hidden"
+      aria-label="Mobilní navigace"
+      hidden>
+      {
+        nav.map((item) => (
+          <a href={item.href} class="flex items-center justify-between rounded-2xl px-4 py-3.5 font-medium hover:bg-mist">
+            {item.label}
+            <Icon name="arrow-up-right" class="size-4 text-muted" />
+          </a>
+        ))
+      }
+      <div class="mt-1 grid grid-cols-2 gap-1.5">
+        <a href="/#formular" class="flex items-center justify-center gap-2 rounded-2xl bg-ink px-4 py-3.5 font-medium text-paper">
+          Prodat
+          <Icon name="arrow-right" class="size-4" />
+        </a>
+        <a href={site.phoneHref} class="flex items-center justify-center gap-2 rounded-2xl border border-ink px-4 py-3.5 font-medium">
+          <Icon name="phone" class="size-4" />
+          Zavolat
+        </a>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const bar = document.getElementById('header-bar')!;
+  const onScroll = () => {
+    const scrolled = window.scrollY > 12;
+    bar.classList.toggle('bg-paper/80', scrolled);
+    bar.classList.toggle('backdrop-blur-xl', scrolled);
+    bar.classList.toggle('border-line', scrolled);
+    bar.classList.toggle('shadow-[0_8px_30px_-12px_rgba(0,0,0,0.15)]', scrolled);
+  };
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  const btn = document.getElementById('menu-btn')!;
+  const menu = document.getElementById('mobile-menu')!;
+  const setOpen = (open: boolean) => {
+    btn.setAttribute('aria-expanded', String(open));
+    if (open) menu.hidden = false;
+    requestAnimationFrame(() => {
+      menu.classList.toggle('opacity-0', !open);
+      menu.classList.toggle('scale-95', !open);
+      menu.classList.toggle('pointer-events-none', !open);
+    });
+    if (!open) setTimeout(() => (menu.hidden = btn.getAttribute('aria-expanded') !== 'true'), 300);
+  };
+  btn.addEventListener('click', () => setOpen(btn.getAttribute('aria-expanded') !== 'true'));
+  menu.addEventListener('click', (e) => {
+    if ((e.target as HTMLElement).closest('a')) setOpen(false);
+  });
+</script>

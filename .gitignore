@@ -1,0 +1,16 @@
+# build
+dist/
+.astro/
+.vercel/
+
+# dependencies
+node_modules/
+
+# env — NIKDY necommitovat
+.env
+.env.*
+!.env.example
+
+# misc
+.DS_Store
+npm-debug.log*

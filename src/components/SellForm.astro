@@ -1,0 +1,534 @@
+---
+import Icon from './Icon.astro';
+
+interface Props {
+  defaultLocation?: string;
+  heading?: string;
+}
+const { defaultLocation = '', heading = 'Prodejte své starožitnosti' } = Astro.props;
+---
+
+<section id="formular" class="scroll-mt-24 py-20">
+  <div class="container-x">
+    <div class="grain grid overflow-hidden rounded-[2.5rem] bg-ink text-paper lg:grid-cols-[0.9fr_1.1fr]">
+      <!-- Levá část: info -->
+      <div class="relative flex flex-col justify-between gap-10 p-8 sm:p-12">
+        <div>
+          <p class="eyebrow text-white/50">Výkupní formulář</p>
+          <h2 class="h-display reveal mt-4 text-5xl sm:text-6xl">{heading}</h2>
+          <p class="reveal mt-5 max-w-md text-white/60" style="--d:100ms">
+            Vyplnění zabere asi minutu. Pošlete pár fotek a do 24 hodin vám pošleme férovou nabídku. Nezávazně.
+          </p>
+        </div>
+        <ul class="space-y-3 text-sm">
+          {
+            ['Ocenění zdarma a nezávazně', 'Odpověď do 24 hodin', 'Platba hotově nebo převodem', 'Fotky mažeme do 7 dnů'].map(
+              (t, i) => (
+                <li class="reveal flex items-center gap-3" style={`--d:${150 + i * 70}ms`}>
+                  <span class="grid size-6 place-items-center rounded-full bg-white/10">
+                    <Icon name="check" class="size-3.5" strokeWidth={2.5} />
+                  </span>
+                  {t}
+                </li>
+              ),
+            )
+          }
+        </ul>
+        <!-- Rotující kruhový štítek -->
+        <div class="pointer-events-none absolute -right-10 -bottom-10 hidden size-44 opacity-20 lg:block" aria-hidden="true">
+          <svg viewBox="0 0 200 200" class="animate-spin-slow size-full">
+            <defs>
+              <path id="circle" d="M100,100 m-80,0 a80,80 0 1,1 160,0 a80,80 0 1,1 -160,0"></path>
+            </defs>
+            <text fill="#fff" font-size="15" letter-spacing="6" font-family="Inter Variable, sans-serif">
+              <textPath href="#circle">VÝKUP STAROŽITNOSTÍ • PO CELÉ ČR • </textPath>
+            </text>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Pravá část: formulář -->
+      <div class="p-3 text-ink sm:p-4">
+        <div class="rounded-[2rem] bg-paper p-5 sm:p-8">
+          <form id="sell-form" class="space-y-5" novalidate>
+            <div class="grid gap-5 sm:grid-cols-2">
+              <div>
+                <label for="f-name" class="label">Jméno</label>
+                <input id="f-name" name="name" type="text" class="field" placeholder="Jan Novák" autocomplete="name" required />
+              </div>
+              <div>
+                <label for="f-phone" class="label">Telefon</label>
+                <input
+                  id="f-phone"
+                  name="phone"
+                  type="tel"
+                  inputmode="numeric"
+                  class="field"
+                  placeholder="603 538 440"
+                  autocomplete="tel-national"
+                  required
+                />
+              </div>
+            </div>
+
+            <div>
+              <label for="f-email-user" class="label">E-mail</label>
+              <div class="flex gap-2">
+                <input
+                  id="f-email-user"
+                  name="emailUser"
+                  type="text"
+                  inputmode="email"
+                  autocomplete="off"
+                  autocapitalize="off"
+                  spellcheck="false"
+                  class="field min-w-0 flex-1"
+                  placeholder="jan.novak"
+                  required
+                />
+                <select id="f-email-domain" name="emailDomain" class="field w-auto shrink-0 cursor-pointer pr-8" aria-label="Doména e-mailu">
+                  <option value="@seznam.cz">@seznam.cz</option>
+                  <option value="@gmail.com">@gmail.com</option>
+                  <option value="@email.cz">@email.cz</option>
+                  <option value="@centrum.cz">@centrum.cz</option>
+                  <option value="other">jiná…</option>
+                </select>
+              </div>
+              <input
+                id="f-email-custom"
+                name="emailCustom"
+                type="text"
+                class="field mt-2 hidden"
+                placeholder="@vase-domena.cz"
+                autocapitalize="off"
+              />
+              <p class="mt-2 text-xs text-muted">Napište jen začátek e-mailu (bez @) a doménu vyberte vedle.</p>
+            </div>
+
+            <div class="relative">
+              <label for="f-location" class="label">Lokalita</label>
+              <div class="relative">
+                <Icon name="map-pin" class="pointer-events-none absolute top-1/2 left-4 size-4 -translate-y-1/2 text-muted" />
+                <input
+                  id="f-location"
+                  name="location"
+                  type="text"
+                  class="field pl-10"
+                  placeholder="Obec nebo město"
+                  autocomplete="off"
+                  value={defaultLocation}
+                  required
+                />
+              </div>
+              <ul
+                id="f-suggestions"
+                class="absolute z-20 mt-2 hidden max-h-60 w-full overflow-y-auto rounded-2xl border border-line bg-paper p-1.5 shadow-xl"
+                role="listbox">
+              </ul>
+            </div>
+
+            <div>
+              <label for="f-message" class="label">Co chcete prodat?</label>
+              <textarea
+                id="f-message"
+                name="message"
+                rows="4"
+                class="field resize-none"
+                placeholder="Např. starý dubový příborník, dva obrazy po babičce, sada porcelánu…"
+                required></textarea>
+            </div>
+
+            <fieldset>
+              <legend class="label">Požadovaná cena</legend>
+              <div class="grid grid-cols-2 gap-2 rounded-full bg-mist p-1">
+                <label class="cursor-pointer">
+                  <input type="radio" name="desiredPriceOption" value="offer" class="peer sr-only" checked />
+                  <span
+                    class="block rounded-full px-4 py-2.5 text-center text-sm font-medium text-muted transition-all peer-checked:bg-ink peer-checked:text-paper peer-focus-visible:ring-2 peer-focus-visible:ring-ink">
+                    Nabídněte mi
+                  </span>
+                </label>
+                <label class="cursor-pointer">
+                  <input type="radio" name="desiredPriceOption" value="fixed" class="peer sr-only" />
+                  <span
+                    class="block rounded-full px-4 py-2.5 text-center text-sm font-medium text-muted transition-all peer-checked:bg-ink peer-checked:text-paper peer-focus-visible:ring-2 peer-focus-visible:ring-ink">
+                    Mám svou cenu
+                  </span>
+                </label>
+              </div>
+              <div id="f-price-wrap" class="mt-2 hidden">
+                <div class="relative">
+                  <input
+                    id="f-price"
+                    name="fixedPriceAmount"
+                    type="number"
+                    min="0"
+                    inputmode="numeric"
+                    class="field pr-14"
+                    placeholder="Např. 5000"
+                    aria-label="Požadovaná cena v Kč"
+                  />
+                  <span class="absolute top-1/2 right-4 -translate-y-1/2 text-sm text-muted">Kč</span>
+                </div>
+              </div>
+            </fieldset>
+
+            <div>
+              <div class="mb-2 flex items-center justify-between">
+                <span class="label mb-0">Fotografie</span>
+                <span id="f-photo-count" class="rounded-full bg-mist px-2.5 py-0.5 text-xs font-medium tabular-nums">0 / 20</span>
+              </div>
+              <label
+                id="f-dropzone"
+                for="f-photos"
+                class="group flex cursor-pointer flex-col items-center justify-center gap-3 rounded-3xl border-2 border-dashed border-line bg-mist px-6 py-8 text-center transition-all duration-300 hover:border-ink hover:bg-paper">
+                <span class="icon-bubble">
+                  <Icon name="image-plus" class="size-5" />
+                </span>
+                <span class="text-sm">
+                  <span class="font-semibold underline underline-offset-4">Vyberte fotky</span>
+                  <span class="text-muted"> nebo je přetáhněte sem</span>
+                </span>
+                <span class="text-xs text-muted">JPG, PNG, HEIC · max. 20 fotek · automaticky zmenšíme</span>
+                <input id="f-photos" type="file" accept="image/*" multiple class="sr-only" />
+              </label>
+              <div id="f-preview" class="mt-3 grid grid-cols-4 gap-2 sm:grid-cols-5"></div>
+            </div>
+
+            <div id="f-progress" class="hidden">
+              <div class="h-1.5 w-full overflow-hidden rounded-full bg-mist">
+                <div id="f-progress-bar" class="h-full w-0 rounded-full bg-ink transition-all duration-300"></div>
+              </div>
+              <p id="f-progress-text" class="mt-2 text-xs text-muted">Nahrávám fotky… 0 %</p>
+            </div>
+
+            <div id="f-error" class="hidden rounded-2xl border border-ink bg-mist px-4 py-3 text-sm" role="alert"></div>
+
+            <button id="f-submit" type="submit" class="btn-primary w-full py-4 text-base">
+              <span id="f-submit-label">Odeslat k ocenění</span>
+              <Icon name="arrow-right" class="arrow size-5" />
+            </button>
+            <p class="text-center text-xs text-muted">Odesláním souhlasíte se zpracováním údajů za účelem ocenění.</p>
+          </form>
+
+          <!-- Úspěch -->
+          <div id="f-success" class="hidden py-10 text-center" aria-live="polite">
+            <div class="mx-auto grid size-20 place-items-center rounded-full bg-ink text-paper">
+              <Icon name="check" class="size-9" strokeWidth={2.5} />
+            </div>
+            <h3 class="h-display mt-6 text-4xl">Děkujeme!</h3>
+            <p class="mt-3 text-muted">
+              Poptávka <strong id="f-success-id" class="text-ink"></strong> dorazila. Ozveme se do 24 hodin.
+            </p>
+            <button id="f-again" type="button" class="btn-ghost mt-8">Odeslat další poptávku</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { firebaseConfig, cloudinary, assertEnv } from '../lib/env';
+
+  const MAX_FILES = 20;
+  const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T;
+
+  const form = $<HTMLFormElement>('sell-form');
+  const submitBtn = $<HTMLButtonElement>('f-submit');
+  const submitLabel = $('f-submit-label');
+  const errorBox = $('f-error');
+  const photoInput = $<HTMLInputElement>('f-photos');
+  const dropzone = $('f-dropzone');
+  const preview = $('f-preview');
+  const photoCount = $('f-photo-count');
+  const progress = $('f-progress');
+  const progressBar = $('f-progress-bar');
+  const progressText = $('f-progress-text');
+  const locationInput = $<HTMLInputElement>('f-location');
+  const suggestions = $('f-suggestions');
+  const emailUser = $<HTMLInputElement>('f-email-user');
+  const emailDomain = $<HTMLSelectElement>('f-email-domain');
+  const emailCustom = $<HTMLInputElement>('f-email-custom');
+  const phoneInput = $<HTMLInputElement>('f-phone');
+  const priceWrap = $('f-price-wrap');
+  const priceInput = $<HTMLInputElement>('f-price');
+
+  let files: File[] = [];
+  const newId = () => Math.floor(100000 + Math.random() * 900000);
+  let vykupId = newId();
+
+  // Těžké knihovny načteme až když uživatel začne formulář vyplňovat → rychlé první načtení stránky
+  let libs: Promise<[typeof import('compressorjs'), typeof import('firebase/app'), typeof import('firebase/firestore/lite')]> | null =
+    null;
+  const loadLibs = () =>
+    (libs ??= Promise.all([import('compressorjs'), import('firebase/app'), import('firebase/firestore/lite')]));
+  form.addEventListener('focusin', () => loadLibs(), { once: true });
+
+  // ---------- Fotky ----------
+  const updateCount = () => {
+    photoCount.textContent = `${files.length} / ${MAX_FILES}`;
+    photoCount.classList.toggle('bg-ink', files.length > 0);
+    photoCount.classList.toggle('text-paper', files.length > 0);
+  };
+
+  const addFiles = (list: FileList | File[]) => {
+    const incoming = Array.from(list).filter((f) => f.type.startsWith('image/') || /\.(heic|heif)$/i.test(f.name));
+    if (files.length + incoming.length > MAX_FILES) {
+      showError(`Můžete nahrát maximálně ${MAX_FILES} fotografií.`);
+      incoming.splice(MAX_FILES - files.length);
+    }
+    for (const file of incoming) {
+      files.push(file);
+      const url = URL.createObjectURL(file);
+      const item = document.createElement('div');
+      item.className = 'group/photo relative aspect-square overflow-hidden rounded-2xl bg-mist animate-[rise_.5s_var(--ease-spring)_both]';
+      item.innerHTML = `<img src="${url}" alt="" class="size-full object-cover grayscale-[30%] transition duration-300 group-hover/photo:grayscale-0" />
+        <button type="button" aria-label="Odebrat fotku" class="absolute top-1.5 right-1.5 grid size-7 place-items-center rounded-full bg-ink text-paper text-sm opacity-90 transition hover:scale-110">✕</button>`;
+      item.querySelector('button')!.addEventListener('click', () => {
+        files = files.filter((f) => f !== file);
+        URL.revokeObjectURL(url);
+        item.remove();
+        updateCount();
+      });
+      preview.appendChild(item);
+    }
+    updateCount();
+  };
+
+  photoInput.addEventListener('change', () => {
+    if (photoInput.files) addFiles(photoInput.files);
+    photoInput.value = '';
+  });
+  ['dragenter', 'dragover'].forEach((ev) =>
+    dropzone.addEventListener(ev, (e) => {
+      e.preventDefault();
+      dropzone.classList.add('border-ink', 'bg-paper', 'scale-[1.01]');
+    }),
+  );
+  ['dragleave', 'drop'].forEach((ev) =>
+    dropzone.addEventListener(ev, (e) => {
+      e.preventDefault();
+      dropzone.classList.remove('border-ink', 'bg-paper', 'scale-[1.01]');
+    }),
+  );
+  dropzone.addEventListener('drop', (e) => {
+    const dt = (e as DragEvent).dataTransfer;
+    if (dt?.files) addFiles(dt.files);
+  });
+
+  // ---------- E-mail ----------
+  emailDomain.addEventListener('change', () => {
+    const other = emailDomain.value === 'other';
+    emailCustom.classList.toggle('hidden', !other);
+    emailCustom.required = other;
+    if (!other) emailCustom.value = '';
+  });
+  // Když někdo napíše celý e-mail, chytře ho rozdělíme
+  emailUser.addEventListener('blur', () => {
+    const v = emailUser.value.trim();
+    const at = v.indexOf('@');
+    if (at > 0) {
+      const domain = v.slice(at).toLowerCase();
+      emailUser.value = v.slice(0, at);
+      const match = Array.from(emailDomain.options).find((o) => o.value === domain);
+      if (match) emailDomain.value = domain;
+      else {
+        emailDomain.value = 'other';
+        emailCustom.value = domain;
+      }
+      emailDomain.dispatchEvent(new Event('change'));
+      if (!match) emailCustom.value = domain;
+    }
+  });
+
+  // ---------- Telefon ----------
+  phoneInput.addEventListener('input', () => {
+    const digits = phoneInput.value.replace(/\D/g, '').replace(/^420/, '').slice(0, 9);
+    phoneInput.value = digits.replace(/(\d{3})(?=\d)/g, '$1 ').trim();
+  });
+
+  // ---------- Cena ----------
+  form.querySelectorAll<HTMLInputElement>('input[name="desiredPriceOption"]').forEach((r) =>
+    r.addEventListener('change', () => {
+      const fixed = r.value === 'fixed' && r.checked;
+      priceWrap.classList.toggle('hidden', !fixed);
+      priceInput.required = fixed;
+      if (!fixed) priceInput.value = '';
+      else priceInput.focus();
+    }),
+  );
+
+  // ---------- Našeptávač lokality (OpenStreetMap Nominatim) ----------
+  let timer: ReturnType<typeof setTimeout>;
+  let controller: AbortController | null = null;
+  locationInput.addEventListener('input', () => {
+    clearTimeout(timer);
+    const q = locationInput.value.trim();
+    if (q.length < 3) return suggestions.classList.add('hidden');
+    timer = setTimeout(async () => {
+      controller?.abort();
+      controller = new AbortController();
+      try {
+        const res = await fetch(
+          `https://nominatim.openstreetmap.org/search?format=json&limit=5&addressdetails=1&countrycodes=cz,sk&accept-language=cs&q=${encodeURIComponent(q)}`,
+          { signal: controller.signal },
+        );
+        const data: { display_name: string }[] = await res.json();
+        suggestions.innerHTML = '';
+        for (const item of data) {
+          const li = document.createElement('li');
+          li.textContent = item.display_name;
+          li.setAttribute('role', 'option');
+          li.className = 'cursor-pointer rounded-xl px-3 py-2.5 text-sm hover:bg-mist';
+          li.addEventListener('click', () => {
+            locationInput.value = item.display_name;
+            suggestions.classList.add('hidden');
+          });
+          suggestions.appendChild(li);
+        }
+        suggestions.classList.toggle('hidden', data.length === 0);
+      } catch {
+        /* zrušený nebo neúspěšný dotaz — ignorujeme */
+      }
+    }, 300);
+  });
+  document.addEventListener('click', (e) => {
+    if (!suggestions.contains(e.target as Node) && e.target !== locationInput) suggestions.classList.add('hidden');
+  });
+
+  // ---------- Odeslání ----------
+  function showError(msg: string) {
+    errorBox.textContent = msg;
+    errorBox.classList.remove('hidden');
+  }
+  function setProgress(pct: number) {
+    progressBar.style.width = `${pct}%`;
+    progressText.textContent = `Nahrávám fotky… ${pct} %`;
+  }
+
+  async function uploadPhotos(Compressor: (typeof import('compressorjs'))['default']) {
+    if (!files.length) return { urls: [] as string[], folderUrl: null as string | null };
+    progress.classList.remove('hidden');
+    setProgress(0);
+    const date = new Date().toISOString().slice(0, 10);
+    const folder = `retrovykup/vykup_${vykupId}_${date}`;
+    let done = 0;
+
+    const urls = await Promise.all(
+      files.map(
+        (file, i) =>
+          new Promise<string>((resolve, reject) => {
+            new Compressor(file, {
+              quality: 0.6,
+              maxWidth: 1600,
+              maxHeight: 1600,
+              async success(compressed) {
+                try {
+                  const fd = new FormData();
+                  fd.append('file', compressed);
+                  fd.append('upload_preset', cloudinary.uploadPreset);
+                  fd.append('folder', folder);
+                  fd.append('public_id', `foto_${i + 1}`);
+                  const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudinary.cloudName}/image/upload`, {
+                    method: 'POST',
+                    body: fd,
+                  });
+                  const json = await res.json();
+                  if (!res.ok || !json.secure_url) throw new Error(json?.error?.message || 'Upload selhal');
+                  done++;
+                  setProgress(Math.round((done / files.length) * 100));
+                  resolve(json.secure_url as string);
+                } catch (err) {
+                  reject(err);
+                }
+              },
+              error: reject,
+            });
+          }),
+      ),
+    );
+    return {
+      urls,
+      folderUrl: `https://console.cloudinary.com/console/c-${cloudinary.cloudName}/media_library/folders/${folder}`,
+    };
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    errorBox.classList.add('hidden');
+
+    if (!form.checkValidity()) {
+      const firstInvalid = form.querySelector<HTMLElement>(':invalid');
+      firstInvalid?.focus();
+      return showError('Vyplňte prosím všechna povinná pole.');
+    }
+    if (phoneInput.value.replace(/\D/g, '').length < 9) {
+      phoneInput.focus();
+      return showError('Zadejte prosím celé telefonní číslo (9 číslic).');
+    }
+    if (!assertEnv(firebaseConfig, 'Firebase') || (files.length && !assertEnv(cloudinary, 'Cloudinary'))) {
+      return showError('Formulář teď není dostupný. Zavolejte nám prosím na 603 538 440.');
+    }
+
+    submitBtn.disabled = true;
+    submitLabel.textContent = 'Odesílám…';
+
+    try {
+      const [{ default: Compressor }, { initializeApp, getApps }, { getFirestore, collection, addDoc, serverTimestamp }] =
+        await loadLibs();
+
+      const upload = await uploadPhotos(Compressor);
+
+      const fd = new FormData(form);
+      let domain = String(fd.get('emailDomain') || '@seznam.cz');
+      if (domain === 'other') {
+        domain = String(fd.get('emailCustom') || '').trim();
+        if (domain && !domain.startsWith('@')) domain = `@${domain}`;
+      }
+      const priceOption = String(fd.get('desiredPriceOption') || 'offer');
+
+      const app = getApps()[0] ?? initializeApp(firebaseConfig);
+      await addDoc(collection(getFirestore(app), 'leads'), {
+        name: String(fd.get('name') || '').trim(),
+        email: `${String(fd.get('emailUser') || '').trim()}${domain}`,
+        phone: String(fd.get('phone') || '').trim(),
+        location: String(fd.get('location') || '').trim(),
+        message: String(fd.get('message') || '').trim(),
+        desiredPriceOption: priceOption,
+        fixedPriceAmount: priceOption === 'fixed' ? String(fd.get('fixedPriceAmount') || '') : 'Nezadáno',
+        photos_count: upload.urls.length,
+        photos_urls: upload.urls,
+        cloudinary_folder: upload.folderUrl || 'Bez fotografií',
+        vykup_id: vykupId,
+        source: location.pathname,
+        status: 'nova',
+        timestamp: serverTimestamp(),
+      });
+
+      $('f-success-id').textContent = `#${vykupId}`;
+      form.classList.add('hidden');
+      $('f-success').classList.remove('hidden');
+      $('formular').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } catch (err) {
+      console.error(err);
+      showError('Odeslání se nezdařilo. Zkuste to prosím znovu, nebo nám zavolejte na 603 538 440.');
+    } finally {
+      submitBtn.disabled = false;
+      submitLabel.textContent = 'Odeslat k ocenění';
+      progress.classList.add('hidden');
+    }
+  });
+
+  $('f-again').addEventListener('click', () => {
+    form.reset();
+    files = [];
+    preview.innerHTML = '';
+    updateCount();
+    priceWrap.classList.add('hidden');
+    emailCustom.classList.add('hidden');
+    vykupId = newId();
+    $('f-success').classList.add('hidden');
+    form.classList.remove('hidden');
+  });
+</script>

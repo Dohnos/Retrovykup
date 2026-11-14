@@ -1,0 +1,469 @@
+---
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import Logo from '../../components/Logo.astro';
+import AdminLogin from '../../components/AdminLogin.astro';
+import { STATUS_SHORT } from '../../lib/admin-labels';
+---
+
+<Base title="Retrovykup Admin — Mapa leadů" noindex bare>
+  <AdminLogin title="Mapa leadů" subtitle="Přihlaste se pro přístup k mapě" backHref="/admin" />
+
+  <div id="appLoading" class="grid min-h-dvh place-items-center">
+    <span class="size-8 animate-spin rounded-full border-2 border-line border-t-ink"></span>
+  </div>
+
+  <div id="mapSection" class="hidden">
+    <nav class="relative z-[1100] border-b border-line bg-paper">
+      <div class="flex items-center justify-between px-4 py-3">
+        <Logo />
+        <div class="flex items-center gap-2">
+          <a href="/admin" class="btn-ghost px-4 py-2.5">
+            <Icon name="layout-dashboard" class="size-4" /> Dashboard
+          </a>
+          <span id="adminEmail" class="hidden text-sm text-muted lg:inline"></span>
+          <button id="logoutBtn" class="btn-primary px-4 py-2.5" aria-label="Odhlásit">
+            <Icon name="log-out" class="size-4" /><span class="hidden sm:inline">Odhlásit</span>
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <div id="mapWrap" class="flex flex-col lg:flex-row">
+      <aside class="w-full shrink-0 overflow-y-auto border-b border-line bg-paper lg:w-80 lg:border-r lg:border-b-0">
+        <div class="space-y-6 p-4">
+          <div class="grid grid-cols-3 gap-2 text-center">
+            <div class="rounded-2xl bg-ink py-3 text-paper">
+              <p class="h-display text-3xl tabular-nums" id="statShown">0</p>
+              <p class="text-[11px] text-white/60">na mapě</p>
+            </div>
+            <div class="rounded-2xl bg-mist py-3">
+              <p class="h-display text-3xl tabular-nums" id="statTotal">0</p>
+              <p class="text-[11px] text-muted">celkem</p>
+            </div>
+            <div class="rounded-2xl border border-line py-3">
+              <p class="h-display text-3xl tabular-nums" id="statMissing">0</p>
+              <p class="text-[11px] text-muted">bez pozice</p>
+            </div>
+          </div>
+
+          <div id="geoProgress" class="hidden rounded-2xl bg-mist px-3 py-2 text-xs">
+            <span id="geoProgressText">Hledám adresy…</span>
+          </div>
+
+          <div>
+            <p class="eyebrow mb-2">Filtr statusu</p>
+            <div class="flex flex-wrap gap-1.5" id="filterButtons">
+              <button class="filter-btn is-active" data-filter="all">Vše</button>
+              {
+                Object.entries(STATUS_SHORT).map(([k, v]) => (
+                  <button class="filter-btn" data-filter={k}>
+                    {v.emoji} {v.label}
+                  </button>
+                ))
+              }
+            </div>
+          </div>
+
+          <div>
+            <p class="eyebrow mb-2">Legenda</p>
+            <div id="legend" class="space-y-1.5"></div>
+            <p class="mt-2 text-[11px] leading-snug text-muted">
+              Symbol ve špendlíku = status nejnovějšího leadu na místě. Číslo = počet leadů na stejné adrese. Pulz = nová poptávka.
+            </p>
+          </div>
+
+          <div id="missingBox" class="hidden">
+            <p class="eyebrow mb-2">Nepodařilo se umístit</p>
+            <div id="missingList" class="space-y-1.5"></div>
+          </div>
+
+          <div class="space-y-2 border-t border-line pt-4">
+            <button id="refitBtn" class="act w-full justify-center"><Icon name="crosshair" class="size-4" /> Vycentrovat na leady</button>
+            <button id="clearCacheBtn" class="act w-full justify-center"><Icon name="refresh-cw" class="size-4" /> Vymazat cache adres</button>
+          </div>
+        </div>
+      </aside>
+
+      <div class="relative flex-1">
+        <div id="map"></div>
+      </div>
+    </div>
+  </div>
+</Base>
+
+<style is:global>
+  @import 'leaflet/dist/leaflet.css';
+
+  #mapWrap { height: calc(100dvh - 65px); }
+  #map { height: 100%; width: 100%; background: #f4f4f4; }
+  @media (max-width: 1023px) {
+    #mapWrap { height: auto; }
+    #map { height: 65vh; min-height: 340px; }
+  }
+  /* Černobílá mapa */
+  .leaflet-tile-pane { filter: grayscale(1) contrast(1.05); }
+
+  .rv-marker { background: transparent; border: none; }
+  .rv-pin {
+    position: relative; width: 34px; height: 44px;
+    filter: drop-shadow(0 4px 4px rgba(0,0,0,.35));
+    transition: transform .2s cubic-bezier(.22,1,.36,1);
+    transform-origin: 50% 100%;
+  }
+  .rv-marker:hover .rv-pin { transform: scale(1.18); }
+  .rv-emoji { position: absolute; left: 0; right: 0; top: 7px; text-align: center; font-size: 13px; line-height: 20px; }
+  .rv-count {
+    position: absolute; top: -5px; right: -7px; min-width: 20px; height: 20px; padding: 0 5px;
+    border-radius: 9999px; background: #fff; color: #0a0a0a; border: 1.5px solid #0a0a0a;
+    font: 700 11px/17px system-ui, sans-serif; text-align: center;
+  }
+  .rv-pulse {
+    position: absolute; left: 50%; bottom: -6px; width: 36px; height: 36px; margin-left: -18px;
+    border-radius: 9999px; background: rgba(10,10,10,.35);
+    animation: rvPulse 2s ease-out infinite; pointer-events: none;
+  }
+  @keyframes rvPulse {
+    0% { transform: scale(.35); opacity: .9; }
+    70%, 100% { transform: scale(1.2); opacity: 0; }
+  }
+  .leaflet-popup-content-wrapper { border-radius: 20px; }
+  .leaflet-popup-content { margin: 14px 16px; width: 290px !important; }
+  .rv-popup-scroll { max-height: 340px; overflow-y: auto; }
+
+  .filter-btn {
+    border-radius: 9999px; padding: .375rem .75rem; font-size: .75rem; font-weight: 500;
+    background: #fff; border: 1px solid var(--color-line); transition: all .2s;
+  }
+  .filter-btn:hover { border-color: var(--color-ink); }
+  .filter-btn.is-active { background: var(--color-ink); color: #fff; border-color: var(--color-ink); }
+  .act {
+    display: inline-flex; align-items: center; gap: .375rem; border-radius: 9999px; padding: .5rem .9rem;
+    font-size: .8125rem; font-weight: 500; border: 1px solid var(--color-line); background: #fff; transition: all .2s;
+  }
+  .act:hover { border-color: var(--color-ink); }
+</style>
+
+<script>
+  import L from 'leaflet';
+  import { signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'firebase/auth';
+  import { collection, query, orderBy, onSnapshot, type Unsubscribe } from 'firebase/firestore';
+  import {
+    auth,
+    db,
+    STATUS_LABELS,
+    STATUS_SHORT,
+    badgeClass,
+    formatDate,
+    escapeHtml,
+    getPhotoUrls,
+    whatsappHref,
+    WHATSAPP_SVG,
+    type Lead,
+  } from '../../lib/admin';
+
+  const GEO_CACHE_KEY = 'rv_geo_cache_v1';
+  const GEO_DELAY_MS = 1100; // Nominatim: max 1 dotaz/s
+  const DEFAULT_CENTER: L.LatLngTuple = [49.8, 15.48];
+  const DEFAULT_ZOOM = 7;
+  /** Odstíny špendlíků — černobílé, liší se sytostí */
+  const PIN_FILL: Record<string, string> = {
+    nova: '#0a0a0a',
+    probiha: '#404040',
+    vyrizeno: '#0a0a0a',
+    nezajem: '#a3a3a3',
+    ceka: '#737373',
+    domluveno: '#262626',
+  };
+
+  const $ = (id: string) => document.getElementById(id)!;
+
+  type Coord = { lat: number; lon: number } | null;
+  let allLeads: Lead[] = [];
+  let currentFilter = 'all';
+  let unsubscribe: Unsubscribe | null = null;
+  let map: L.Map | null = null;
+  let markerLayer: L.LayerGroup | null = null;
+  let geoCache: Record<string, Coord> = loadGeoCache();
+  let geocodingRunning = false;
+
+  // ---------- Auth ----------
+  $('loginForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const err = $('loginError');
+    err.classList.add('hidden');
+    try {
+      await signInWithEmailAndPassword(
+        auth,
+        ($('loginEmail') as HTMLInputElement).value.trim(),
+        ($('loginPassword') as HTMLInputElement).value,
+      );
+    } catch {
+      err.textContent = 'Chybné přihlašovací údaje.';
+      err.classList.remove('hidden');
+    }
+  });
+  $('logoutBtn').addEventListener('click', () => signOut(auth));
+
+  onAuthStateChanged(auth, (user) => {
+    $('appLoading').classList.add('hidden');
+    const login = $('loginSection');
+    if (user) {
+      login.classList.add('hidden');
+      login.classList.remove('grid');
+      $('mapSection').classList.remove('hidden');
+      $('adminEmail').textContent = user.email ?? '';
+      initMap();
+      startListener();
+    } else {
+      $('mapSection').classList.add('hidden');
+      login.classList.remove('hidden');
+      login.classList.add('grid');
+      unsubscribe?.();
+      unsubscribe = null;
+      allLeads = [];
+    }
+  });
+
+  // ---------- Mapa ----------
+  function initMap() {
+    if (map) {
+      setTimeout(() => map!.invalidateSize(), 0);
+      return;
+    }
+    map = L.map('map', { center: DEFAULT_CENTER, zoom: DEFAULT_ZOOM, scrollWheelZoom: true });
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">Přispěvatelé OpenStreetMap</a>',
+    }).addTo(map);
+    markerLayer = L.layerGroup().addTo(map);
+    setTimeout(() => map!.invalidateSize(), 0);
+    renderLegend();
+  }
+
+  function markerIcon(status: string | undefined, count: number, isNew: boolean) {
+    const fill = PIN_FILL[status ?? ''] ?? '#737373';
+    const emoji = STATUS_SHORT[status ?? '']?.emoji ?? '•';
+    return L.divIcon({
+      className: 'rv-marker',
+      html: `<div class="rv-pin">
+          ${isNew ? '<span class="rv-pulse"></span>' : ''}
+          <svg viewBox="0 0 34 44" width="34" height="44" xmlns="http://www.w3.org/2000/svg">
+            <path d="M17 1C8.16 1 1 8.16 1 17c0 11.1 14.06 25.27 15.42 26.62a.82.82 0 0 0 1.16 0C18.94 42.27 33 28.1 33 17 33 8.16 25.84 1 17 1z" fill="${fill}" stroke="#fff" stroke-width="2"/>
+            <circle cx="17" cy="16.6" r="10" fill="#fff"/>
+          </svg>
+          <span class="rv-emoji">${emoji}</span>
+          ${count > 1 ? `<span class="rv-count">${count}</span>` : ''}
+        </div>`,
+      iconSize: [34, 44],
+      iconAnchor: [17, 44],
+      popupAnchor: [0, -40],
+    });
+  }
+
+  // ---------- Geokódování ----------
+  function loadGeoCache(): Record<string, Coord> {
+    try {
+      return JSON.parse(localStorage.getItem(GEO_CACHE_KEY) || '{}') || {};
+    } catch {
+      return {};
+    }
+  }
+  function saveGeoCache() {
+    try {
+      localStorage.setItem(GEO_CACHE_KEY, JSON.stringify(geoCache));
+    } catch {
+      /* plné úložiště — nevadí */
+    }
+  }
+  function normalize(loc?: string) {
+    const clean = String(loc ?? '').trim().replace(/\s+/g, ' ');
+    return !clean || clean.toLowerCase() === 'nezadáno' ? '' : clean.toLowerCase();
+  }
+  const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+  async function geocodeOne(q: string): Promise<Coord> {
+    const res = await fetch(
+      `https://nominatim.openstreetmap.org/search?format=json&limit=1&addressdetails=0&countrycodes=cz,sk&accept-language=cs&q=${encodeURIComponent(q)}`,
+    );
+    if (!res.ok) throw new Error('Nominatim HTTP ' + res.status);
+    const data = await res.json();
+    if (!Array.isArray(data) || !data.length) return null;
+    return { lat: parseFloat(data[0].lat), lon: parseFloat(data[0].lon) };
+  }
+
+  async function processQueue() {
+    if (geocodingRunning) return;
+    const pending = [...new Set(allLeads.map((l) => normalize(l.location)).filter((k) => k && !(k in geoCache)))];
+    if (!pending.length) return showProgress(null);
+    geocodingRunning = true;
+    for (let i = 0; i < pending.length; i++) {
+      showProgress(`Hledám adresy na mapě… ${i + 1}/${pending.length}`);
+      try {
+        geoCache[pending[i]] = await geocodeOne(pending[i]);
+        saveGeoCache();
+        renderMarkers();
+      } catch (err) {
+        console.warn('Geokódování selhalo pro', pending[i], err);
+      }
+      if (i < pending.length - 1) await sleep(GEO_DELAY_MS);
+    }
+    geocodingRunning = false;
+    showProgress(null);
+    renderMarkers();
+    fitToMarkers();
+  }
+
+  function showProgress(text: string | null) {
+    $('geoProgress').classList.toggle('hidden', !text);
+    if (text) $('geoProgressText').textContent = text;
+  }
+
+  // ---------- Data ----------
+  function startListener() {
+    unsubscribe?.();
+    unsubscribe = onSnapshot(
+      query(collection(db, 'leads'), orderBy('timestamp', 'desc')),
+      (snap) => {
+        allLeads = snap.docs.map((d) => ({ id: d.id, ...(d.data() as Omit<Lead, 'id'>) }));
+        renderMarkers();
+        processQueue();
+      },
+      (err) => console.error('Chyba při načítání leadů:', err),
+    );
+  }
+
+  $('filterButtons').addEventListener('click', (e) => {
+    const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('.filter-btn');
+    if (!btn) return;
+    document.querySelectorAll('.filter-btn').forEach((b) => b.classList.remove('is-active'));
+    btn.classList.add('is-active');
+    currentFilter = btn.dataset.filter!;
+    renderMarkers();
+    fitToMarkers();
+  });
+
+  const filtered = () => (currentFilter === 'all' ? allLeads : allLeads.filter((l) => l.status === currentFilter));
+
+  // ---------- Render ----------
+  function renderMarkers() {
+    if (!map || !markerLayer) return;
+    markerLayer.clearLayers();
+    const leads = filtered();
+    const groups = new Map<string, { lat: number; lon: number; leads: Lead[] }>();
+    const missing: Lead[] = [];
+
+    for (const lead of leads) {
+      const key = normalize(lead.location);
+      const c = key ? geoCache[key] : null;
+      if (!c) {
+        missing.push(lead);
+        continue;
+      }
+      const gk = `${c.lat.toFixed(5)},${c.lon.toFixed(5)}`;
+      if (!groups.has(gk)) groups.set(gk, { lat: c.lat, lon: c.lon, leads: [] });
+      groups.get(gk)!.leads.push(lead);
+    }
+
+    groups.forEach((g) => {
+      const newest = g.leads[0];
+      L.marker([g.lat, g.lon], {
+        icon: markerIcon(newest.status, g.leads.length, g.leads.some((l) => l.status === 'nova')),
+        title: `${newest.location || ''} — ${g.leads.length} lead(ů)`,
+        riseOnHover: true,
+      })
+        .bindPopup(popup(g.leads), { maxWidth: 320 })
+        .addTo(markerLayer!);
+    });
+
+    $('statShown').textContent = String(leads.length - missing.length);
+    $('statTotal').textContent = String(allLeads.length);
+    $('statMissing').textContent = String(missing.length);
+    renderMissing(missing);
+    renderLegend();
+  }
+
+  function popup(leads: Lead[]) {
+    const items = leads
+      .map((lead) => {
+        const photos = getPhotoUrls(lead);
+        const thumbs = photos
+          .slice(0, 3)
+          .map(
+            (u) =>
+              `<a href="${escapeHtml(u)}" target="_blank" rel="noopener noreferrer"><img src="${escapeHtml(u)}" alt="" class="size-12 rounded-xl object-cover" /></a>`,
+          )
+          .join('');
+        const more = photos.length > 3 ? `<span class="self-center text-[11px] text-muted">+${photos.length - 3}</span>` : '';
+        const msg = lead.message || '—';
+        const short = msg.length > 140 ? msg.slice(0, 140) + '…' : msg;
+        return `
+        <div class="border-b border-line py-2 last:border-b-0">
+          <div class="flex items-start justify-between gap-2">
+            <p class="text-[15px] leading-tight font-semibold">${escapeHtml(lead.name || '—')}</p>
+            <span class="whitespace-nowrap rounded-full px-2 py-0.5 text-[10px] font-semibold ${badgeClass(lead.status)}">${STATUS_LABELS[lead.status ?? ''] ?? '—'}</span>
+          </div>
+          <p class="mb-1.5 text-[11px] text-muted">#${escapeHtml(lead.vykup_id || '—')} · ${formatDate(lead.timestamp)}</p>
+          <p class="text-xs">📞 ${
+            lead.phone
+              ? `<a href="tel:${escapeHtml(String(lead.phone).replace(/\s+/g, ''))}" class="underline">${escapeHtml(lead.phone)}</a>`
+              : '—'
+          }</p>
+          <p class="mb-1.5 text-xs">📍 ${escapeHtml(lead.location || '—')}</p>
+          <p class="mb-2 rounded-xl bg-mist px-2 py-1.5 text-xs text-muted italic">„${escapeHtml(short)}“</p>
+          ${thumbs ? `<div class="mb-2 flex gap-1">${thumbs}${more}</div>` : ''}
+          <div class="flex items-center gap-1.5">
+            <a href="/admin#lead-${encodeURIComponent(lead.id)}" class="rounded-full bg-ink px-3 py-1.5 text-[11px] !text-white">🔍 Detail v adminu</a>
+            <a href="${whatsappHref(lead)}" target="_blank" rel="noopener noreferrer" title="Odeslat na WhatsApp" class="grid size-7 place-items-center rounded-full border border-line !text-ink">${WHATSAPP_SVG}</a>
+          </div>
+        </div>`;
+      })
+      .join('');
+    const header =
+      leads.length > 1 ? `<p class="mb-1 text-[11px] font-semibold tracking-wide text-muted uppercase">${leads.length} leadů na tomto místě</p>` : '';
+    return `<div class="rv-popup-scroll">${header}${items}</div>`;
+  }
+
+  function renderMissing(missing: Lead[]) {
+    $('missingBox').classList.toggle('hidden', !missing.length);
+    $('missingList').innerHTML = missing
+      .map(
+        (l) => `<a href="/admin#lead-${encodeURIComponent(l.id)}" class="block rounded-xl bg-mist px-3 py-2 transition hover:bg-line">
+          <p class="truncate text-xs font-medium">${escapeHtml(l.name || '—')}</p>
+          <p class="truncate text-[11px] text-muted">📍 ${escapeHtml(l.location || 'bez lokality')}</p></a>`,
+      )
+      .join('');
+  }
+
+  function renderLegend() {
+    const leads = filtered();
+    $('legend').innerHTML = Object.entries(STATUS_LABELS)
+      .map(([k, label]) => {
+        const n = leads.filter((l) => l.status === k).length;
+        return `<div class="flex items-center gap-2 text-xs ${n === 0 ? 'opacity-40' : ''}">
+          <span class="inline-block size-3 shrink-0 rounded-full" style="background:${PIN_FILL[k]};box-shadow:0 0 0 1.5px #fff,0 0 0 2.5px ${PIN_FILL[k]}"></span>
+          <span class="flex-1">${label}</span><span class="font-medium text-muted">${n}</span></div>`;
+      })
+      .join('');
+  }
+
+  function fitToMarkers() {
+    if (!map || !markerLayer) return;
+    const pts: L.LatLng[] = [];
+    markerLayer.eachLayer((layer) => {
+      if ('getLatLng' in layer) pts.push((layer as L.Marker).getLatLng());
+    });
+    if (!pts.length) return map.setView(DEFAULT_CENTER, DEFAULT_ZOOM);
+    map.fitBounds(L.latLngBounds(pts), { padding: [50, 50], maxZoom: 12 });
+  }
+
+  $('refitBtn').addEventListener('click', fitToMarkers);
+  $('clearCacheBtn').addEventListener('click', () => {
+    if (!confirm('Vymazat uloženou cache adres? Souřadnice se znovu dohledají (cca 1 adresa/s).')) return;
+    geoCache = {};
+    saveGeoCache();
+    renderMarkers();
+    processQueue();
+  });
+  window.addEventListener('resize', () => map?.invalidateSize());
+</script>
