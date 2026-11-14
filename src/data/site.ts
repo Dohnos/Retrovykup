@@ -10,6 +10,26 @@ export const site = {
     'Výkup starožitností a retro předmětů po celé ČR. Nábytek, obrazy, porcelán, sklo, lustry, hračky i militaria. Férové ocenění do 24 hodin, platba ihned, diskrétně.',
 };
 
+/**
+ * 🧾 Správce osobních údajů — DOPLŇTE (GDPR vyžaduje identifikaci správce).
+ * Prázdná pole se na webu nezobrazí.
+ */
+export const operator = {
+  name: '', // např. „Jan Novák“ nebo „Retrovykup s.r.o.“
+  ico: '', // např. „12345678“
+  address: '', // např. „Ulice 1, 110 00 Praha“
+};
+
+/** 🔐 Ochrana osobních údajů — verze souhlasu a doba uložení */
+export const privacy = {
+  url: '/ochrana-osobnich-udaju',
+  version: '2026-11-14',
+  updated: '14. 11. 2026',
+  /** Po této době se lead automaticky smaže (po zapnutí TTL ve Firestore, viz README) */
+  retentionDays: 180,
+  retentionText: '6 měsíců',
+};
+
 export const nav = [
   { href: '/vykup', label: 'Jak to funguje' },
   { href: '/galerie', label: 'Galerie' },
@@ -61,6 +81,6 @@ export const faq = [
   },
   {
     q: 'Co se stane s mými fotkami a údaji?',
-    a: 'Slouží jen k ocenění. Fotografie i data z formuláře automaticky mažeme do 7 dnů.',
+    a: 'Slouží jen k ocenění a domluvě výkupu. Nikde je nezveřejňujeme ani neprodáváme a po 6 měsících je mažeme. Podrobnosti najdete v Zásadách ochrany osobních údajů.',
   },
 ];

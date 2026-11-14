@@ -1,7 +1,7 @@
 ---
 import Icon from './Icon.astro';
 import Logo from './Logo.astro';
-import { site, nav } from '../data/site';
+import { site, nav, operator, privacy } from '../data/site';
 import { cities, cityUrl } from '../data/cities';
 
 const year = new Date().getFullYear();
@@ -42,6 +42,7 @@ const year = new Date().getFullYear();
             ))
           }
           <li><a href="/#formular" class="text-white/70 transition-colors hover:text-white">Výkupní formulář</a></li>
+          <li><a href={privacy.url} class="text-white/70 transition-colors hover:text-white">Ochrana osobních údajů</a></li>
         </ul>
       </div>
 
@@ -62,8 +63,13 @@ const year = new Date().getFullYear();
     </div>
 
     <div class="mt-14 flex flex-col gap-3 border-t border-white/10 pt-6 text-xs text-white/40 sm:flex-row sm:justify-between">
-      <p>© {year} Retrovykup. Všechna práva vyhrazena.</p>
-      <p>Fotografie a data z formuláře automaticky mažeme do 7 dnů.</p>
+      <p>
+        © {year} Retrovykup{operator.name && ` · ${operator.name}`}{operator.ico && ` · IČO ${operator.ico}`}. Všechna práva vyhrazena.
+      </p>
+      <p class="flex flex-wrap gap-x-4 gap-y-1">
+        <a href={privacy.url} class="underline-offset-4 hover:text-white hover:underline">Ochrana osobních údajů (GDPR)</a>
+        <span>Web nepoužívá sledovací cookies.</span>
+      </p>
     </div>
   </div>
 </footer>

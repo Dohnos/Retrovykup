@@ -12,8 +12,12 @@ service cloud.firestore {
       // Veřejný formulář smí jen VYTVÁŘET leady se správnými poli a rozumnou velikostí
       allow create: if request.resource.data.keys().hasOnly([
                          'name','email','phone','location','message','desiredPriceOption','fixedPriceAmount',
-                         'photos_count','photos_urls','cloudinary_folder','vykup_id','source','status','timestamp'])
+                         'photos_count','photos_urls','cloudinary_folder','vykup_id','source','status','timestamp',
+                         'consent','consent_version','consent_text','expireAt'])
                     && request.resource.data.status == 'nova'
+                    && request.resource.data.consent == true          // GDPR souhlas je povinný
+                    && request.resource.data.consent_text is string && request.resource.data.consent_text.size() < 2000
+                    && request.resource.data.expireAt is timestamp
                     && request.resource.data.name is string && request.resource.data.name.size() < 200
                     && request.resource.data.message is string && request.resource.data.message.size() < 5000
                     && request.resource.data.photos_urls is list && request.resource.data.photos_urls.size() <= 20

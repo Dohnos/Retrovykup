@@ -5,7 +5,8 @@
   "trailingSlash": false,
   "redirects": [
     { "source": "/kalendar-burz", "destination": "/vykup-starozitnosti", "permanent": true },
-    { "source": "/index", "destination": "/", "permanent": true }
+    { "source": "/index", "destination": "/", "permanent": true },
+    { "source": "/gdpr", "destination": "/ochrana-osobnich-udaju", "permanent": true }
   ],
   "headers": [
     {

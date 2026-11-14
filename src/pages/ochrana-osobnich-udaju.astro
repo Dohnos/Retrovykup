@@ -1,0 +1,278 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import { site, operator, privacy } from '../data/site';
+import { processors, dataCategories } from '../data/privacy';
+
+const toc = [
+  ['spravce', 'Správce údajů'],
+  ['udaje', 'Jaké údaje zpracováváme'],
+  ['ucel', 'Účel a právní základ'],
+  ['doba', 'Jak dlouho údaje uchováváme'],
+  ['prijemci', 'Kde a kým jsou údaje zpracovávány'],
+  ['prava', 'Vaše práva'],
+  ['souhlas', 'Odvolání souhlasu'],
+  ['cookies', 'Cookies a úložiště prohlížeče'],
+  ['zabezpeceni', 'Zabezpečení'],
+  ['zaver', 'Závěrečná ustanovení'],
+];
+
+const rights = [
+  ['eye', 'Přístup', 'Můžete zjistit, jaké údaje o vás zpracováváme, a získat jejich kopii (čl. 15).'],
+  ['pencil', 'Oprava', 'Můžete požádat o opravu nepřesných nebo doplnění neúplných údajů (čl. 16).'],
+  ['trash-2', 'Výmaz', 'Můžete požádat o smazání údajů („právo být zapomenut“, čl. 17).'],
+  ['pause', 'Omezení', 'Můžete požádat o omezení zpracování (čl. 18).'],
+  ['download', 'Přenositelnost', 'Můžete získat údaje ve strojově čitelném formátu (čl. 20).'],
+  ['hand', 'Námitka', 'Můžete vznést námitku proti zpracování (čl. 21).'],
+  ['undo-2', 'Odvolání souhlasu', 'Souhlas můžete kdykoliv odvolat (čl. 7 odst. 3).'],
+  ['scale', 'Stížnost', 'Můžete podat stížnost u Úřadu pro ochranu osobních údajů (čl. 77).'],
+];
+---
+
+<Base
+  title="Ochrana osobních údajů (GDPR) | Retrovykup"
+  description="Zásady zpracování osobních údajů Retrovykup: jaké údaje z výkupního formuláře zpracováváme, proč, kde, jak dlouho a jaká máte práva podle GDPR.">
+  <section class="pt-14 pb-6 sm:pt-20">
+    <div class="container-x">
+      <span class="pill rise"><Icon name="shield-check" class="size-3.5" /> GDPR · Nařízení (EU) 2016/679</span>
+      <h1 class="h-display mt-6 max-w-4xl text-[clamp(3rem,8vw,6rem)]">
+        <span class="rise block" style="--d:100ms">Ochrana</span>
+        <span class="rise block" style="--d:220ms"><em>osobních údajů</em></span>
+      </h1>
+      <p class="rise mt-6 max-w-2xl text-lg text-muted" style="--d:350ms">
+        Vaše údaje používáme jen k tomu, abychom mohli ocenit a vykoupit vaše předměty. Nikde je nezveřejňujeme, neprodáváme a
+        nepoužíváme k reklamě.
+      </p>
+      <p class="rise mt-4 text-sm text-muted" style="--d:420ms">Platné od {privacy.updated} · verze {privacy.version}</p>
+    </div>
+  </section>
+
+  <!-- Shrnutí -->
+  <section class="py-10">
+    <div class="container-x grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      {
+        [
+          ['target', 'Účel', 'Ocenění a výkup předmětů'],
+          ['clock', 'Doba', `Nejdéle ${privacy.retentionText}`],
+          ['ban', 'Bez reklamy', 'Žádné prodávání ani sledování'],
+          ['user-check', 'Vaše práva', 'Přístup, oprava, výmaz a další'],
+        ].map(([icon, t, d], i) => (
+          <div class="card group reveal" style={`--d:${i * 70}ms`}>
+            <span class="icon-bubble">
+              <Icon name={icon} class="size-5" />
+            </span>
+            <p class="mt-5 text-sm text-muted">{t}</p>
+            <p class="mt-0.5 font-semibold">{d}</p>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="py-10">
+    <div class="container-x grid gap-10 lg:grid-cols-[16rem_1fr]">
+      <nav class="lg:sticky lg:top-28 lg:self-start" aria-label="Obsah">
+        <p class="eyebrow mb-3">Obsah</p>
+        <ol class="space-y-1 text-sm">
+          {
+            toc.map(([id, label], i) => (
+              <li>
+                <a href={`#${id}`} class="flex gap-3 rounded-full px-3 py-1.5 text-muted transition-colors hover:bg-mist hover:text-ink">
+                  <span class="tabular-nums">{String(i + 1).padStart(2, '0')}</span>
+                  {label}
+                </a>
+              </li>
+            ))
+          }
+        </ol>
+      </nav>
+
+      <article class="legal max-w-3xl">
+        <h2 id="spravce"><span>01</span>Správce osobních údajů</h2>
+        <p>Správcem osobních údajů je provozovatel webu retrovykup.cz:</p>
+        <div class="not-legal rounded-3xl bg-mist p-6 text-[15px]">
+          <p class="font-semibold">{operator.name || 'Retrovykup'}</p>
+          {operator.ico && <p>IČO: {operator.ico}</p>}
+          {operator.address && <p>{operator.address}</p>}
+          <p class="mt-3 flex flex-wrap gap-x-5 gap-y-1">
+            <a href={`mailto:${site.email}`} class="underline underline-offset-4">{site.email}</a>
+            <a href={site.phoneHref} class="underline underline-offset-4">{site.phone}</a>
+          </p>
+        </div>
+        <p>Pověřence pro ochranu osobních údajů jsme nejmenovali, protože nám to zákon neukládá. Se všemi dotazy se obracejte na výše uvedený e-mail.</p>
+
+        <h2 id="udaje"><span>02</span>Jaké údaje zpracováváme</h2>
+        <p>Zpracováváme jen údaje, které nám sami pošlete přes výkupní formulář, telefonicky, e-mailem nebo přes WhatsApp:</p>
+        <div class="not-legal grid gap-3 sm:grid-cols-2">
+          {
+            dataCategories.map((c) => (
+              <div class="flex gap-4 rounded-3xl border border-line p-5">
+                <span class="grid size-10 shrink-0 place-items-center rounded-2xl bg-ink text-paper">
+                  <Icon name={c.icon} class="size-4" />
+                </span>
+                <div>
+                  <p class="font-semibold">{c.title}</p>
+                  <p class="mt-0.5 text-sm text-muted">{c.text}</p>
+                </div>
+              </div>
+            ))
+          }
+        </div>
+        <p>
+          Nezpracováváme zvláštní kategorie údajů (např. o zdraví) ani údaje dětí. Prosíme, nevkládejte do popisu ani na fotografie
+          údaje, které nejsou potřeba (např. doklady, další osoby).
+        </p>
+
+        <h2 id="ucel"><span>03</span>Účel a právní základ zpracování</h2>
+        <ul>
+          <li>
+            <strong>Ocenění předmětů a odpověď na poptávku</strong> — na základě vašeho <strong>souhlasu</strong> uděleného ve formuláři (čl. 6
+            odst. 1 písm. a) GDPR) a zároveň proto, že jde o <strong>jednání před uzavřením smlouvy</strong> na vaši žádost (čl. 6 odst. 1 písm.
+            b) GDPR).
+          </li>
+          <li>
+            <strong>Uzavření a plnění kupní smlouvy</strong>, domluva vyzvednutí a platby — plnění smlouvy (čl. 6 odst. 1 písm. b) GDPR).
+          </li>
+          <li>
+            <strong>Splnění zákonných povinností</strong>, pokud k výkupu dojde (účetní a daňové doklady) — čl. 6 odst. 1 písm. c) GDPR.
+          </li>
+          <li>
+            <strong>Provoz a bezpečnost webu</strong> (technické záznamy hostingu) — oprávněný zájem (čl. 6 odst. 1 písm. f) GDPR).
+          </li>
+        </ul>
+        <p>K automatizovanému rozhodování ani profilování nedochází. Údaje nepoužíváme k marketingu.</p>
+
+        <h2 id="doba"><span>04</span>Jak dlouho údaje uchováváme</h2>
+        <ul>
+          <li>
+            <strong>Poptávky a fotografie</strong>, které nevedly k výkupu: nejdéle <strong>{privacy.retentionText}</strong> od odeslání, poté je
+            mažeme. Dříve je smažeme, pokud o to požádáte nebo odvoláte souhlas.
+          </li>
+          <li>
+            <strong>Údaje k uskutečněnému výkupu</strong> (doklady): po dobu stanovenou právními předpisy, zejména zákonem o účetnictví a
+            daňovými předpisy.
+          </li>
+          <li><strong>Technické záznamy hostingu</strong>: po dobu nezbytnou pro provoz a bezpečnost, obvykle několik dní.</li>
+        </ul>
+
+        <h2 id="prijemci"><span>05</span>Kde a kým jsou údaje zpracovávány</h2>
+        <p>
+          Údaje nepředáváme žádným dalším firmám k jejich vlastnímu použití. K provozu využíváme tyto zpracovatele, kteří s údaji
+          pracují jen podle našich pokynů a na základě smluv o zpracování:
+        </p>
+        <div class="not-legal space-y-3">
+          {
+            processors.map((p) => (
+              <details class="faq-item group rounded-3xl border border-line">
+                <summary class="flex cursor-pointer list-none items-center justify-between gap-4 p-5">
+                  <span>
+                    <span class="block font-semibold">{p.name}</span>
+                    <span class="block text-sm text-muted">{p.what}</span>
+                  </span>
+                  <span class="faq-icon grid size-8 shrink-0 place-items-center rounded-full bg-mist transition-transform duration-300">
+                    <Icon name="plus" class="size-4" />
+                  </span>
+                </summary>
+                <div class="space-y-1 px-5 pb-5 text-sm text-muted">
+                  <p>
+                    <span class="text-ink">Provozovatel:</span> {p.company}
+                  </p>
+                  <p>
+                    <span class="text-ink">Předání mimo EU:</span> {p.transfer}
+                  </p>
+                  <a href={p.url} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 text-ink underline underline-offset-4">
+                    Zásady zpracování <Icon name="arrow-up-right" class="size-3.5" />
+                  </a>
+                </div>
+              </details>
+            ))
+          }
+        </div>
+        <p>
+          Úvodní obrázek webu se načítá ze služby postimg.cc, která tak vidí IP adresu vašeho prohlížeče. Jinak web nenačítá obsah ze
+          sociálních sítí, reklamních ani analytických služeb.
+        </p>
+
+        <h2 id="prava"><span>06</span>Vaše práva</h2>
+        <p>Podle GDPR máte tato práva:</p>
+        <div class="not-legal grid gap-3 sm:grid-cols-2">
+          {
+            rights.map(([icon, t, d]) => (
+              <div class="flex gap-4 rounded-3xl border border-line p-5">
+                <span class="grid size-10 shrink-0 place-items-center rounded-2xl bg-mist">
+                  <Icon name={icon} class="size-4" />
+                </span>
+                <div>
+                  <p class="font-semibold">{t}</p>
+                  <p class="mt-0.5 text-sm text-muted">{d}</p>
+                </div>
+              </div>
+            ))
+          }
+        </div>
+        <p>
+          Práva uplatníte e-mailem na <a href={`mailto:${site.email}`}>{site.email}</a>. Odpovíme bez zbytečného odkladu, nejpozději do
+          1 měsíce. Abychom údaje nevydali cizí osobě, můžeme vás požádat o ověření (např. číslem poptávky a telefonem).
+        </p>
+        <p>
+          Dozorovým úřadem je <strong>Úřad pro ochranu osobních údajů</strong>, Pplk. Sochora 27, 170 00 Praha 7,
+          <a href="https://uoou.gov.cz" target="_blank" rel="noopener noreferrer">uoou.gov.cz</a>.
+        </p>
+
+        <h2 id="souhlas"><span>07</span>Odvolání souhlasu</h2>
+        <p>
+          Souhlas je dobrovolný. Bez něj ale nemůžeme poptávku přes formulář přijmout — můžete nám však zavolat. Souhlas můžete kdykoliv
+          odvolat e-mailem na <a href={`mailto:${site.email}`}>{site.email}</a> (stačí uvést číslo poptávky nebo telefon). Odvolání
+          nemá vliv na zákonnost zpracování před ním. Údaje pak smažeme, pokud je nemusíme uchovávat ze zákona.
+        </p>
+
+        <h2 id="cookies"><span>08</span>Cookies a úložiště prohlížeče</h2>
+        <p>
+          Veřejná část webu <strong>nepoužívá žádné cookies</strong> ani analytické či reklamní nástroje, proto nevyžaduje cookie lištu.
+          Fonty i ikony jsou uloženy přímo na našem serveru. Administrace (jen pro pracovníky) používá technicky nezbytné úložiště
+          prohlížeče pro přihlášení a mezipaměť mapy.
+        </p>
+
+        <h2 id="zabezpeceni"><span>09</span>Zabezpečení</h2>
+        <p>
+          Web běží výhradně přes šifrované spojení HTTPS. Přístup k poptávkám má pouze přihlášený administrátor, databáze je chráněna
+          přístupovými pravidly a fotografie jsou uloženy pod náhodnými adresami.
+        </p>
+
+        <h2 id="zaver"><span>10</span>Závěrečná ustanovení</h2>
+        <p>
+          Tyto zásady se řídí Nařízením Evropského parlamentu a Rady (EU) 2016/679 (GDPR) a zákonem č. 110/2019 Sb., o zpracování
+          osobních údajů. Zásady můžeme aktualizovat; aktuální verze je vždy na této stránce. Tato verze platí od {privacy.updated}.
+        </p>
+      </article>
+    </div>
+  </section>
+</Base>
+
+<style>
+  @reference '../styles/global.css';
+
+  .legal :global(h2) {
+    @apply mt-14 mb-4 flex scroll-mt-28 items-baseline gap-3 font-display text-4xl leading-tight first:mt-0;
+  }
+  .legal :global(h2 span) {
+    @apply font-sans text-sm font-semibold text-muted tabular-nums;
+  }
+  .legal :global(p:not(.not-legal *)),
+  .legal :global(li:not(.not-legal *)) {
+    @apply leading-relaxed text-neutral-700;
+  }
+  .legal :global(p:not(.not-legal *)) {
+    @apply my-4;
+  }
+  .legal :global(ul:not(.not-legal *)) {
+    @apply my-4 space-y-3 pl-5;
+    list-style: disc;
+  }
+  .legal :global(a:not(.not-legal *)) {
+    @apply underline underline-offset-4;
+  }
+  .legal :global(.not-legal) {
+    @apply my-6;
+  }
+</style>

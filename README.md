@@ -40,6 +40,15 @@ npm run build          # výstup do dist/
 Všechny klíče jsou ve **Vercel → Project → Settings → Environment Variables** (seznam viz `.env.example`).
 V repozitáři nejsou žádné klíče. Bezpečnostní pravidla Firestore jsou v `firestore.rules`.
 
+## 🛡️ GDPR
+
+- Stránka `/ochrana-osobnich-udaju` (+ `/gdpr` přesměrování), odkaz v patičce a u formuláře.
+- Formulář má povinný souhlas; do leadu se ukládá `consent`, `consent_version`, `consent_text` a `expireAt`.
+- 🧾 **Doplňte správce** (jméno/firma, IČO, adresa) v `src/data/site.ts` → `operator`.
+- ⏳ **Automatické mazání:** Firebase Console → Firestore → *Time-to-live (TTL)* → přidat politiku pro kolekci `leads`, pole `expireAt`. Doba se nastavuje v `privacy.retentionDays`.
+- 🖼️ Fotky v Cloudinary TTL nemaže — staré složky `retrovykup/vykup_*` je potřeba mazat ručně (nebo přes Cloudinary API).
+- Při změně textu souhlasu zvyšte `privacy.version`.
+
 ## 📄 Licence
 
 Tento projekt je licencován. Nelze ho používat pro další projekty.

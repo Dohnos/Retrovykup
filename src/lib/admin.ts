@@ -31,6 +31,9 @@ export interface Lead {
   vykup_id?: number | string;
   status?: string;
   timestamp?: Timestamp;
+  consent?: boolean;
+  consent_version?: string;
+  expireAt?: Timestamp;
 }
 
 export { STATUS_LABELS, STATUS_SHORT } from './admin-labels';

@@ -380,6 +380,8 @@ import { STATUS_LABELS } from '../lib/admin-labels';
           <p><span class="text-muted">Datum:</span> ${formatDate(lead.timestamp)}</p>
           <p><span class="text-muted">Požadovaná cena:</span> ${escapeHtml(price)}</p>
           <p><span class="text-muted">Počet fotek:</span> ${lead.photos_count || 0}</p>
+          <p><span class="text-muted">GDPR souhlas:</span> ${lead.consent ? `✅ ano (verze ${escapeHtml(lead.consent_version || '—')})` : '— (starší poptávka)'}</p>
+          ${lead.expireAt ? `<p><span class="text-muted">Automatické smazání:</span> ${formatDate(lead.expireAt)}</p>` : ''}
           <p><span class="text-muted">Status:</span> <span class="rounded-full px-2.5 py-0.5 text-xs font-semibold ${badgeClass(lead.status)}">${STATUS_LABELS[lead.status ?? ''] ?? '—'}</span></p>
         </div>
       </div>
