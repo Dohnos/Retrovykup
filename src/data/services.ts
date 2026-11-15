@@ -18,6 +18,8 @@ export interface Service {
   info: { icon: string; title: string; points: string[] };
   faq: { q: string; a: string }[];
   cta: { title: string; text: string };
+  /** Zobrazit přehled puncovních značek */
+  hallmarks?: 'zlato' | 'stribro';
 }
 
 export const services: Service[] = [
@@ -81,6 +83,65 @@ export const services: Service[] = [
       },
     ],
     cta: { title: 'Máte doma zlato?', text: 'Pošlete fotky a detail puncu — do 24 hodin víte, kolik za něj dostanete.' },
+    hallmarks: 'zlato',
+  },
+  {
+    slug: 'vykup-stribra',
+    name: 'Výkup stříbra',
+    short: 'Stříbrné příbory, mince, šperky, podnosy i slitky. Cena podle ryzosti a váhy.',
+    seoTitle: 'Výkup stříbra – příbory, mince, šperky | Retrovykup',
+    seoDesc:
+      'Výkup stříbra po celé ČR: stříbrné příbory, podnosy, mince, šperky, svícny i slitky. Férová cena podle ryzosti a váhy, ocenění do 24 h, platba ihned.',
+    eyebrow: 'Výkup stříbra po celé ČR',
+    lines: ['Výkup', 'stříbra', '_férově._'],
+    intro:
+      'Vykupujeme stříbrné příbory, nádobí, mince, šperky i slitky. Cenu určujeme podle ryzosti (punc), hmotnosti a aktuální ceny stříbra — u starožitností i podle sběratelské hodnoty.',
+    quickLabel: 'stříbra',
+    itemsTitle: 'Jaké stříbro vykupujeme',
+    items: [
+      { icon: 'utensils', title: 'Příbory a soupravy', text: 'Celé jídelní soupravy i jednotlivé lžíce, vidličky, nože a naběračky.' },
+      { icon: 'coffee', title: 'Nádobí a podnosy', text: 'Podnosy, konvice, cukřenky, poháry, tácky a misky.' },
+      { icon: 'coins', title: 'Mince a medaile', text: 'Historické i investiční stříbrné mince, pamětní medaile.' },
+      { icon: 'gem', title: 'Šperky', text: 'Prsteny, řetízky, náramky, brože — i poškozené.' },
+      { icon: 'flame', title: 'Svícny a dekorace', text: 'Svícny, dózy, rámečky, tabatěrky a další stříbrné předměty.' },
+      { icon: 'landmark', title: 'Slitky', text: 'Investiční stříbro v cihličkách a slitcích.' },
+    ],
+    steps: [
+      { icon: 'camera', title: 'Vyfoťte a zvažte', text: 'Pošlete fotky, detail puncu a přibližnou hmotnost.' },
+      { icon: 'scale', title: 'Předběžná cena', text: 'Podle ryzosti, váhy a hodnoty předmětu pošleme nabídku do 24 h.' },
+      { icon: 'badge-check', title: 'Ověření', text: 'Při předání stříbro převážíme a ověříme ryzost.' },
+      { icon: 'banknote', title: 'Platba ihned', text: 'Hotově, nebo převodem na účet — ihned po ověření.' },
+    ],
+    info: {
+      icon: 'stamp',
+      title: 'Jak poznat stříbro',
+      points: [
+        'Hledejte punc — na příborech bývá na zadní straně rukojeti, na nádobí na dně.',
+        'Nejčastější ryzosti: 925 (sterling), 900 a 800 u starších předmětů. Přehled značek níže.',
+        'Postříbřené předměty (např. značené Alpaka nebo EPNS) nejsou z ryzího stříbra — i tak je rádi posoudíme.',
+        'Při výkupu drahých kovů je ze zákona potřeba doklad totožnosti prodávajícího.',
+      ],
+    },
+    faq: [
+      {
+        q: 'Jak určujete výkupní cenu stříbra?',
+        a: 'Podle hmotnosti, ryzosti (punce) a aktuální ceny stříbra. U starožitných a designových předmětů zohledňujeme i jejich sběratelskou hodnotu.',
+      },
+      {
+        q: 'Vykupujete i neúplné sady příborů?',
+        a: 'Ano. Vykupujeme celé soupravy v kazetách i jednotlivé kusy.',
+      },
+      {
+        q: 'Jak poznám, jestli je předmět stříbrný, nebo jen postříbřený?',
+        a: 'Stříbrné předměty mají punc s ryzostí (např. 925 nebo 800). Postříbřené bývají značené Alpaka, EPNS nebo nemají punc vůbec. Pošlete fotku značky a poradíme.',
+      },
+      {
+        q: 'Potřebuji k výkupu stříbra doklad?',
+        a: 'Ano, při výkupu drahých kovů je ze zákona potřeba ověřit totožnost prodávajícího — stačí občanský průkaz.',
+      },
+    ],
+    cta: { title: 'Máte doma stříbro?', text: 'Pošlete fotky a detail puncu — do 24 hodin víte, kolik za něj dostanete.' },
+    hallmarks: 'stribro',
   },
   {
     slug: 'vykup-knih',

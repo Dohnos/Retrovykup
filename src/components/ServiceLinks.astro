@@ -7,7 +7,7 @@ interface Props {
   title?: string;
 }
 const { exclude, title = 'Vykupujeme také' } = Astro.props;
-const icons: Record<string, string> = { 'vykup-zlata': 'gem', 'vykup-knih': 'book-open', 'vyklizeni-pozustalosti': 'house' };
+const icons: Record<string, string> = { 'vykup-zlata': 'gem', 'vykup-stribra': 'utensils', 'vykup-knih': 'book-open', 'vyklizeni-pozustalosti': 'house' };
 const list = [
   ...(exclude ? [{ slug: '', name: 'Výkup starožitností', href: '/', icon: 'amphora', text: 'Nábytek, obrazy, porcelán, lustry a retro do roku 1989.' }] : []),
   ...services
@@ -20,7 +20,7 @@ const list = [
   <div class="container-x">
     <p class="eyebrow reveal">Další služby</p>
     <h2 class="h-display reveal mt-3 text-4xl sm:text-5xl" style="--d:80ms">{title}</h2>
-    <div class="mt-10 grid gap-4 md:grid-cols-3">
+    <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
       {
         list.map((l, i) => (
           <a href={l.href} class="group card card-hover reveal flex flex-col justify-between gap-8 p-7" style={`--d:${i * 80}ms`}>

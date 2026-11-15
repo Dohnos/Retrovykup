@@ -1,0 +1,161 @@
+---
+/**
+ * Puncovní značky — oficiální přehled (obrázek) + textová tabulka pro SEO a čtečky.
+ * Podle vyhlášky č. 363/2003 Sb.
+ */
+import Icon from './Icon.astro';
+
+interface Props {
+  metal: 'zlato' | 'stribro';
+}
+const { metal } = Astro.props;
+
+const data = {
+  zlato: {
+    title: 'Jak přečíst punc',
+    em: 'na zlatě',
+    marks: [
+      ['999', '0', 'hlava orla v kruhu', '24 k, ryzí / investiční zlato'],
+      ['986', '1', 'hlava orla', '≈ 23,6 k, dukátové zlato'],
+      ['900', '2', 'hlava orla', '≈ 21,6 k, mincovní zlato'],
+      ['750', '3', 'hlava kohouta', '18 k, kvalitní šperky'],
+      ['585', '4', 'hlava labutě', '14 k, nejčastější u šperků'],
+    ],
+    convention: '999, 916, 750 a 585',
+  },
+  stribro: {
+    title: 'Jak přečíst punc',
+    em: 'na stříbře',
+    marks: [
+      ['999', '0', 'hlava kamzíka', 'ryzí / investiční stříbro'],
+      ['959', '1', 'hlava kamzíka', 'velmi vysoká ryzost'],
+      ['925', '2', 'hlava kamzíka', 'sterlingové stříbro, šperky a příbory'],
+      ['900', '3', 'hlava zajíce', 'mince a starší předměty'],
+      ['835', '4', 'hlava zajíce', 'příbory a starožitnosti'],
+      ['800', '5', 'hlava zajíce', 'nejnižší zákonná ryzost, starší stříbro'],
+    ],
+    convention: '999, 925, 830 a 800',
+  },
+}[metal];
+---
+
+<section id="puncovni-znacky" class="scroll-mt-36 py-20">
+  <div class="container-x">
+    <div class="grid gap-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
+      <div>
+        <p class="eyebrow reveal">Puncovní značky</p>
+        <h2 class="h-display reveal mt-3 text-4xl sm:text-5xl" style="--d:80ms">{data.title} <em>{data.em}</em></h2>
+      </div>
+      <p class="reveal text-lg leading-relaxed text-muted lg:pb-1" style="--d:140ms">
+        Punc je malá značka, kterou Puncovní úřad potvrzuje ryzost drahého kovu. Číslice ve značce není obsah kovu, ale pořadové číslo
+        ryzosti — čím nižší, tím ryzejší kov.
+      </p>
+    </div>
+
+    <div class="mt-12 grid items-start gap-8 lg:grid-cols-[0.95fr_1.05fr]">
+      <!-- Oficiální přehled značek -->
+      <figure class="reveal">
+        <a
+          href="/images/ceske-puncovni-znacky.jpg"
+          target="_blank"
+          class="group relative block overflow-hidden rounded-[2rem] border border-line bg-ink"
+          aria-label="Otevřít přehled puncovních značek ve velkém rozlišení">
+          <picture>
+            <source srcset="/images/ceske-puncovni-znacky.webp" type="image/webp" />
+            <img
+              src="/images/ceske-puncovni-znacky.jpg"
+              width="876"
+              height="1134"
+              loading="lazy"
+              decoding="async"
+              alt="České puncovní značky pro zlaté, stříbrné a platinové zboží: státní značky zlata (999 až 585: hlava orla, kohouta a labutě), stříbra (999 až 800: hlava kamzíka a zajíce) a platiny (999 až 800: koruna), značky Konvence s vahami, značky pro staré zboží nižší ryzosti a znaménka METAL, MET a M."
+              class="h-auto w-full transition-transform duration-700 ease-(--ease-spring) group-hover:scale-[1.02]"
+            />
+          </picture>
+          <span class="absolute right-4 bottom-4 inline-flex items-center gap-1.5 rounded-full bg-paper px-3 py-1.5 text-xs font-semibold text-ink shadow-lg">
+            <Icon name="zoom-in" class="size-3.5" /> Zvětšit
+          </span>
+        </a>
+        <figcaption class="mt-3 text-xs text-muted">
+          České puncovní značky pro zlaté, stříbrné a platinové zboží. Zdroj: Puncovní úřad.
+        </figcaption>
+      </figure>
+
+      <!-- Textový přehled -->
+      <div class="space-y-6">
+        <div class="reveal overflow-hidden rounded-3xl border border-line">
+          <table class="w-full text-left text-sm">
+            <caption class="bg-mist px-5 py-3 text-left font-semibold">Státní puncovní značky — {metal === 'zlato' ? 'zlato' : 'stříbro'}</caption>
+            <thead class="text-xs text-muted">
+              <tr class="border-b border-line">
+                <th class="px-5 py-2.5 font-medium">Ryzost</th>
+                <th class="px-2 py-2.5 font-medium">Číslo</th>
+                <th class="px-5 py-2.5 font-medium">Motiv / použití</th>
+              </tr>
+            </thead>
+            <tbody>
+              {
+                data.marks.map(([f, n, motif, use]) => (
+                  <tr class="border-b border-line last:border-0">
+                    <td class="px-5 py-3 text-base font-bold tabular-nums">
+                      {f}
+                      <span class="text-xs font-medium text-muted">/1000</span>
+                    </td>
+                    <td class="px-2 py-3">
+                      <span class="grid size-7 place-items-center rounded-full bg-ink text-xs font-bold text-paper">{n}</span>
+                    </td>
+                    <td class="px-5 py-3">
+                      <span class="block font-medium">{motif}</span>
+                      <span class="block text-xs text-muted">{use}</span>
+                    </td>
+                  </tr>
+                ))
+              }
+            </tbody>
+          </table>
+        </div>
+
+        <ul class="reveal space-y-3 text-sm">
+          <li class="flex gap-3">
+            <span class="grid size-8 shrink-0 place-items-center rounded-full bg-mist"><Icon name="scale" class="size-4" /></span>
+            <span>
+              <strong>Značky Konvence</strong> (váhy s číslem ryzosti — {data.convention}) jsou mezinárodní značky platné ve všech
+              členských státech Úmluvy o zkoušení a označování drahých kovů, včetně ČR.
+            </span>
+          </li>
+          <li class="flex gap-3">
+            <span class="grid size-8 shrink-0 place-items-center rounded-full bg-mist"><Icon name="hourglass" class="size-4" /></span>
+            <span>
+              <strong>Staré zboží nižší ryzosti</strong> má vlastní značku. Starší a zahraniční punce (např. rakousko-uherské) také
+              oceníme.
+            </span>
+          </li>
+          <li class="flex gap-3">
+            <span class="grid size-8 shrink-0 place-items-center rounded-full bg-mist"><Icon name="info" class="size-4" /></span>
+            <span>
+              <strong>Znaménka METAL, MET nebo M</strong> označují předměty z obecných kovů — nejde o {metal === 'zlato' ? 'zlato' : 'stříbro'}.
+            </span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Puncovní úřad -->
+    <div class="grain reveal mt-10 flex flex-col gap-6 rounded-[2rem] bg-ink p-7 text-paper sm:flex-row sm:items-center sm:justify-between sm:p-9">
+      <div class="flex items-start gap-4">
+        <span class="icon-bubble bg-paper text-ink"><Icon name="landmark" class="size-5" /></span>
+        <div>
+          <p class="text-lg font-semibold">Puncovní úřad</p>
+          <p class="mt-1 max-w-xl text-sm text-white/60">
+            Státní úřad, který značí a zkouší zboží z drahých kovů. Najdete u něj přehled všech platných i starších uznávaných
+            puncovních značek a můžete si nechat ověřit ryzost. Kozí 4, 110 00 Praha 1.
+          </p>
+        </div>
+      </div>
+      <a href="https://punc.gov.cz" target="_blank" rel="noopener noreferrer" class="btn-light shrink-0 px-6 py-3.5 whitespace-nowrap">
+        punc.gov.cz
+        <Icon name="arrow-up-right" class="size-4" />
+      </a>
+    </div>
+  </div>
+</section>

@@ -7,7 +7,7 @@ import Icon from '../components/Icon.astro';
 import CtaBand from '../components/CtaBand.astro';
 import Shipping from '../components/Shipping.astro';
 import ServiceLinks from '../components/ServiceLinks.astro';
-import GoldHallmarks from '../components/GoldHallmarks.astro';
+import Hallmarks from '../components/Hallmarks.astro';
 import { services, serviceUrl, type Service } from '../data/services';
 import { site } from '../data/site';
 
@@ -98,7 +98,7 @@ const schema = [
     </div>
   </section>
 
-  {s.slug === 'vykup-zlata' && <GoldHallmarks />}
+  {s.hallmarks && <Hallmarks metal={s.hallmarks} />}
 
   <!-- Postup -->
   <section class="py-20">
