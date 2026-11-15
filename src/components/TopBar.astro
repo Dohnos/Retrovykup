@@ -1,0 +1,19 @@
+---
+import Icon from './Icon.astro';
+---
+
+<div class="bg-ink text-paper">
+  <div class="container-x flex items-center justify-center gap-3 py-2 text-[13px] sm:gap-4 sm:text-sm">
+    <p class="flex items-center gap-2">
+      <Icon name="timer" class="size-4 shrink-0 text-emerald-400" />
+      <span>Vyplnění formuláře zabere jen{' '}<span class="font-semibold underline decoration-2 underline-offset-4">1 minutu</span></span>
+    </p>
+    <a
+      href="/#formular"
+      data-cta
+      class="group inline-flex shrink-0 items-center gap-1.5 rounded-full bg-paper px-3 py-1 text-xs font-semibold text-ink transition hover:bg-neutral-200 sm:px-4 sm:py-1.5 sm:text-[13px]">
+      <span>Vyplnit<span class="hidden sm:inline"> formulář</span></span>
+      <Icon name="arrow-right" class="size-3.5 transition-transform group-hover:translate-x-0.5" />
+    </a>
+  </div>
+</div>
