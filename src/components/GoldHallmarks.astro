@@ -1,0 +1,78 @@
+---
+/**
+ * České státní puncovní značky pro zlato (vyhláška č. 363/2003 Sb.).
+ * Tvary jsou schematické — skutečné značky obsahují reliéf zvířecí hlavy.
+ */
+import Icon from './Icon.astro';
+
+const marks = [
+  { fineness: '999', karat: '24 k', no: '0', motif: 'hlava orla', shape: 'v kruhu', d: 'M40 8 A22 22 0 1 1 39.99 8 Z', note: 'Ryzí / investiční zlato' },
+  { fineness: '986', karat: '≈ 23,6 k', no: '1', motif: 'hlava orla', shape: 'v půlkruhu s odseknutými rohy', d: 'M20 10 H60 L70 20 A30 30 0 0 1 10 20 Z', note: 'Dukátové zlato' },
+  { fineness: '900', karat: '≈ 21,6 k', no: '2', motif: 'hlava orla', shape: 'v obdélníku s vyklenutými boky', d: 'M16 12 H64 Q74 30 64 48 H16 Q6 30 16 12 Z', note: 'Mincovní zlato' },
+  { fineness: '750', karat: '18 k', no: '3', motif: 'hlava kohouta', shape: 'v nepravidelném pětiúhelníku', d: 'M12 12 H68 V36 L40 50 L12 36 Z', note: 'Kvalitní šperky' },
+  { fineness: '585', karat: '14 k', no: '4', motif: 'hlava labutě', shape: 'v protáhlém šestiúhelníku', d: 'M6 30 L18 12 H62 L74 30 L62 48 H18 Z', note: 'Nejčastější u šperků' },
+];
+---
+
+<section id="puncovni-znacky" class="scroll-mt-36 py-20">
+  <div class="container-x">
+    <div class="grid gap-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
+      <div>
+        <p class="eyebrow reveal">Puncovní značky</p>
+        <h2 class="h-display reveal mt-3 text-4xl sm:text-5xl" style="--d:80ms">Jak přečíst punc <em>na zlatě</em></h2>
+      </div>
+      <p class="reveal text-lg leading-relaxed text-muted lg:pb-1" style="--d:140ms">
+        Český státní punc má pro každou ryzost vlastní tvar a motiv. Číslice ve značce není obsah zlata, ale pořadové číslo ryzosti
+        — čím nižší, tím ryzejší zlato.
+      </p>
+    </div>
+
+    <div class="mt-12 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+      {
+        marks.map((m, i) => (
+          <div class="card card-hover group reveal flex flex-col" style={`--d:${i * 70}ms`}>
+            <div class="grid place-items-center rounded-2xl bg-mist py-5">
+              <svg viewBox="0 0 80 60" class="h-16 w-20 transition-transform duration-500 ease-(--ease-spring) group-hover:scale-110" aria-hidden="true">
+                <path d={m.d} fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round" />
+                <text x="40" y="38" text-anchor="middle" font-size="20" font-weight="700" fill="currentColor" font-family="Inter Variable, sans-serif">
+                  {m.no}
+                </text>
+              </svg>
+            </div>
+            <p class="mt-4 text-2xl font-bold tracking-tight tabular-nums">
+              {m.fineness}
+              <span class="text-base font-medium text-muted">/1000</span>
+            </p>
+            <p class="text-sm font-medium">{m.karat} · {m.note}</p>
+            <p class="mt-2 text-xs leading-relaxed text-muted">
+              Číslo {m.no}, {m.motif} {m.shape}
+            </p>
+          </div>
+        ))
+      }
+    </div>
+
+    <p class="reveal mt-4 text-xs text-muted">
+      Schematické znázornění tvaru značky podle vyhlášky č. 363/2003 Sb. Skutečná značka obsahuje reliéf zvířecí hlavy a je velmi
+      malá — nejlépe ji uvidíte lupou. Zahraniční a starší značky (např. 375, 14K, 18K) také oceníme.
+    </p>
+
+    <!-- Puncovní úřad -->
+    <div class="grain reveal mt-8 flex flex-col gap-6 rounded-[2rem] bg-ink p-7 text-paper sm:flex-row sm:items-center sm:justify-between sm:p-9">
+      <div class="flex items-start gap-4">
+        <span class="icon-bubble bg-paper text-ink"><Icon name="landmark" class="size-5" /></span>
+        <div>
+          <p class="text-lg font-semibold">Puncovní úřad</p>
+          <p class="mt-1 max-w-xl text-sm text-white/60">
+            Státní úřad, který značí a zkouší zboží z drahých kovů. Najdete u něj přehled všech platných i starších uznávaných
+            puncovních značek a můžete si nechat ověřit ryzost. Kozí 4, 110 00 Praha 1.
+          </p>
+        </div>
+      </div>
+      <a href="https://punc.gov.cz" target="_blank" rel="noopener noreferrer" class="btn-light shrink-0 px-6 py-3.5 whitespace-nowrap">
+        punc.gov.cz
+        <Icon name="arrow-up-right" class="size-4" />
+      </a>
+    </div>
+  </div>
+</section>

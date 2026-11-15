@@ -53,7 +53,7 @@ export const services: Service[] = [
       title: 'Jak poznat zlato',
       points: [
         'Hledejte punc — malou značku na zapínání, vnitřní straně prstenu nebo očku řetízku.',
-        'Ryzost se uvádí v tisícinách: 585 = 14karátové zlato, 750 = 18karátové, 999 = ryzí.',
+        'Ryzost se uvádí v tisícinách: 585 = 14karátové zlato, 750 = 18karátové, 999 = ryzí. Přehled značek níže.',
         'Vyfoťte punc zblízka a přidejte hmotnost v gramech — nabídka pak bude přesnější.',
         'Při výkupu zlata je ze zákona potřeba doklad totožnosti prodávajícího.',
       ],
@@ -70,6 +70,10 @@ export const services: Service[] = [
       {
         q: 'Potřebuji k výkupu zlata doklad?',
         a: 'Ano, při výkupu zlata je ze zákona potřeba ověřit totožnost prodávajícího — stačí občanský průkaz.',
+      },
+      {
+        q: 'Jak poznám, jestli má šperk punc?',
+        a: 'Český státní punc je malá značka se zvířecí hlavou (orel, kohout nebo labuť) a číslem ryzosti. Přehled najdete výše na této stránce, kompletní seznam platných i starších značek má Puncovní úřad na punc.gov.cz.',
       },
       {
         q: 'Musím zlato posílat poštou?',
