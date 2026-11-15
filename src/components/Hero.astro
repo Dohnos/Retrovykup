@@ -1,5 +1,6 @@
 ---
 import Icon from './Icon.astro';
+import ContactButtons from './ContactButtons.astro';
 import { site, operator, privacy } from '../data/site';
 
 interface Props {
@@ -7,8 +8,10 @@ interface Props {
   /** Řádky nadpisu — každý se animuje zvlášť. Text v _podtržítkách_ bude kurzívou. */
   lines: string[];
   text: string;
+  /** Město do předvyplněné WhatsApp/e-mail zprávy */
+  city?: string;
 }
-const { eyebrow, lines, text } = Astro.props;
+const { eyebrow, lines, text, city } = Astro.props;
 
 const fmt = (s: string) => s.replace(/_(.+?)_/g, '<em>$1</em>');
 const ticks = Array.from({ length: 60 }, (_, i) => i * 6);
@@ -52,7 +55,7 @@ const tiles = [
       <circle cx="200" cy="200" r="6" fill="#fff"></circle>
     </svg>
 
-    <div class="container-x grid items-center gap-8 py-8 sm:py-12 lg:min-h-[min(80svh,740px)] lg:grid-cols-[1.1fr_0.9fr] lg:gap-16 lg:py-14">
+    <div class="container-x grid items-center gap-8 py-8 sm:py-12 lg:min-h-[min(80svh,740px)] lg:grid-cols-[1.2fr_0.8fr] lg:gap-14 lg:py-14">
       <!-- Text + CTA -->
       <div>
         <span class="rise inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3.5 py-1.5 text-xs font-medium backdrop-blur">
@@ -69,17 +72,7 @@ const tiles = [
 
         <p class="rise mt-5 max-w-xl text-base leading-relaxed text-white/70 sm:text-lg" style="--d:380ms">{text}</p>
 
-        <div class="rise mt-7 flex flex-col gap-3 sm:flex-row" style="--d:460ms">
-          <a href="#formular" data-cta class="btn-light px-7 py-4 text-base shadow-[0_10px_40px_-10px_rgba(255,255,255,0.5)]">
-            <Icon name="camera" class="size-5" />
-            Získat nabídku zdarma
-            <Icon name="arrow-right" class="arrow size-5" />
-          </a>
-          <a href={site.phoneHref} class="btn-ghost-dark px-7 py-4 text-base">
-            <Icon name="phone" class="size-5" />
-            {site.phone}
-          </a>
-        </div>
+        <ContactButtons class="rise mt-7" style="--d:460ms" tone="dark" email="link" city={city} />
 
         <ul class="rise mt-7 flex flex-wrap gap-2 text-xs sm:text-sm" style="--d:560ms">
           {

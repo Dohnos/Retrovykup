@@ -1,0 +1,86 @@
+---
+/**
+ * Kontaktní tlačítka — vždy v pořadí: Formulář → WhatsApp → Telefon → E-mail.
+ */
+import Icon from './Icon.astro';
+import WhatsAppIcon from './WhatsAppIcon.astro';
+import { site, whatsappLink, emailLink } from '../data/site';
+
+interface Props {
+  /** Na jakém pozadí tlačítka leží */
+  tone?: 'dark' | 'light';
+  size?: 'lg' | 'md';
+  /** E-mail jako tlačítko, nebo jako menší odkaz pod tlačítky */
+  email?: 'button' | 'link';
+  /** Text hlavního tlačítka */
+  formLabel?: string;
+  /** Skryje tlačítko formuláře (např. když je nahrazeno jiným) */
+  hideForm?: boolean;
+  /** Město do předvyplněné zprávy */
+  city?: string;
+  /** Tlačítka roztáhnout na celou šířku (pod sebou) */
+  stack?: boolean;
+  class?: string;
+  style?: string;
+}
+const {
+  tone = 'light',
+  size = 'lg',
+  email = 'button',
+  formLabel = 'Chci nabídnout',
+  hideForm = false,
+  city,
+  stack = false,
+  class: className,
+  style,
+} = Astro.props;
+
+const dark = tone === 'dark';
+const pad = size === 'lg' ? 'px-5 py-4 text-base' : 'px-4 py-3 text-sm';
+const primary = dark ? 'btn-light' : 'btn-primary';
+const ghost = dark ? 'btn-ghost-dark' : 'btn-ghost';
+const ic = size === 'lg' ? 'size-5' : 'size-4';
+---
+
+<div class:list={[className]} style={style}>
+  <div class:list={['flex flex-col gap-2', !stack && 'sm:flex-row sm:flex-wrap', '[&>a]:whitespace-nowrap']}>
+    {
+      !hideForm && (
+        <a href="/#formular" data-cta class:list={[primary, pad, dark && 'shadow-[0_10px_40px_-10px_rgba(255,255,255,0.45)]']}>
+          <Icon name="camera" class={ic} />
+          {formLabel}
+          <Icon name="arrow-right" class:list={['arrow', ic]} />
+        </a>
+      )
+    }
+    <a href={whatsappLink(city)} target="_blank" rel="noopener noreferrer" class:list={[ghost, pad]}>
+      <WhatsAppIcon class={ic} />
+      WhatsApp
+    </a>
+    <a href={site.phoneHref} class:list={[ghost, pad]}>
+      <Icon name="phone" class={ic} />
+      Volat {site.phone}
+    </a>
+    {
+      email === 'button' && (
+        <a href={emailLink(city)} class:list={[ghost, pad]}>
+          <Icon name="mail" class={ic} />
+          E-mail
+        </a>
+      )
+    }
+  </div>
+  {
+    email === 'link' && (
+      <a
+        href={emailLink(city)}
+        class:list={[
+          'mt-3 inline-flex items-center gap-2 text-sm underline-offset-4 hover:underline',
+          dark ? 'text-white/60 hover:text-white' : 'text-muted hover:text-ink',
+        ]}>
+        <Icon name="mail" class="size-4" />
+        nebo napište e-mail na {site.email}
+      </a>
+    )
+  }
+</div>

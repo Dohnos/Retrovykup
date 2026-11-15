@@ -1,7 +1,8 @@
 ---
 import Icon from './Icon.astro';
 import Logo from './Logo.astro';
-import { nav, site } from '../data/site';
+import { nav, site, whatsappLink, emailLink } from '../data/site';
+import WhatsAppIcon from './WhatsAppIcon.astro';
 import { cleanPath } from '../lib/path';
 
 const path = cleanPath(Astro.url.pathname);
@@ -30,13 +31,18 @@ const path = cleanPath(Astro.url.pathname);
       </nav>
 
       <div class="flex items-center gap-2">
-        <a href={site.phoneHref} class="btn-ghost hidden px-4 py-2.5 lg:inline-flex">
-          <Icon name="phone" class="size-4" />
-          {site.phone}
-        </a>
         <a href="/#formular" class="btn-primary hidden px-5 py-2.5 sm:inline-flex">
-          Získat nabídku
+          Chci nabídnout
           <Icon name="arrow-right" class="arrow size-4" />
+        </a>
+        <a href={whatsappLink()} target="_blank" rel="noopener noreferrer" class="hidden size-10 place-items-center rounded-full border border-line transition hover:border-ink md:grid" aria-label="WhatsApp" title="WhatsApp">
+          <WhatsAppIcon class="size-[18px]" />
+        </a>
+        <a href={site.phoneHref} class="hidden size-10 place-items-center rounded-full border border-line transition hover:border-ink md:grid" aria-label={`Volat ${site.phone}`} title={`Volat ${site.phone}`}>
+          <Icon name="phone" class="size-[18px]" />
+        </a>
+        <a href={emailLink()} class="hidden size-10 place-items-center rounded-full border border-line transition hover:border-ink md:grid" aria-label="E-mail" title={site.email}>
+          <Icon name="mail" class="size-[18px]" />
         </a>
         <button
           id="menu-btn"
@@ -63,14 +69,23 @@ const path = cleanPath(Astro.url.pathname);
           </a>
         ))
       }
-      <div class="mt-1 grid grid-cols-2 gap-1.5">
-        <a href="/#formular" class="flex items-center justify-center gap-2 rounded-2xl bg-ink px-4 py-3.5 font-medium text-paper">
-          Získat nabídku
-          <Icon name="arrow-right" class="size-4" />
+      <a href="/#formular" class="mt-1 flex items-center justify-center gap-2 rounded-2xl bg-ink px-4 py-3.5 font-semibold text-paper">
+        <Icon name="camera" class="size-4" />
+        Chci nabídnout
+        <Icon name="arrow-right" class="size-4" />
+      </a>
+      <div class="mt-1.5 grid grid-cols-3 gap-1.5">
+        <a href={whatsappLink()} target="_blank" rel="noopener noreferrer" class="flex flex-col items-center gap-1 rounded-2xl border border-ink px-2 py-3 text-sm font-medium">
+          <WhatsAppIcon class="size-5" />
+          WhatsApp
         </a>
-        <a href={site.phoneHref} class="flex items-center justify-center gap-2 rounded-2xl border border-ink px-4 py-3.5 font-medium">
-          <Icon name="phone" class="size-4" />
-          Zavolat
+        <a href={site.phoneHref} class="flex flex-col items-center gap-1 rounded-2xl border border-ink px-2 py-3 text-sm font-medium">
+          <Icon name="phone" class="size-5" />
+          Volat
+        </a>
+        <a href={emailLink()} class="flex flex-col items-center gap-1 rounded-2xl border border-ink px-2 py-3 text-sm font-medium">
+          <Icon name="mail" class="size-5" />
+          E-mail
         </a>
       </div>
     </nav>

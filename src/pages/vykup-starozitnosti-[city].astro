@@ -6,6 +6,7 @@ import SellForm from '../components/SellForm.astro';
 import Faq from '../components/Faq.astro';
 import Icon from '../components/Icon.astro';
 import CtaBand from '../components/CtaBand.astro';
+import ContactButtons from '../components/ContactButtons.astro';
 import Shipping from '../components/Shipping.astro';
 import { cities, cityUrl, type City } from '../data/cities';
 import { faq as baseFaq, site } from '../data/site';
@@ -63,6 +64,7 @@ const schema = [
     eyebrow={`Výkup po celé ČR · ${city.name} a okolí`}
     lines={['Výkup', 'starožitností', `_${city.name}_`]}
     text={city.intro}
+    city={city.name}
   />
 
   <nav class="container-x pt-5 text-xs text-muted" aria-label="Drobečková navigace">
@@ -113,16 +115,9 @@ const schema = [
           </ul>
         </div>
         <div class="card reveal grain bg-ink text-paper sm:col-span-2" style="--d:240ms">
-          <div class="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <p class="text-lg font-semibold">Máte věci k prodeji {city.locative}?</p>
-              <p class="mt-1 text-sm text-white/60">Zavolejte, nebo pošlete fotky přes formulář níže.</p>
-            </div>
-            <a href={site.phoneHref} class="btn-light shrink-0">
-              <Icon name="phone" class="size-4" />
-              {site.phone}
-            </a>
-          </div>
+          <p class="text-lg font-semibold">Máte věci k prodeji {city.locative}?</p>
+          <p class="mt-1 text-sm text-white/60">Pošlete fotky přes formulář, WhatsApp nebo e-mail, případně zavolejte.</p>
+          <ContactButtons class="mt-5" tone="dark" size="md" city={city.name} />
         </div>
       </div>
     </div>

@@ -1,6 +1,7 @@
 ---
 import Icon from './Icon.astro';
 import Logo from './Logo.astro';
+import ContactButtons from './ContactButtons.astro';
 import { site, nav, operator, privacy } from '../data/site';
 import { cities, cityUrl } from '../data/cities';
 
@@ -16,16 +17,7 @@ const year = new Date().getFullYear();
           Výkup starožitností a retro předmětů po celé České republice. Férové ocenění do 24 hodin, platba ihned, diskrétní
           jednání.
         </p>
-        <div class="mt-6 flex flex-wrap gap-2">
-          <a href={site.phoneHref} class="btn-ghost-dark px-4 py-2.5">
-            <Icon name="phone" class="size-4" />
-            {site.phone}
-          </a>
-          <a href={`mailto:${site.email}`} class="btn-ghost-dark px-4 py-2.5">
-            <Icon name="mail" class="size-4" />
-            {site.email}
-          </a>
-        </div>
+        <ContactButtons class="mt-6" tone="dark" size="md" />
       </div>
 
       <div>

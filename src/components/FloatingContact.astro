@@ -1,6 +1,7 @@
 ---
 import Icon from './Icon.astro';
-import { site } from '../data/site';
+import { site, whatsappLink, emailLink } from '../data/site';
+import WhatsAppIcon from './WhatsAppIcon.astro';
 ---
 
 <!-- 📱 Mobil: lepivá lišta dole -->
@@ -8,16 +9,19 @@ import { site } from '../data/site';
   id="cta-bar"
   class="fixed inset-x-3 bottom-3 z-40 translate-y-[150%] transition-transform duration-500 ease-(--ease-spring) md:hidden"
   style="padding-bottom: env(safe-area-inset-bottom)">
-  <div class="flex items-center gap-2 rounded-full border border-white/10 bg-ink/95 p-1.5 shadow-[0_15px_40px_-10px_rgba(0,0,0,0.6)] backdrop-blur-xl">
-    <a href="/#formular" data-cta class="flex flex-1 items-center justify-center gap-2 rounded-full bg-paper px-4 py-3 text-sm font-semibold text-ink">
-      <Icon name="camera" class="size-4" />
-      Získat nabídku
+  <div class="flex items-center gap-1.5 rounded-full border border-white/10 bg-ink/95 p-1.5 shadow-[0_15px_40px_-10px_rgba(0,0,0,0.6)] backdrop-blur-xl">
+    <a href="/#formular" data-cta class="flex min-w-0 flex-1 items-center justify-center gap-2 rounded-full bg-paper px-3 py-3 text-sm font-semibold whitespace-nowrap text-ink">
+      <Icon name="camera" class="size-4 shrink-0" />
+      Chci nabídnout
     </a>
-    <a href={site.phoneHref} class="grid size-11 place-items-center rounded-full bg-white/10 text-paper" aria-label="Zavolat">
+    <a href={whatsappLink()} target="_blank" rel="noopener noreferrer" class="grid size-11 shrink-0 place-items-center rounded-full bg-white/10 text-paper" aria-label="WhatsApp">
+      <WhatsAppIcon class="size-5" />
+    </a>
+    <a href={site.phoneHref} class="grid size-11 shrink-0 place-items-center rounded-full bg-white/10 text-paper" aria-label={`Volat ${site.phone}`}>
       <Icon name="phone" class="size-5" />
     </a>
-    <a href={site.whatsappHref} target="_blank" rel="noopener noreferrer" class="grid size-11 place-items-center rounded-full bg-white/10 text-paper" aria-label="WhatsApp">
-      <Icon name="message-circle" class="size-5" />
+    <a href={emailLink()} class="grid size-11 shrink-0 place-items-center rounded-full bg-white/10 text-paper" aria-label="E-mail">
+      <Icon name="mail" class="size-5" />
     </a>
   </div>
 </div>
@@ -30,16 +34,16 @@ import { site } from '../data/site';
     data-cta
     class="btn-primary pointer-events-none translate-y-4 px-6 py-4 opacity-0 shadow-[0_15px_40px_-10px_rgba(0,0,0,0.6)] transition-all duration-500">
     <Icon name="camera" class="size-5" />
-    Získat nabídku
+    Chci nabídnout
     <Icon name="arrow-right" class="arrow size-4" />
   </a>
   <a
-    href={site.whatsappHref}
+    href={whatsappLink()}
     target="_blank"
     rel="noopener noreferrer"
     class="group relative grid size-14 place-items-center rounded-full bg-ink text-paper shadow-[0_12px_30px_-8px_rgba(0,0,0,0.5)] transition-transform duration-300 ease-(--ease-spring) hover:scale-110"
     aria-label="Napsat na WhatsApp">
-    <Icon name="message-circle" class="size-6 transition-transform duration-300 group-hover:-rotate-12" />
+    <WhatsAppIcon class="size-6 transition-transform duration-300 group-hover:-rotate-12" />
     <span class="absolute inset-0 -z-10 animate-ping rounded-full bg-ink/30 [animation-duration:2.5s]"></span>
   </a>
 </div>

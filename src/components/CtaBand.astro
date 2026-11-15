@@ -1,6 +1,5 @@
 ---
-import Icon from './Icon.astro';
-import { site } from '../data/site';
+import ContactButtons from './ContactButtons.astro';
 
 interface Props {
   title?: string;
@@ -19,24 +18,14 @@ const dark = variant === 'dark';
   <div class="container-x">
     <div
       class:list={[
-        'reveal relative flex flex-col items-start gap-6 overflow-hidden rounded-[2.5rem] p-8 sm:p-12 lg:flex-row lg:items-center lg:justify-between',
+        'reveal relative flex flex-col items-start gap-7 overflow-hidden rounded-[2.5rem] p-8 sm:p-12',
         dark ? 'grain bg-ink text-paper' : 'border border-line bg-mist',
       ]}>
       <div class="relative">
         <h2 class="h-display text-3xl sm:text-4xl">{title}</h2>
         <p class:list={['mt-3 max-w-xl', dark ? 'text-white/60' : 'text-muted']}>{text}</p>
       </div>
-      <div class="relative flex w-full shrink-0 flex-col gap-3 sm:w-auto sm:flex-row [&>a]:whitespace-nowrap">
-        <a href="/#formular" data-cta class:list={[dark ? 'btn-light' : 'btn-primary', 'px-7 py-4 text-base']}>
-          <Icon name="camera" class="size-5" />
-          Získat nabídku
-          <Icon name="arrow-right" class="arrow size-5" />
-        </a>
-        <a href={site.phoneHref} class:list={[dark ? 'btn-ghost-dark' : 'btn-ghost', 'px-7 py-4 text-base']}>
-          <Icon name="phone" class="size-5" />
-          {site.phone}
-        </a>
-      </div>
+      <ContactButtons class="relative" tone={dark ? 'dark' : 'light'} />
       <!-- dekorativní kruhy -->
       <span
         class:list={['pointer-events-none absolute -top-24 -right-24 size-72 rounded-full border', dark ? 'border-white/10' : 'border-ink/10']}

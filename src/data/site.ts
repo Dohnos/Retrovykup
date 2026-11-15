@@ -4,13 +4,38 @@ export const site = {
   phone: '603 538 440',
   phoneHref: 'tel:+420603538440',
   phoneIntl: '+420603538440',
-  whatsappHref: 'https://wa.me/420603538440',
+  whatsappNumber: '420603538440',
   email: 'retrovykup@seznam.cz',
   ogImage: '/og.png',
   ogImageAlt: 'Retrovykup — výkup starožitností po celé ČR: nábytek, lustry, porcelán, hodiny, obrazy, militaria',
   description:
     'Výkup starožitností po celé ČR. Pošlete fotky a do 24 h máte férovou nabídku. Nábytek, obrazy, porcelán, lustry, hodiny, militaria. Platba ihned.',
 };
+
+/** 💬 WhatsApp s předvyplněnou zprávou (volitelně s městem) */
+export function whatsappLink(city?: string) {
+  const text = `Dobrý den, mám zájem o výkup starožitností${city ? ` (${city})` : ''}. Posílám fotky předmětů:`;
+  return `https://wa.me/${site.whatsappNumber}?text=${encodeURIComponent(text)}`;
+}
+
+/** ✉️ E-mail s předvyplněným předmětem a osnovou zprávy */
+export function emailLink(city?: string) {
+  const subject = `Výkup starožitností – poptávka${city ? ` (${city})` : ''}`;
+  const body = [
+    'Dobrý den,',
+    '',
+    'rád/a bych nabídl/a k výkupu:',
+    '- ',
+    '',
+    `Lokalita: ${city ?? ''}`,
+    'Telefon: ',
+    '',
+    'Fotky přikládám v příloze.',
+    '',
+    'Děkuji',
+  ].join('\n');
+  return `mailto:${site.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+}
 
 /**
  * 🧾 Správce osobních údajů — DOPLŇTE (GDPR vyžaduje identifikaci správce).

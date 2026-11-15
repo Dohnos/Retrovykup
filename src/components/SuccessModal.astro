@@ -1,6 +1,7 @@
 ---
 import Icon from './Icon.astro';
-import { site } from '../data/site';
+import { site, whatsappLink, emailLink } from '../data/site';
+import WhatsAppIcon from './WhatsAppIcon.astro';
 ---
 
 <dialog
@@ -36,10 +37,20 @@ import { site } from '../data/site';
         <Icon name="plus" class="size-5" />
         Poslat další poptávku
       </button>
-      <a href={site.phoneHref} class="btn-ghost w-full py-4">
-        <Icon name="phone" class="size-4" />
-        Spěchá to? Zavolejte {site.phone}
-      </a>
+      <div class="grid grid-cols-3 gap-2">
+        <a href={whatsappLink()} target="_blank" rel="noopener noreferrer" class="btn-ghost flex-col gap-1 px-2 py-3 text-xs">
+          <WhatsAppIcon class="size-5" />
+          WhatsApp
+        </a>
+        <a href={site.phoneHref} class="btn-ghost flex-col gap-1 px-2 py-3 text-xs">
+          <Icon name="phone" class="size-5" />
+          Volat
+        </a>
+        <a href={emailLink()} class="btn-ghost flex-col gap-1 px-2 py-3 text-xs">
+          <Icon name="mail" class="size-5" />
+          E-mail
+        </a>
+      </div>
     </div>
   </div>
 </dialog>
