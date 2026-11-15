@@ -146,8 +146,11 @@ const allSchema = bare || noindex ? [] : [orgSchema, websiteSchema, ...(breadcru
           <a href="#obsah" class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] btn-primary">
             Přeskočit na obsah
           </a>
-          <TopBar />
-          <Header />
+          <!-- Info lišta + menu zůstávají nahoře i při scrollování -->
+          <div class="sticky top-0 z-50">
+            <TopBar />
+            <Header />
+          </div>
           <main id="obsah">
             <slot />
           </main>
