@@ -4,6 +4,7 @@ import Logo from './Logo.astro';
 import ContactButtons from './ContactButtons.astro';
 import { site, nav, operator, privacy } from '../data/site';
 import { cities, cityUrl } from '../data/cities';
+import { services, serviceUrl } from '../data/services';
 
 const year = new Date().getFullYear();
 ---
@@ -34,6 +35,15 @@ const year = new Date().getFullYear();
             ))
           }
           <li><a href="/galerie" class="text-white/70 transition-colors hover:text-white">Galerie</a></li>
+          {
+            services.map((sv) => (
+              <li>
+                <a href={serviceUrl(sv)} class="text-white/70 transition-colors hover:text-white">
+                  {sv.name}
+                </a>
+              </li>
+            ))
+          }
           <li><a href="/#formular" class="text-white/70 transition-colors hover:text-white">Výkupní formulář</a></li>
           <li><a href={privacy.url} class="text-white/70 transition-colors hover:text-white">Ochrana osobních údajů</a></li>
         </ul>

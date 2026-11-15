@@ -1,0 +1,44 @@
+---
+import Icon from './Icon.astro';
+import { services, serviceUrl } from '../data/services';
+
+interface Props {
+  exclude?: string;
+  title?: string;
+}
+const { exclude, title = 'Vykupujeme také' } = Astro.props;
+const icons: Record<string, string> = { 'vykup-zlata': 'gem', 'vykup-knih': 'book-open', 'vyklizeni-pozustalosti': 'house' };
+const list = [
+  ...(exclude ? [{ slug: '', name: 'Výkup starožitností', href: '/', icon: 'amphora', text: 'Nábytek, obrazy, porcelán, lustry a retro do roku 1989.' }] : []),
+  ...services
+    .filter((s) => s.slug !== exclude)
+    .map((s) => ({ slug: s.slug, name: s.name, href: serviceUrl(s), icon: icons[s.slug] ?? 'sparkles', text: s.short })),
+];
+---
+
+<section class="py-16">
+  <div class="container-x">
+    <p class="eyebrow reveal">Další služby</p>
+    <h2 class="h-display reveal mt-3 text-4xl sm:text-5xl" style="--d:80ms">{title}</h2>
+    <div class="mt-10 grid gap-4 md:grid-cols-3">
+      {
+        list.map((l, i) => (
+          <a href={l.href} class="group card card-hover reveal flex flex-col justify-between gap-8 p-7" style={`--d:${i * 80}ms`}>
+            <div class="flex items-start justify-between">
+              <span class="icon-bubble">
+                <Icon name={l.icon} class="size-5" />
+              </span>
+              <span class="grid size-11 place-items-center rounded-full bg-mist transition-transform duration-500 ease-(--ease-spring) group-hover:rotate-45 group-hover:bg-ink group-hover:text-paper">
+                <Icon name="arrow-up-right" class="size-5" />
+              </span>
+            </div>
+            <div>
+              <h3 class="text-xl font-semibold">{l.name}</h3>
+              <p class="mt-1.5 line-clamp-2 text-sm text-muted">{l.text}</p>
+            </div>
+          </a>
+        ))
+      }
+    </div>
+  </div>
+</section>

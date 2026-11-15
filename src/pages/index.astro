@@ -7,6 +7,7 @@ import Faq from '../components/Faq.astro';
 import Icon from '../components/Icon.astro';
 import CtaBand from '../components/CtaBand.astro';
 import Shipping from '../components/Shipping.astro';
+import ServiceLinks from '../components/ServiceLinks.astro';
 import { faq, site } from '../data/site';
 
 const faqSchema = {
@@ -68,6 +69,7 @@ const serviceSchema = {
     </div>
   </section>
 
+  <ServiceLinks />
   <Sections show="cities" />
   <Faq items={faq} />
   <CtaBand title="Připraveni prodat?" />

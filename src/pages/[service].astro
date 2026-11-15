@@ -1,0 +1,129 @@
+---
+import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+import SellForm from '../components/SellForm.astro';
+import Faq from '../components/Faq.astro';
+import Icon from '../components/Icon.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Shipping from '../components/Shipping.astro';
+import ServiceLinks from '../components/ServiceLinks.astro';
+import { services, serviceUrl, type Service } from '../data/services';
+import { site } from '../data/site';
+
+export function getStaticPaths() {
+  return services.map((s) => ({ params: { service: s.slug }, props: { service: s } }));
+}
+
+const { service: s } = Astro.props as { service: Service };
+const url = `${site.url}${serviceUrl(s)}`;
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: s.name,
+    serviceType: s.name,
+    description: s.seoDesc,
+    url,
+    provider: { '@id': `${site.url}/#organization` },
+    areaServed: { '@type': 'Country', name: 'Česká republika' },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: s.faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+  },
+];
+---
+
+<Base
+  title={s.seoTitle}
+  description={s.seoDesc}
+  imageAlt={`${s.name} — Retrovykup`}
+  breadcrumbs={[{ name: s.name, path: serviceUrl(s) }]}
+  schema={schema}>
+  <Hero eyebrow={s.eyebrow} lines={s.lines} text={s.intro} />
+
+  <nav class="container-x pt-5 text-xs text-muted" aria-label="Drobečková navigace">
+    <ol class="flex flex-wrap items-center gap-1.5">
+      <li><a href="/" class="hover:text-ink">Úvod</a></li>
+      <li aria-hidden="true">/</li>
+      <li class="text-ink" aria-current="page">{s.name}</li>
+    </ol>
+  </nav>
+
+  <!-- Co vykupujeme -->
+  <section class="py-20">
+    <div class="container-x">
+      <p class="eyebrow reveal">{s.name}</p>
+      <h2 class="h-display reveal mt-3 max-w-2xl text-4xl sm:text-5xl" style="--d:80ms">{s.itemsTitle}</h2>
+      <div class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {
+          s.items.map((it, i) => (
+            <div class="card card-hover group reveal" style={`--d:${(i % 3) * 70}ms`}>
+              <span class="icon-bubble">
+                <Icon name={it.icon} class="size-5" />
+              </span>
+              <h3 class="mt-5 text-lg font-semibold">{it.title}</h3>
+              <p class="mt-1.5 text-sm leading-relaxed text-muted">{it.text}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Info blok -->
+  <section class="py-6">
+    <div class="container-x">
+      <div class="grain reveal grid gap-8 rounded-[2.5rem] bg-ink p-8 text-paper sm:p-12 lg:grid-cols-[0.8fr_1.2fr]">
+        <div>
+          <span class="icon-bubble bg-paper text-ink"><Icon name={s.info.icon} class="size-5" /></span>
+          <h2 class="h-display mt-5 text-3xl sm:text-4xl">{s.info.title}</h2>
+        </div>
+        <ul class="space-y-4">
+          {
+            s.info.points.map((p) => (
+              <li class="flex gap-3 text-white/75">
+                <span class="mt-0.5 grid size-6 shrink-0 place-items-center rounded-full bg-white/10">
+                  <Icon name="check" class="size-3.5" strokeWidth={2.5} />
+                </span>
+                {p}
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Postup -->
+  <section class="py-20">
+    <div class="container-x">
+      <p class="eyebrow reveal">Jak to funguje</p>
+      <h2 class="h-display reveal mt-3 max-w-2xl text-4xl sm:text-5xl" style="--d:80ms">Jednoduše. <em>Ve čtyřech krocích.</em></h2>
+      <ol class="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        {
+          s.steps.map((st, i) => (
+            <li class="card card-hover group reveal relative overflow-hidden" style={`--d:${i * 90}ms`}>
+              <span class="pointer-events-none absolute -top-3 right-1 text-[6rem] leading-none font-bold tracking-tighter text-ink/[0.06]">
+                {i + 1}
+              </span>
+              <span class="icon-bubble">
+                <Icon name={st.icon} class="size-5" />
+              </span>
+              <h3 class="mt-6 text-lg font-semibold">{st.title}</h3>
+              <p class="mt-1.5 text-sm leading-relaxed text-muted">{st.text}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <SellForm heading={s.cta.title} />
+  <Shipping />
+  <Faq items={s.faq} title={`${s.name} — otázky`} />
+  <ServiceLinks exclude={s.slug} />
+  <CtaBand title={s.cta.title} text={s.cta.text} />
+</Base>

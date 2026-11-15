@@ -1,5 +1,6 @@
 import type { APIRoute } from 'astro';
 import { cities, cityUrl } from '../data/cities';
+import { services, serviceUrl } from '../data/services';
 import { site } from '../data/site';
 
 /** Sitemapa pro Google Search Console / Seznam Webmaster: https://retrovykup.cz/sitemap.xml */
@@ -8,6 +9,7 @@ export const GET: APIRoute = () => {
   const pages: [path: string, priority: string, changefreq: string][] = [
     ['/', '1.0', 'weekly'],
     ['/vykup-starozitnosti', '0.9', 'weekly'],
+    ...services.map((s) => [serviceUrl(s), '0.9', 'monthly'] as [string, string, string]),
     ...cities.map((c) => [cityUrl(c), '0.8', 'monthly'] as [string, string, string]),
     ['/vykup', '0.7', 'monthly'],
     ['/galerie', '0.6', 'monthly'],
