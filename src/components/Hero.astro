@@ -134,8 +134,8 @@ const tiles = [
             <input
               id="q-phone"
               type="tel"
-              inputmode="numeric"
-              autocomplete="tel-national"
+              inputmode="tel"
+              autocomplete="tel"
               placeholder="Váš telefon"
               aria-label="Váš telefon"
               class="field pl-10"
@@ -235,10 +235,6 @@ const tiles = [
       photos.value = '';
       render();
     });
-    phone.addEventListener('input', () => {
-      const d = phone.value.replace(/\D/g, '').replace(/^420/, '').slice(0, 9);
-      phone.value = d.replace(/(\d{3})(?=\d)/g, '$1 ').trim();
-    });
 
     const fail = (msg: string, focus?: HTMLElement) => {
       err.textContent = msg;
@@ -250,7 +246,7 @@ const tiles = [
       e.preventDefault();
       err.classList.add('hidden');
       if (!picked.length) return fail('Přidejte prosím alespoň jednu fotku.', $('q-drop'));
-      if (phone.value.replace(/\D/g, '').length < 9) return fail('Zadejte celé telefonní číslo (9 číslic), ať vám můžeme zavolat.', phone);
+      if (!phone.value.trim()) return fail('Zadejte prosím telefon, ať vám můžeme zavolat.', phone);
       if (!consent.checked) return fail('Pro odeslání potvrďte souhlas se zpracováním údajů.', consent);
       if (!leadEnvReady(true)) return fail('Odeslání teď není dostupné. Zavolejte nám prosím na 603 538 440.');
 

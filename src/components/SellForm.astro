@@ -69,10 +69,10 @@ const { defaultLocation = '', heading = 'Prodejte své starožitnosti' } = Astro
                   id="f-phone"
                   name="phone"
                   type="tel"
-                  inputmode="numeric"
+                  inputmode="tel"
                   class="field"
                   placeholder="603 538 440"
-                  autocomplete="tel-national"
+                  autocomplete="tel"
                   required
                 />
               </div>
@@ -363,7 +363,6 @@ const { defaultLocation = '', heading = 'Prodejte své starožitnosti' } = Astro
     const { phone, files: incoming } = (e as CustomEvent<{ phone?: string; files?: File[] }>).detail || {};
     if (phone) {
       phoneInput.value = phone;
-      phoneInput.dispatchEvent(new Event('input'));
     }
     if (incoming?.length) addFiles(incoming);
     preloadLeadLibs();
@@ -397,10 +396,6 @@ const { defaultLocation = '', heading = 'Prodejte své starožitnosti' } = Astro
   });
 
   // ---------- Telefon ----------
-  phoneInput.addEventListener('input', () => {
-    const digits = phoneInput.value.replace(/\D/g, '').replace(/^420/, '').slice(0, 9);
-    phoneInput.value = digits.replace(/(\d{3})(?=\d)/g, '$1 ').trim();
-  });
 
   // ---------- Cena ----------
   form.querySelectorAll<HTMLInputElement>('input[name="desiredPriceOption"]').forEach((r) =>
@@ -475,10 +470,6 @@ const { defaultLocation = '', heading = 'Prodejte své starožitnosti' } = Astro
     if (!(document.getElementById('f-consent') as HTMLInputElement).checked) {
       document.getElementById('f-consent')!.focus();
       return showError('Pro odeslání je potřeba souhlas se zpracováním osobních údajů.');
-    }
-    if (phoneInput.value.replace(/\D/g, '').length < 9) {
-      phoneInput.focus();
-      return showError('Zadejte prosím celé telefonní číslo (9 číslic).');
     }
     if (!leadEnvReady(files.length > 0)) {
       return showError('Formulář teď není dostupný. Zavolejte nám prosím na 603 538 440.');
