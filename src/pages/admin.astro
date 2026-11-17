@@ -304,9 +304,9 @@ import { STATUS_LABELS } from '../lib/admin-labels';
             .map(([v, l]) => `<option value="${v}" ${lead.status === v ? 'selected' : ''}>${l}</option>`)
             .join('')}
         </select>
-        <button class="act act-dark" data-action="zajem" data-id="${id}">✅ Mám zájem</button>
-        <button class="act" data-action="nezajem" data-id="${id}">❌ Nemám zájem</button>
-        <a class="act" href="${whatsappHref(lead)}" target="_blank" rel="noopener noreferrer" title="Odeslat souhrn na WhatsApp">${WHATSAPP_SVG}</a>
+        <button class="act" data-action="zajem" data-id="${id}" title="Mám zájem (odeslat e-mail)" aria-label="Mám zájem">✅</button>
+        <button class="act" data-action="nezajem" data-id="${id}" title="Nemám zájem (odeslat e-mail)" aria-label="Nemám zájem">❌</button>
+        <a class="act" href="${whatsappHref(lead)}" target="_blank" rel="noopener noreferrer" title="Odeslat souhrn na WhatsApp">${WHATSAPP_SVG} ZVL</a>
         ${contactButtons(lead)}
         <button class="act" data-action="detail" data-id="${id}">🔍 Detail</button>
         <button class="act" data-action="delete" data-id="${id}">🗑️ Smazat</button>
@@ -504,10 +504,10 @@ import { STATUS_LABELS } from '../lib/admin-labels';
         }
       </div>
       <div class="flex flex-wrap gap-2 border-t border-line pt-4">
-        <a href="${whatsappHref(lead)}" target="_blank" rel="noopener noreferrer" class="act act-dark">${WHATSAPP_SVG} Odeslat na WhatsApp</a>
+        <a href="${whatsappHref(lead)}" target="_blank" rel="noopener noreferrer" class="act" title="Odeslat souhrn na WhatsApp">${WHATSAPP_SVG} ZVL</a>
         ${contactButtons(lead)}
-        <button class="act" data-action="zajem" data-id="${sid}">✅ Mám zájem</button>
-        <button class="act" data-action="nezajem" data-id="${sid}">❌ Nemám zájem</button>
+        <button class="act" data-action="zajem" data-id="${sid}" title="Mám zájem (odeslat e-mail)" aria-label="Mám zájem">✅</button>
+        <button class="act" data-action="nezajem" data-id="${sid}" title="Nemám zájem (odeslat e-mail)" aria-label="Nemám zájem">❌</button>
         <button class="act" data-action="delete" data-id="${sid}">🗑️ Smazat</button>
       </div>`;
     const modal = $('detailModal');
