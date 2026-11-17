@@ -46,7 +46,7 @@ export const services: Service[] = [
     ],
     steps: [
       { icon: 'camera', title: 'Vyfoťte a zvažte', text: 'Pošlete fotky, ideálně i detail puncu a přibližnou hmotnost.' },
-      { icon: 'scale', title: 'Předběžná cena', text: 'Podle ryzosti a aktuálního kurzu vám pošleme nabídku do 24 h.' },
+      { icon: 'scale', title: 'Předběžná cena', text: 'Podle ryzosti a aktuálního kurzu vám pošleme nabídku obratem.' },
       { icon: 'badge-check', title: 'Ověření', text: 'Při předání zlato převážíme a ověříme ryzost.' },
       { icon: 'banknote', title: 'Platba ihned', text: 'Hotově, nebo převodem na účet — ihned po ověření.' },
     ],
@@ -82,7 +82,7 @@ export const services: Service[] = [
         a: 'Nemusíte. U zlata a cenných předmětů preferujeme osobní předání — přijedeme za vámi.',
       },
     ],
-    cta: { title: 'Máte doma zlato?', text: 'Pošlete fotky a detail puncu — do 24 hodin víte, kolik za něj dostanete.' },
+    cta: { title: 'Máte doma zlato?', text: 'Pošlete fotky a detail puncu — obratem víte, kolik za něj dostanete.' },
     hallmarks: 'zlato',
   },
   {
@@ -91,7 +91,7 @@ export const services: Service[] = [
     short: 'Stříbrné příbory, mince, šperky, podnosy i slitky. Cena podle ryzosti a váhy.',
     seoTitle: 'Výkup stříbra – příbory, mince, šperky | Retrovykup',
     seoDesc:
-      'Výkup stříbra po celé ČR: stříbrné příbory, podnosy, mince, šperky, svícny i slitky. Férová cena podle ryzosti a váhy, ocenění do 24 h, platba ihned.',
+      'Výkup stříbra po celé ČR: stříbrné příbory, podnosy, mince, šperky, svícny i slitky. Férová cena podle ryzosti a váhy, rychlé ocenění, platba ihned.',
     eyebrow: 'Výkup stříbra po celé ČR',
     lines: ['Výkup', 'stříbra', '_férově._'],
     intro:
@@ -108,7 +108,7 @@ export const services: Service[] = [
     ],
     steps: [
       { icon: 'camera', title: 'Vyfoťte a zvažte', text: 'Pošlete fotky, detail puncu a přibližnou hmotnost.' },
-      { icon: 'scale', title: 'Předběžná cena', text: 'Podle ryzosti, váhy a hodnoty předmětu pošleme nabídku do 24 h.' },
+      { icon: 'scale', title: 'Předběžná cena', text: 'Podle ryzosti, váhy a hodnoty předmětu pošleme nabídku obratem.' },
       { icon: 'badge-check', title: 'Ověření', text: 'Při předání stříbro převážíme a ověříme ryzost.' },
       { icon: 'banknote', title: 'Platba ihned', text: 'Hotově, nebo převodem na účet — ihned po ověření.' },
     ],
@@ -140,7 +140,7 @@ export const services: Service[] = [
         a: 'Ano, při výkupu drahých kovů je ze zákona potřeba ověřit totožnost prodávajícího — stačí občanský průkaz.',
       },
     ],
-    cta: { title: 'Máte doma stříbro?', text: 'Pošlete fotky a detail puncu — do 24 hodin víte, kolik za něj dostanete.' },
+    cta: { title: 'Máte doma stříbro?', text: 'Pošlete fotky a detail puncu — obratem víte, kolik za něj dostanete.' },
     hallmarks: 'stribro',
   },
   {
@@ -149,11 +149,11 @@ export const services: Service[] = [
     short: 'Staré a vzácné knihy, první vydání, mapy i celé knihovny.',
     seoTitle: 'Výkup starých knih a knihoven | Retrovykup',
     seoDesc:
-      'Výkup starých a vzácných knih po celé ČR: první vydání, bibliofilie, knihy s podpisem, staré mapy, rukopisy i celé knihovny. Ocenění z fotek do 24 h.',
+      'Výkup starých a vzácných knih po celé ČR: první vydání, bibliofilie, knihy s podpisem, staré mapy, rukopisy i celé knihovny. Rychlé ocenění z fotek.',
     eyebrow: 'Výkup knih po celé ČR',
     lines: ['Výkup', 'starých knih', '_i knihoven._'],
     intro:
-      'Vykupujeme staré a vzácné knihy, bibliofilie, mapy i celé knihovny po prarodičích. Pošlete fotky hřbetů a titulních stran a do 24 hodin máte nabídku.',
+      'Vykupujeme staré a vzácné knihy, bibliofilie, mapy i celé knihovny po prarodičích. Pošlete fotky hřbetů a titulních stran a obratem máte nabídku.',
     quickLabel: 'knih',
     itemsTitle: 'Jaké knihy vykupujeme',
     items: [
@@ -166,7 +166,7 @@ export const services: Service[] = [
     ],
     steps: [
       { icon: 'camera', title: 'Vyfoťte knihy', text: 'Hřbety v knihovně, titulní stranu a tiráž u zajímavých kusů.' },
-      { icon: 'search', title: 'Ocenění', text: 'Posoudíme vydání, stav a vzácnost a do 24 h pošleme nabídku.' },
+      { icon: 'search', title: 'Ocenění', text: 'Posoudíme vydání, stav a vzácnost a obratem pošleme nabídku.' },
       { icon: 'truck', title: 'Odvoz zdarma', text: 'Celou knihovnu sbalíme a odvezeme, menší počet můžete poslat.' },
       { icon: 'banknote', title: 'Platba ihned', text: 'Hotově při převzetí, nebo převodem na účet.' },
     ],
@@ -194,7 +194,7 @@ export const services: Service[] = [
         a: 'Hřbety knih, u zajímavých kusů titulní stranu a tiráž (strana s rokem vydání a nákladem). Případně podpis nebo věnování.',
       },
     ],
-    cta: { title: 'Máte doma staré knihy?', text: 'Vyfoťte hřbety v knihovně a do 24 hodin víte, co má hodnotu.' },
+    cta: { title: 'Máte doma staré knihy?', text: 'Vyfoťte hřbety v knihovně a obratem víte, co má hodnotu.' },
   },
   {
     slug: 'vyklizeni-pozustalosti',

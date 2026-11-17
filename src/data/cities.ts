@@ -26,7 +26,7 @@ export const cities: City[] = [
     lat: 50.0755,
     lon: 14.4378,
     intro:
-      'Vykupujeme starožitnosti a retro předměty v celé Praze — z bytů po prarodičích, vil, půd i sklepů. Pošlete fotky, do 24 hodin máte nabídku a my si pro věci přijedeme.',
+      'Vykupujeme starožitnosti a retro předměty v celé Praze — z bytů po prarodičích, vil, půd i sklepů. Pošlete fotky a obratem máte nabídku. Přijedeme si pro věci, nebo objednáme dopravu a vy jen zabalíte. Snadno a rychle.',
     local: {
       title: 'Pražské byty skrývají poklady',
       text: 'Činžovní domy na Vinohradech, vily v Dejvicích nebo Bubenči i paneláky ze 70. let — každá pražská domácnost má jiný příběh. Často vykupujeme starožitný nábytek, obrazy, lustry, broušené sklo a design z období socialismu, který dnes zažívá velký návrat.',
@@ -54,7 +54,7 @@ export const cities: City[] = [
     lat: 49.1951,
     lon: 16.6068,
     intro:
-      'Výkup starožitností v Brně a okolí rychle a férově. Stačí pár fotek — ocenění pošleme do 24 hodin a pro předměty si přijedeme kamkoliv v Brně.',
+      'Výkup starožitností v Brně a okolí rychle a férově. Stačí pár fotek a obratem máte ocenění. Přijedeme si pro věci, nebo objednáme dopravu a vy jen zabalíte. Snadno a rychle.',
     local: {
       title: 'Brno — město funkcionalismu',
       text: 'Brno je proslulé funkcionalistickou architekturou a moravskou tradicí ohýbaného nábytku. Rádi vykoupíme thonetky, funkcionalistické kusy, chromový nábytek, keramiku i obrazy moravských autorů.',
@@ -82,7 +82,7 @@ export const cities: City[] = [
     lat: 49.8209,
     lon: 18.2625,
     intro:
-      'Výkup starožitností a retro předmětů v Ostravě a celém Moravskoslezském kraji. Ocenění z fotek do 24 hodin, vyzvednutí u vás doma a platba ihned.',
+      'Výkup starožitností a retro předmětů v Ostravě a celém Moravskoslezském kraji. Rychlé ocenění z fotek a platba ihned. Přijedeme si pro věci, nebo objednáme dopravu a vy jen zabalíte. Snadno a rychle.',
     local: {
       title: 'Hornická a průmyslová tradice',
       text: 'Ostrava žije průmyslovou historií. Vedle klasických starožitností rádi vykoupíme hornické a hutnické předměty, odznaky, militaria, retro elektroniku a nábytek ze sorely i z pozdějších desetiletí.',
@@ -110,7 +110,7 @@ export const cities: City[] = [
     lat: 49.7384,
     lon: 13.3736,
     intro:
-      'Výkup starožitností v Plzni a okolí. Pošlete fotky předmětů, do 24 hodin dostanete férovou nabídku a my si vše vyzvedneme.',
+      'Výkup starožitností v Plzni a okolí. Pošlete fotky předmětů a obratem dostanete férovou nabídku. Přijedeme si pro věci, nebo objednáme dopravu a vy jen zabalíte. Snadno a rychle.',
     local: {
       title: 'Pivo, Škodovka a Chodsko',
       text: 'Plzeňsko má bohatou pivovarskou a strojírenskou tradici. Vykupujeme pivní sklo, půllitry a reklamní předměty, věci spojené se Škodovkou i lidovou keramiku z Chodska a Šumavy.',
@@ -125,7 +125,7 @@ export const cities: City[] = [
       },
       {
         q: 'Mají cenu staré pivní půllitry a tácky?',
-        a: 'Často ano, hlavně starší kusy se značkou pivovaru. Pošlete fotky a ocenění dostanete do 24 hodin.',
+        a: 'Často ano, hlavně starší kusy se značkou pivovaru. Pošlete fotky a ocenění dostanete obratem.',
       },
     ],
   },
@@ -166,7 +166,7 @@ export const cities: City[] = [
     lat: 49.5938,
     lon: 17.2509,
     intro:
-      'Výkup starožitností v Olomouci a na celé Hané. Fotky stačí poslat přes formulář — nabídku máte do 24 hodin a pro věci si přijedeme.',
+      'Výkup starožitností v Olomouci a na celé Hané. Fotky stačí poslat přes formulář a nabídku máte obratem. Přijedeme si pro věci, nebo objednáme dopravu a vy jen zabalíte. Snadno a rychle.',
     local: {
       title: 'Hanácká metropole a bývalá pevnost',
       text: 'Olomouc byla po staletí pevnostním a posádkovým městem a centrem Hané. Vykupujeme militaria, uniformy a vyznamenání, lidové kroje a výšivky, starožitný nábytek, obrazy i hodiny.',
@@ -194,7 +194,7 @@ export const cities: City[] = [
     lat: 48.9745,
     lon: 14.4743,
     intro:
-      'Výkup starožitností v Českých Budějovicích a celých jižních Čechách. Pošlete fotky, nabídku máte do 24 hodin a pro věci si přijedeme.',
+      'Výkup starožitností v Českých Budějovicích a celých jižních Čechách. Pošlete fotky a nabídku máte obratem. Přijedeme si pro věci, nebo objednáme dopravu a vy jen zabalíte. Snadno a rychle.',
     local: {
       title: 'Jihočeská tradice',
       text: 'Budějovice proslavilo pivovarnictví i výroba psacích potřeb. Rádi vykoupíme pivní sklo a reklamní předměty, staré tužky a pastelky v plechových krabičkách, selský a malovaný nábytek z jihočeských vesnic i obrazy krajinářů.',
@@ -216,7 +216,7 @@ export const cities: City[] = [
     lat: 50.2092,
     lon: 15.8328,
     intro:
-      'Výkup starožitností v Hradci Králové a okolí. Ocenění z fotek do 24 hodin, vyzvednutí u vás doma a platba hned na místě.',
+      'Výkup starožitností v Hradci Králové a okolí. Rychlé ocenění z fotek a platba hned na místě. Přijedeme si pro věci, nebo objednáme dopravu a vy jen zabalíte. Snadno a rychle.',
     local: {
       title: 'Salon republiky',
       text: 'Hradec Králové je známý prvorepublikovou architekturou a hudební tradicí. Vykupujeme prvorepublikový a funkcionalistický nábytek, hudební nástroje, militaria spojená s bitvou roku 1866, obrazy i hodiny.',
@@ -238,7 +238,7 @@ export const cities: City[] = [
     lat: 50.6607,
     lon: 14.0323,
     intro:
-      'Vykupujeme starožitnosti v Ústí nad Labem a celém Ústeckém kraji. Fotky stačí poslat přes formulář — nabídku máte do 24 hodin.',
+      'Vykupujeme starožitnosti v Ústí nad Labem a celém Ústeckém kraji. Fotky stačí poslat přes formulář a nabídku máte obratem. Přijedeme si pro věci, nebo objednáme dopravu a vy jen zabalíte. Snadno a rychle.',
     local: {
       title: 'Severní Čechy plné příběhů',
       text: 'Severní Čechy mají bohatou průmyslovou a měšťanskou historii. Často vykupujeme porcelán, sklo, nábytek z vil a činžovních domů, hodiny, obrazy i retro předměty z období průmyslového rozmachu.',
@@ -260,7 +260,7 @@ export const cities: City[] = [
     lat: 50.0343,
     lon: 15.7812,
     intro:
-      'Výkup starožitností v Pardubicích a okolí — rychle, férově a diskrétně. Pošlete fotky a do 24 hodin máte nabídku.',
+      'Výkup starožitností v Pardubicích a okolí — rychle, férově a diskrétně. Pošlete fotky a obratem máte nabídku. Přijedeme si pro věci, nebo objednáme dopravu a vy jen zabalíte. Snadno a rychle.',
     local: {
       title: 'Město perníku a dostihů',
       text: 'Pardubice mají silnou průmyslovou i jezdeckou tradici. Vykupujeme retro elektroniku — rádia, gramofony, magnetofony — jezdecké a dostihové předměty, nábytek, obrazy i militaria.',
@@ -282,7 +282,7 @@ export const cities: City[] = [
     lat: 49.2265,
     lon: 17.6707,
     intro:
-      'Výkup starožitností ve Zlíně a celém Zlínském kraji. Ocenění z fotek do 24 hodin, odvoz zajistíme a zaplatíme ihned.',
+      'Výkup starožitností ve Zlíně a celém Zlínském kraji. Rychlé ocenění z fotek a platba ihned. Přijedeme si pro věci, nebo objednáme dopravu a vy jen zabalíte. Snadno a rychle.',
     local: {
       title: 'Baťovo funkcionalistické město',
       text: 'Zlín je symbolem baťovské éry a funkcionalismu a kraj má i tradici ohýbaného nábytku. Vykupujeme předměty z baťovského období, funkcionalistický a ohýbaný nábytek, lidové umění ze Slovácka a Valašska i obrazy.',
@@ -304,7 +304,7 @@ export const cities: City[] = [
     lat: 49.3961,
     lon: 15.5912,
     intro:
-      'Výkup starožitností v Jihlavě a na celé Vysočině. Pošlete fotky, nabídku máte do 24 hodin a pro věci si přijedeme.',
+      'Výkup starožitností v Jihlavě a na celé Vysočině. Pošlete fotky a nabídku máte obratem. Přijedeme si pro věci, nebo objednáme dopravu a vy jen zabalíte. Snadno a rychle.',
     local: {
       title: 'Stříbrné město Vysočiny',
       text: 'Jihlava vyrostla na těžbě stříbra a Vysočina je krajem skla a venkovských statků. Vykupujeme selský nábytek, broušené sklo, hodiny, obrazy, staré nářadí i předměty z chalup a půd.',
@@ -326,7 +326,7 @@ export const cities: City[] = [
     lat: 50.2319,
     lon: 12.8711,
     intro:
-      'Výkup starožitností v Karlových Varech a celém Karlovarském kraji. Ocenění z fotek do 24 hodin, vyzvednutí a platba na místě.',
+      'Výkup starožitností v Karlových Varech a celém Karlovarském kraji. Rychlé ocenění z fotek a platba na místě. Přijedeme si pro věci, nebo objednáme dopravu a vy jen zabalíte. Snadno a rychle.',
     local: {
       title: 'Lázně, sklo a porcelán',
       text: 'Karlovarsko je proslulé sklem, porcelánem a lázeňskou tradicí. Rádi vykoupíme sklo a porcelán z místních výroben, lázeňské pohárky, lázeňské suvenýry, starožitný nábytek i obrazy.',
@@ -348,7 +348,7 @@ export const cities: City[] = [
     lat: 50.1473,
     lon: 14.1029,
     intro:
-      'Výkup starožitností na Kladně a v okolí. Pošlete fotky, nabídku máte do 24 hodin — pro věci si přijedeme a zaplatíme ihned.',
+      'Výkup starožitností na Kladně a v okolí. Pošlete fotky a nabídku máte obratem. Přijedeme si pro věci, nebo objednáme dopravu a vy jen zabalíte. Snadno a rychle.',
     local: {
       title: 'Hornické a hutnické Kladno',
       text: 'Kladno má za sebou dlouhou historii dolů a oceláren. Vedle běžných starožitností rádi vykoupíme hornické a hutnické předměty, odznaky, militaria, retro nábytek a vybavení domácností z 50.–80. let.',
@@ -358,7 +358,7 @@ export const cities: City[] = [
     highlights: ['Hornické předměty', 'Odznaky', 'Retro nábytek', 'Militaria'],
     faq: [
       { q: 'Vykupujete i ve Slaném, Rakovníku a Kralupech?', a: 'Ano — celé Kladensko a okolí: Slaný, Unhošť, Stochov, Kralupy nad Vltavou, Rakovník i Beroun.' },
-      { q: 'Mají hodnotu hornické odznaky a předměty?', a: 'Často ano. Pošlete fotky a do 24 hodin dostanete ocenění.' },
+      { q: 'Mají hodnotu hornické odznaky a předměty?', a: 'Často ano. Pošlete fotky a ocenění dostanete obratem.' },
     ],
   },
   {

@@ -19,12 +19,12 @@ const { defaultLocation = '', heading = 'Prodejte své starožitnosti' } = Astro
           <p class="eyebrow text-white/50">Výkupní formulář</p>
           <h2 class="h-display reveal mt-4 text-4xl sm:text-5xl">{heading}</h2>
           <p class="reveal mt-5 max-w-md text-white/60" style="--d:100ms">
-            Vyplnění zabere asi minutu. Pošlete pár fotek a do 24 hodin vám pošleme férovou nabídku. Nezávazně.
+            Vyplnění zabere asi minutu. Pošlete pár fotek a obratem vám pošleme férovou nabídku. Nezávazně.
           </p>
         </div>
         <ul class="space-y-3 text-sm">
           {
-            ['Ocenění zdarma a nezávazně', 'Odpověď do 24 hodin', 'Platba hotově nebo převodem', 'Doprava zdarma — platíme my', 'Údaje chráníme dle GDPR'].map(
+            ['Ocenění zdarma a nezávazně', 'Rychlá odpověď', 'Platba hotově nebo převodem', 'Doprava zdarma — platíme my', 'Údaje chráníme dle GDPR'].map(
               (t, i) => (
                 <li class="reveal flex items-center gap-3" style={`--d:${150 + i * 70}ms`}>
                   <span class="grid size-6 place-items-center rounded-full bg-white/10">

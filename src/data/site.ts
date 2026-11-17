@@ -9,7 +9,7 @@ export const site = {
   ogImage: '/og.png',
   ogImageAlt: 'Retrovykup — výkup starožitností po celé ČR: nábytek, lustry, porcelán, hodiny, obrazy, militaria',
   description:
-    'Výkup starožitností po celé ČR. Pošlete fotky a do 24 h máte férovou nabídku. Nábytek, obrazy, porcelán, lustry, hodiny, militaria. Platba ihned.',
+    'Výkup starožitností a retro do roku 1989. Pošlete fotky a obratem máte férovou nabídku. Přijedeme, nebo objednáme dopravu a vy jen zabalíte. Snadno a rychle.',
 };
 
 /** 💬 WhatsApp s předvyplněnou zprávou (volitelně s městem) */
@@ -91,14 +91,14 @@ export const categories = [
 
 export const benefits = [
   { icon: 'hand-coins', title: 'Férové ocenění', text: 'Nabídneme nejlepší možnou cenu podle aktuálního trhu.' },
-  { icon: 'clock', title: 'Odpověď do 24 h', text: 'Z fotek vám pošleme nabídku nejpozději do druhého dne.' },
+  { icon: 'zap', title: 'Rychlá odpověď', text: 'Z fotek vám obratem pošleme férovou nabídku.' },
   { icon: 'shield-check', title: 'Diskrétně', text: 'Vaše údaje ani fotky nikde nezveřejňujeme.' },
   { icon: 'truck', title: 'Doprava zdarma', text: 'Přijedeme osobně, nebo objednáme dopravu. Platíme ji my, vy nic.' },
 ];
 
 export const steps = [
   { icon: 'camera', title: 'Vyfoťte', text: 'Pár fotek z mobilu stačí. Vyplnění formuláře zabere minutu.' },
-  { icon: 'search', title: 'Ocenění', text: 'Předměty posoudíme a do 24 hodin pošleme férovou nabídku.' },
+  { icon: 'search', title: 'Ocenění', text: 'Předměty posoudíme a obratem pošleme férovou nabídku.' },
   { icon: 'truck', title: 'Doprava zdarma', text: 'Přijedeme si pro věci, nebo objednáme Zásilkovnu, Balíkovnu či TopTrans. Platíme my.' },
   { icon: 'banknote', title: 'Platba ihned', text: 'Hotově na místě, nebo převodem na účet. Jak chcete.' },
 ];
@@ -106,7 +106,7 @@ export const steps = [
 export const faq = [
   {
     q: 'Jak dlouho trvá ocenění?',
-    a: 'Obvykle do 24 hodin od odeslání formuláře. Čím lepší fotky a popis, tím přesnější nabídka.',
+    a: 'Snažíme se ozvat co nejdříve, obvykle obratem. Čím lepší fotky a popis, tím přesnější nabídka.',
   },
   {
     q: 'Jaké předměty vykupujete?',

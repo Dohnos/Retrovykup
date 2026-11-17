@@ -19,14 +19,14 @@ const { city } = Astro.props as { city: City };
 const url = `${site.url}${cityUrl(city)}`;
 
 // SEO: title do ~60 znaků, description 120–160 znaků
-const longTitle = `Výkup starožitností ${city.name} – nabídka do 24 h | Retrovykup`;
+const longTitle = `Výkup starožitností ${city.name} – snadno a rychle | Retrovykup`;
 const seoTitle = longTitle.length <= 62 ? longTitle : `Výkup starožitností ${city.name} | Retrovykup`;
-const longDesc = `Výkup starožitností ${city.locative} a okolí. Pošlete fotky a do 24 h máte nabídku. Nábytek, obrazy, porcelán, lustry, militaria. Platba ihned, doprava zdarma.`;
+const longDesc = `Výkup starožitností ${city.locative} a okolí. Pošlete fotky a obratem máte nabídku. Nábytek, obrazy, porcelán, lustry, militaria. Platba ihned, doprava zdarma.`;
 const seoDesc = longDesc.length <= 160 ? longDesc : longDesc.replace(', militaria', '').replace(', doprava zdarma', '');
 
 const faq = [
   ...city.faq,
-  { q: `Jak rychle dostanu nabídku ${city.locative}?`, a: `Ocenění z fotek posíláme do 24 hodin. Pak si pro věci ${city.locative} přijedeme, nebo objednáme dopravu (Zásilkovna, Balíkovna, TopTrans…) — vždy na naše náklady.` },
+  { q: `Jak rychle dostanu nabídku ${city.locative}?`, a: `Ocenění z fotek posíláme obratem. Pak si pro věci ${city.locative} přijedeme, nebo objednáme dopravu (Zásilkovna, Balíkovna, TopTrans…) — vždy na naše náklady.` },
   ...baseFaq.filter((f) => /platba|dopravu|fotkami/i.test(f.q)),
 ];
 
@@ -125,7 +125,7 @@ const schema = [
 
   <SellForm defaultLocation={city.name} heading={`Výkup starožitností ${city.name}`} />
   <Sections show="categories" title={`Co vykupujeme ${city.locative}`} />
-  <CtaBand title={`Prodáváte ${city.locative}?`} text={`Pošlete fotky a do 24 hodin máte nabídku. Pro věci si přijedeme ${city.locative} i do okolí.`} />
+  <CtaBand title={`Prodáváte ${city.locative}?`} text={`Pošlete fotky a obratem máte nabídku. Vykupujeme ${city.locative} i v okolí — přijedeme, nebo objednáme dopravu.`} />
   <Sections show="steps" />
   <Shipping />
   <Faq items={faq} title={`Výkup ${city.locative} — otázky`} />
