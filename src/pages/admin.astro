@@ -77,6 +77,35 @@ import { STATUS_LABELS } from '../lib/admin-labels';
       <div class="space-y-6 p-6" id="modalContent"></div>
     </div>
   </div>
+
+  <!-- Kontakt klienta: výběr zájem / nezájem -->
+  <dialog id="contactModal" class="m-auto w-[min(92vw,28rem)] rounded-[2rem] bg-paper p-0 text-ink shadow-2xl backdrop:bg-ink/60 backdrop:backdrop-blur-sm">
+    <div class="p-6 sm:p-8">
+      <div class="flex items-start justify-between gap-4">
+        <div>
+          <p class="eyebrow" id="contactChannel">WhatsApp</p>
+          <h2 class="mt-2 text-xl font-semibold" id="contactTitle">Odpověď klientovi</h2>
+          <p class="mt-1 text-sm text-muted" id="contactMeta"></p>
+        </div>
+        <button type="button" data-contact-close class="grid size-9 shrink-0 place-items-center rounded-full bg-mist hover:bg-line" aria-label="Zavřít">
+          <Icon name="x" class="size-4" />
+        </button>
+      </div>
+      <p class="mt-6 text-sm font-medium">Co chcete klientovi napsat?</p>
+      <div class="mt-3 grid grid-cols-2 gap-2">
+        <button type="button" data-decision="zajem" class="rounded-2xl bg-ink px-4 py-4 text-sm font-semibold text-paper transition hover:bg-neutral-800">✅ Mám zájem</button>
+        <button type="button" data-decision="nezajem" class="rounded-2xl border border-ink px-4 py-4 text-sm font-semibold transition hover:bg-mist">❌ Nemám zájem</button>
+      </div>
+      <label class="mt-4 flex cursor-pointer items-center gap-2 text-sm text-muted">
+        <input type="checkbox" id="contactSetStatus" class="size-4 accent-black" checked />
+        Zároveň změnit status (Probíhá / Nemám zájem)
+      </label>
+      <details class="mt-4 text-sm">
+        <summary class="cursor-pointer text-muted underline underline-offset-4">Náhled zprávy</summary>
+        <pre id="contactPreview" class="mt-2 rounded-2xl bg-mist p-4 font-sans text-xs whitespace-pre-wrap"></pre>
+      </details>
+    </div>
+  </dialog>
 </Base>
 
 <style is:global>
@@ -137,6 +166,12 @@ import { STATUS_LABELS } from '../lib/admin-labels';
     getPhotoUrls,
     whatsappHref,
     WHATSAPP_SVG,
+    clientLink,
+    clientMessage,
+    hasEmail,
+    hasPhone,
+    type Channel,
+    type Decision,
     type Lead,
   } from '../lib/admin';
 
@@ -272,6 +307,7 @@ import { STATUS_LABELS } from '../lib/admin-labels';
         <button class="act act-dark" data-action="zajem" data-id="${id}">✅ Mám zájem</button>
         <button class="act" data-action="nezajem" data-id="${id}">❌ Nemám zájem</button>
         <a class="act" href="${whatsappHref(lead)}" target="_blank" rel="noopener noreferrer" title="Odeslat souhrn na WhatsApp">${WHATSAPP_SVG}</a>
+        ${contactButtons(lead)}
         <button class="act" data-action="detail" data-id="${id}">🔍 Detail</button>
         <button class="act" data-action="delete" data-id="${id}">🗑️ Smazat</button>
       </div>
@@ -290,6 +326,7 @@ import { STATUS_LABELS } from '../lib/admin-labels';
       else if (action === 'detail') openDetail(id);
       else if (action === 'delete') deleteLead(id);
       else if (action === 'save-email') saveEmail(id);
+      else if (action === 'contact') openContact(id, actionBtn.dataset.channel as Channel);
       return;
     }
     if (t.closest('[data-stop]') || t.closest('a')) return;
@@ -356,6 +393,65 @@ import { STATUS_LABELS } from '../lib/admin-labels';
     }
   }
 
+  // ---------- Kontakt klienta (WhatsApp / SMS / e-mail) ----------
+  const CHANNEL_LABEL: Record<Channel, string> = { wa: 'WhatsApp klientovi', sms: 'SMS klientovi', email: 'E-mail klientovi' };
+
+  function contactButtons(lead: Lead) {
+    const id = escapeHtml(lead.id);
+    const btn = (channel: Channel, label: string, ok: boolean, why: string) =>
+      ok
+        ? `<button class="act" data-action="contact" data-channel="${channel}" data-id="${id}" title="${CHANNEL_LABEL[channel]}">${label}</button>`
+        : `<button class="act opacity-40 cursor-not-allowed" disabled title="${why}">${label}</button>`;
+    return [
+      btn('wa', `${WHATSAPP_SVG} Klient`, hasPhone(lead), 'Klient nevyplnil telefon'),
+      btn('sms', '💬 SMS', hasPhone(lead), 'Klient nevyplnil telefon'),
+      btn('email', '📧 E-mail', hasEmail(lead), 'Klient nevyplnil e-mail'),
+    ].join('');
+  }
+
+  const contactModal = document.getElementById('contactModal') as HTMLDialogElement;
+  let contactState: { id: string; channel: Channel } | null = null;
+
+  function openContact(id: string, channel: Channel) {
+    const lead = allLeads.find((l) => l.id === id);
+    if (!lead) return;
+    contactState = { id, channel };
+    $('contactChannel').textContent = CHANNEL_LABEL[channel];
+    $('contactTitle').textContent = lead.name || 'Klient';
+    $('contactMeta').textContent = `Poptávka #${lead.vykup_id || '—'} · ${formatDate(lead.timestamp)} · ${
+      channel === 'email' ? lead.email : lead.phone
+    }`;
+    $('contactPreview').textContent = clientMessage(lead, 'zajem');
+    contactModal.showModal();
+  }
+
+  contactModal.addEventListener('mouseover', (e) => {
+    const b = (e.target as HTMLElement).closest<HTMLElement>('[data-decision]');
+    const lead = contactState && allLeads.find((l) => l.id === contactState!.id);
+    if (b && lead) $('contactPreview').textContent = clientMessage(lead, b.dataset.decision as Decision);
+  });
+
+  contactModal.addEventListener('click', async (e) => {
+    const t = e.target as HTMLElement;
+    if (t === contactModal || t.closest('[data-contact-close]')) return contactModal.close();
+    const b = t.closest<HTMLElement>('[data-decision]');
+    if (!b || !contactState) return;
+    const lead = allLeads.find((l) => l.id === contactState!.id);
+    if (!lead) return;
+    const decision = b.dataset.decision as Decision;
+    const link = clientLink(lead, contactState.channel, decision);
+    if (contactState.channel === 'wa') window.open(link, '_blank', 'noopener');
+    else window.location.href = link;
+    if (($('contactSetStatus') as HTMLInputElement).checked) {
+      try {
+        await updateDoc(doc(db, 'leads', lead.id), { status: decision === 'zajem' ? 'probiha' : 'nezajem' });
+      } catch (err) {
+        alert('Chyba při změně statusu: ' + (err as Error).message);
+      }
+    }
+    contactModal.close();
+  });
+
   // ---------- Detail ----------
   function openDetail(id: string) {
     const lead = allLeads.find((l) => l.id === id);
@@ -409,6 +505,7 @@ import { STATUS_LABELS } from '../lib/admin-labels';
       </div>
       <div class="flex flex-wrap gap-2 border-t border-line pt-4">
         <a href="${whatsappHref(lead)}" target="_blank" rel="noopener noreferrer" class="act act-dark">${WHATSAPP_SVG} Odeslat na WhatsApp</a>
+        ${contactButtons(lead)}
         <button class="act" data-action="zajem" data-id="${sid}">✅ Mám zájem</button>
         <button class="act" data-action="nezajem" data-id="${sid}">❌ Nemám zájem</button>
         <button class="act" data-action="delete" data-id="${sid}">🗑️ Smazat</button>
