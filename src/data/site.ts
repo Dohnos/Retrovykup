@@ -42,18 +42,22 @@ export function emailLink(city?: string) {
  * Prázdná pole se na webu nezobrazí.
  */
 export const operator = {
-  name: '', // např. „Jan Novák“ nebo „Retrovykup s.r.o.“
-  ico: '', // např. „12345678“
-  address: '', // např. „Ulice 1, 110 00 Praha“
+  name: 'Petr Dohnálek',
+  ico: '64962873',
+  address: 'Zvole 37, 789 01 Zvole',
+  /** Strukturovaná adresa pro Google (schema.org) */
+  street: 'Zvole 37',
+  postalCode: '789 01',
+  city: 'Zvole',
   dic: '', // nepovinné, jen plátce DPH, např. „CZ12345678“
-  register: '', // např. „Fyzická osoba zapsaná v živnostenském rejstříku“ nebo „Zapsáno v OR u Městského soudu v Praze, oddíl C, vložka 12345“
+  register: 'Fyzická osoba podnikající, zapsaná v živnostenském rejstříku',
 };
 
 /** 🔐 Ochrana osobních údajů — verze souhlasu a doba uložení */
 export const privacy = {
   url: '/ochrana-osobnich-udaju',
-  version: '2026-11-14',
-  updated: '14. 11. 2026',
+  version: '2026-11-26',
+  updated: '26. 11. 2026',
   /** Po této době se lead automaticky smaže (po zapnutí TTL ve Firestore, viz README) */
   retentionDays: 180,
   retentionText: '6 měsíců',

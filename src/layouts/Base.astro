@@ -5,7 +5,7 @@ import TopBar from '../components/TopBar.astro';
 import Footer from '../components/Footer.astro';
 import FloatingContact from '../components/FloatingContact.astro';
 import SuccessModal from '../components/SuccessModal.astro';
-import { site } from '../data/site';
+import { site, operator } from '../data/site';
 import { cleanPath } from '../lib/path';
 import interLatin from '@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url';
 import interLatinExt from '@fontsource-variable/inter/files/inter-latin-ext-wght-normal.woff2?url';
@@ -52,6 +52,19 @@ const orgSchema = {
   email: site.email,
   telephone: site.phoneIntl,
   areaServed: { '@type': 'Country', name: 'Česká republika' },
+  legalName: operator.name,
+  ...(operator.ico ? { identifier: { '@type': 'PropertyValue', propertyID: 'IČO', value: operator.ico } } : {}),
+  ...(operator.street
+    ? {
+        address: {
+          '@type': 'PostalAddress',
+          streetAddress: operator.street,
+          postalCode: operator.postalCode,
+          addressLocality: operator.city,
+          addressCountry: 'CZ',
+        },
+      }
+    : {}),
   contactPoint: {
     '@type': 'ContactPoint',
     telephone: site.phoneIntl,
