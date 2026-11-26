@@ -44,9 +44,9 @@ export function emailLink(city?: string) {
 export const operator = {
   name: 'Petr Dohnálek',
   ico: '64962873',
-  address: 'Zvole 37, 789 01 Zvole',
+  address: 'Zvole 39, 789 01 Zvole',
   /** Strukturovaná adresa pro Google (schema.org) */
-  street: 'Zvole 37',
+  street: 'Zvole 39',
   postalCode: '789 01',
   city: 'Zvole',
   dic: '', // nepovinné, jen plátce DPH, např. „CZ12345678“
